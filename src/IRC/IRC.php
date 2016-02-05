@@ -88,8 +88,8 @@ class IRC{
                             $connection->sendData("PONG :".$new->getArgs()[0]);
                         }
                     }
-                    $connection->getScheduler()->call();
                 }
+                $connection->getScheduler()->call();
             }
         }
     }

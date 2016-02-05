@@ -63,7 +63,7 @@ class PluginManager{
                 $json->loadFile("plugins/".$name."/plugin.json");
                 $json = $json->getConfig();
 
-                if($json["api"] < IRC::API_VERSION or $json["api"] > IRC::API_VERSION){
+                if($json["api"] != IRC::API_VERSION){
                     Logger::info(BashColor::YELLOW."Plugin ".$name." is not supported by this version of Fish.");
                 }
 

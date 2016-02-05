@@ -25,13 +25,45 @@ class Scheduler{
 
     private $tasks = [];
 
+    /**
+     * @param TaskInterface $task
+     * @param $when
+     * @return String
+     */
     public function scheduleDelayedTask(TaskInterface $task, $when){
         $when = time() + $when;
         $this->tasks[$when][] = $task;
+        return $when." ".(count($this->tasks[$when]) - 1);
     }
 
-    public function scheduleRepeatingTask(TaskInterface $task, $interval){
-        //TODO
+    /**
+     * Register the same task multiple times
+     * @param TaskInterface $task
+     * @param $interval
+     * @param $times
+     * @return array
+     */
+    public function scheduleMultipleDelayedTask(TaskInterface $task, $interval, $times){
+        $ids = [];
+        $time = $interval;
+        for($run = 1; $run <= $times; $run++){
+            $ids[$interval] = $this->scheduleDelayedTask($task, $time);
+            $time += $interval;
+        }
+        return $ids;
+    }
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function cancelTask($id){
+        $id = explode(" ", $id);
+        if(isset($this->tasks[$id[0]][$id[1]])){
+            unset($this->tasks[$id[0]][$id[1]]);
+            return true;
+        }
+        return false;
     }
 
     public function call(){
@@ -42,8 +74,8 @@ class Scheduler{
                     $task->onRun();
                 }
             }
+            unset($this->tasks[$time]);
         }
-        //TODO - Implement Repeating Tasks
     }
 
 }
