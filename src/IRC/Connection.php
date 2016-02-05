@@ -24,6 +24,7 @@ namespace IRC;
 use IRC\Event\EventHandler;
 use IRC\Event\Whois\WhoisSendEvent;
 use IRC\Plugin\PluginManager;
+use IRC\Scheduler\Scheduler;
 
 class Connection{
 
@@ -54,6 +55,11 @@ class Connection{
     private $eventHandler;
 
     /**
+     * @var Scheduler
+     */
+    private $scheduler;
+
+    /**
      * @var Channel[]
      */
     private $channels = [];
@@ -64,6 +70,7 @@ class Connection{
 
         $this->pluginManager = new PluginManager();
         $this->eventHandler = new EventHandler();
+        $this->scheduler = new Scheduler();
     }
 
     public function getPluginManager(){
@@ -72,6 +79,10 @@ class Connection{
 
     public function getEventHandler(){
         return $this->eventHandler;
+    }
+
+    public function getScheduler(){
+        return $this->scheduler;
     }
 
     /**
@@ -100,6 +111,7 @@ class Connection{
         if(is_resource($this->socket)){
             stream_set_blocking($this->socket, 0);
             $this->handshake();
+            $this->getPluginManager()->loadAll();
             return $this;
         }
         return false;

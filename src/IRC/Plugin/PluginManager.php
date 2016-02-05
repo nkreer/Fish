@@ -21,36 +21,90 @@
 
 namespace IRC\Plugin;
 
+use IRC\Utils\JsonConfig;
+
 class PluginManager{
 
     private $plugins = [];
 
+    /**
+     * @param $name
+     * @return Plugin|NULL
+     */
     public function getPlugin($name){
-        //TODO
+        return $this->plugins[$name];
     }
 
+    public function loadAll(){
+        foreach(scandir("plugins/") as $element){
+            if(is_dir("plugins/".$element)){
+                $this->loadPlugin($element);
+            }
+        }
+    }
+
+    /**
+     * @param $name
+     * @return bool|int
+     */
     public function loadPlugin($name){
-        //TODO
+        if(is_dir("plugins/".$name)){
+            if(file_exists("plugins/".$name."/plugin.json")){
+                $json = new JsonConfig();
+                $json->loadFile("plugins/".$name."/plugin.json");
+                $json = $json->getConfig();
+
+                $plugin = new Plugin($name, $json["main"]);
+                $plugin->name = $name;
+                $plugin->description = $json["description"];
+                $plugin->apiVersion = $json["api"];
+                $plugin->version = $json["version"];
+                $plugin->author = $json["author"];
+                $key = count($this->plugins);
+                $this->plugins[$plugin->name] = $plugin;
+                return $key;
+            }
+        }
+        return false;
     }
 
-    public function enablePlugin(PluginBase $plugin){
-        //TODO
+    /**
+     * @param Plugin $plugin
+     */
+    public function unloadPlugin(Plugin $plugin){
+        if($this->hasPlugin($plugin->name)){
+            unset($this->plugins[$plugin->name]);
+        }
     }
 
-    public function disablePlugin(PluginBase $plugin){
-        //TODO
-    }
-
-    public function unloadPlugin(PluginBase $plugin){
-        //TODO
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function hasPlugin($name){
+        return isset($this->plugins[$name]);
     }
 
     public function reloadAll(){
-        //TODO
+        foreach($this->plugins as $plugin){
+            $this->unloadPlugin($plugin);
+        }
+
+        $plugins = scandir("plugins/");
+        foreach($plugins as $plugin){
+            if(is_dir("plugins/".$plugin)){
+                $this->loadPlugin($plugin);
+            }
+        }
     }
 
-    public function reloadPlugin(PluginBase $plugin){
-        //TODO
+    /**
+     * @param Plugin $plugin
+     */
+    public function reloadPlugin(Plugin $plugin){
+        $name = $plugin->name;
+        $this->unloadPlugin($plugin);
+        $this->loadPlugin($name);
     }
 
 }

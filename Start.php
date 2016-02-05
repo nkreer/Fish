@@ -3,7 +3,7 @@
 includeFiles("src/IRC/", true);
 
 $irc = new \IRC\IRC();
-$irc->addConnection(new \IRC\Connection("irc.rizon.net", 6667));
+$irc->addConnection(new \IRC\Connection($argv[1], $argv[2]));
 $irc->run();
 
 function includeFiles($baseDir, $debug = true){

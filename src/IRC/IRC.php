@@ -49,7 +49,7 @@ class IRC{
     public function __construct(){
         self::$instance = $this;
         Logger::info(BashColor::GREEN."Starting Fish (".self::CODENAME.") v".self::VERSION.BashColor::YELLOW." (API v".self::API_VERSION.")");
-        mkdir("plugins/");
+        @mkdir("plugins/");
 
         if(!file_exists("fish.json")){
             Logger::info(BashColor::RED."Couldn't find configuration file. Making a new one...");

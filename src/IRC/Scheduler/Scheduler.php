@@ -19,33 +19,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace IRC\Plugin;
+namespace IRC\Scheduler;
 
-use IRC\Connection;
-use IRC\IRC;
+class Scheduler{
 
-class PluginBase{
+    private $tasks = [];
 
-    /**
-     * @var Connection
-     */
-    public $connection;
-    public $id;
-
-    public function getClient(){
-        return IRC::getInstance();
+    public function registerDelayedTask(TaskInterface $task, $when){
+        $when = time() + $when;
+        $this->tasks[$when][] = $task;
     }
 
-    public function getPluginManager(){
-        return $this->connection->getPluginManager();
+    public function registerRepeatingTask(TaskInterface $task, $interval){
+        //TODO
     }
 
-    public function getEventHandler(){
-        return $this->connection->getEventHandler();
-    }
-
-    public function getScheduler(){
-        return $this->connection->getScheduler();
+    public function call(){
+        $time = time();
+        if(isset($this->tasks[$time])){
+            foreach($this->tasks[$time] as $task){
+                if($task instanceof TaskInterface){
+                    $task->onRun();
+                }
+            }
+        }
+        //TODO - Implement Repeating Tasks
     }
 
 }

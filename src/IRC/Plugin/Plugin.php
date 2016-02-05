@@ -26,10 +26,42 @@ use IRC\Utils\BashColor;
 
 class Plugin{
 
-    public function __construct($name){
+    public $name;
+    public $description;
+    public $apiVersion;
+    public $version;
+    public $author;
+
+    public $reflectionClass;
+
+    /**
+     * @var PluginBase
+     */
+    public $class;
+
+    public $isEnabled = false;
+
+    public function __construct($name, $main){
         if(file_exists("plugins/".$name."/plugin.json")){
             Logger::info(BashColor::GREEN."Loading plugin ".BashColor::BLUE.$name);
+
+            $info = new \SplFileInfo("plugins/".$name."/".$main);
+            include("plugins/".$name."/".$main);
+            $class = new \ReflectionClass($name."\\".$info->getBasename(".php")); //Taking care of using the correct namespace
+            $this->class = $class->newInstanceWithoutConstructor();
+            $this->reflectionClass = $class;
+            if($this->reflectionClass->hasMethod("onLoad")){
+                $this->class->onLoad(); //Call the onLoad method
+            }
         }
+    }
+
+    public function enable(){
+        $this->isEnabled = true;
+    }
+
+    public function disable(){
+        $this->isEnabled = false;
     }
 
 }

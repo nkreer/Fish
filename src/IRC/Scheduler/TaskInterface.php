@@ -19,33 +19,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace IRC\Plugin;
+namespace IRC\Scheduler;
 
-use IRC\Connection;
-use IRC\IRC;
+interface TaskInterface{
 
-class PluginBase{
-
-    /**
-     * @var Connection
-     */
-    public $connection;
-    public $id;
-
-    public function getClient(){
-        return IRC::getInstance();
-    }
-
-    public function getPluginManager(){
-        return $this->connection->getPluginManager();
-    }
-
-    public function getEventHandler(){
-        return $this->connection->getEventHandler();
-    }
-
-    public function getScheduler(){
-        return $this->connection->getScheduler();
-    }
+    public function onRun();
 
 }

@@ -21,20 +21,38 @@
 
 namespace IRC\Event;
 
+use IRC\Plugin\Plugin;
+
 class EventHandler{
 
     private $listeners = [];
 
-    public function registerEvents(Listener $listener){
-        $this->listeners[] = $listener;
+    public function registerEvents(Listener $listener, Plugin $plugin){
+        $this->listeners[$plugin->name][] = $listener;
     }
 
     public function unregisterAll(){
         $this->listeners = [];
     }
 
+    public function unregisterPlugin(Plugin $plugin){
+        $this->listeners[$plugin->name] = [];
+    }
+
     public function callEvent(Event $event){
-        //TODO
+        foreach($this->listeners as $plugins){{
+                foreach($plugins as $listener){
+                    if($listener instanceof Listener){
+                        $eventClass = new \ReflectionClass($event);
+                        $reflectionClass = new \ReflectionClass($listener);
+                        $eventName = "on".$eventClass->getName();
+                        if($reflectionClass->hasMethod($eventName)){
+                            $listener->$eventName();
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }
