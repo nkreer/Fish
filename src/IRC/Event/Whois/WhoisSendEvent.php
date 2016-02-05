@@ -25,7 +25,7 @@ use IRC\User;
 
 class WhoisSendEvent extends WhoisEvent{
 
-    public function __construct(User $user){
+    public function __construct($user){
         parent::__construct($user);
     }
 

@@ -25,12 +25,12 @@ class Scheduler{
 
     private $tasks = [];
 
-    public function registerDelayedTask(TaskInterface $task, $when){
+    public function scheduleDelayedTask(TaskInterface $task, $when){
         $when = time() + $when;
         $this->tasks[$when][] = $task;
     }
 
-    public function registerRepeatingTask(TaskInterface $task, $interval){
+    public function scheduleRepeatingTask(TaskInterface $task, $interval){
         //TODO
     }
 

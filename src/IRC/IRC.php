@@ -21,6 +21,7 @@
 
 namespace IRC;
 
+use IRC\Event\Ping\PingEvent;
 use IRC\Utils\BashColor;
 use IRC\Utils\JsonConfig;
 
@@ -79,7 +80,16 @@ class IRC{
         while(true){
             foreach($this->connections as $connection){
                 $new = $connection->check();
-                $connection->getScheduler()->call();
+                if($new != false){
+                    if($new->getCommand() === "PING"){
+                        $ev = new PingEvent();
+                        $connection->getEventHandler()->callEvent($ev);
+                        if(!$ev->isCancelled()){
+                            $connection->sendData("PONG :".$new->getArgs()[0]);
+                        }
+                    }
+                    $connection->getScheduler()->call();
+                }
             }
         }
     }

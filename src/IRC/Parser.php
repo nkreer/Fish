@@ -25,13 +25,13 @@ class Parser{
 
     public static function parse($command){
         $line = explode(":", $command, 2);
-        $line[0] = explode(" ", $line[0]);
-        $command = $line[0][0];
-        unset($line[0][0]);
+        $cmd = explode(" ", $line[0]);
+        $command = $cmd[0];
+        unset($cmd[0]);
         if(isset($line[1])){
-            $line[0][] = $line[1];
+            $cmd[] = $line[1];
         }
-        array_values($line[0]);
+        array_values($cmd);
 
         return new Command($command, $line[0]);
     }

@@ -45,9 +45,9 @@ class EventHandler{
                     if($listener instanceof Listener){
                         $eventClass = new \ReflectionClass($event);
                         $reflectionClass = new \ReflectionClass($listener);
-                        $eventName = "on".$eventClass->getName();
+                        $eventName = "on".$eventClass->getShortName();
                         if($reflectionClass->hasMethod($eventName)){
-                            $listener->$eventName();
+                            $listener->$eventName($event);
                         }
                     }
                 }

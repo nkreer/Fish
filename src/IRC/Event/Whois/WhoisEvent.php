@@ -28,11 +28,11 @@ class WhoisEvent extends Event{
 
     private $user;
 
-    public function __construct(User $user){
+    public function __construct($user){
         $this->user = $user;
     }
 
-    public function getUser(){
+    public function getName(){
         return $this->user;
     }
 

@@ -53,6 +53,7 @@ class Plugin{
             $this->class = $class->newInstanceWithoutConstructor();
             $this->reflectionClass = $class;
             $this->class->connection = $connection;
+            $this->class->plugin = $this;
             if($this->reflectionClass->hasMethod("onLoad")){
                 $this->class->onLoad(); //Call the onLoad method
             }

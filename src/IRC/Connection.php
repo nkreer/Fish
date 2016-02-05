@@ -93,12 +93,9 @@ class Connection{
         $next = fgets($this->socket);
         if(!empty($next)){
             $data = str_replace("\n", "", $next);
-            $data = explode(" ", $data);
-            unset($data[0]);
-            $data = implode(" ", $data);
             $parsed = Parser::parse($data);
             $parsed->setConnection($this);
-            //Logger::info($this->getAddress()."  ".$data);
+            Logger::info($this->getAddress()."  ".$data);
             return $parsed;
         }
         return false;
@@ -134,14 +131,14 @@ class Connection{
      */
     public function sendData($data){
         fwrite($this->socket, $data."\n");
-        //Logger::info($this->getAddress()." > ".$data);
+        Logger::info($this->getAddress()." > ".$data);
     }
 
-    public function whoisUser(User $user){
-        $ev = new WhoisSendEvent($user);
+    public function whoisUser($name){
+        $ev = new WhoisSendEvent($name);
         $this->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
-            $this->sendData("WHOIS ".$user->getNick());
+            $this->sendData("WHOIS ".$name);
         }
     }
 

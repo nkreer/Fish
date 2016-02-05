@@ -22,6 +22,7 @@
 namespace IRC\Plugin;
 
 use IRC\Connection;
+use IRC\IRC;
 use IRC\Logger;
 use IRC\Utils\BashColor;
 use IRC\Utils\JsonConfig;
@@ -62,6 +63,10 @@ class PluginManager{
                 $json->loadFile("plugins/".$name."/plugin.json");
                 $json = $json->getConfig();
 
+                if($json["api"] < IRC::API_VERSION or $json["api"] > IRC::API_VERSION){
+                    Logger::info(BashColor::YELLOW."Plugin ".$name." is not supported by this version of Fish.");
+                }
+
                 $plugin = new Plugin($name, $json["main"], $this->connection);
                 $plugin->name = $name;
                 $plugin->description = $json["description"];
@@ -71,6 +76,7 @@ class PluginManager{
                 if(isset($json["commands"])){
                     $plugin->commands = $json["commands"];
                 }
+
                 $key = count($this->plugins);
                 $this->plugins[$plugin->name] = $plugin;
                 return $key;

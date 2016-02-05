@@ -31,6 +31,11 @@ class PluginBase{
      */
     public $connection;
 
+    /**
+     * @var Plugin
+     */
+    public $plugin;
+
     public function getConnection(){
         return $this->connection;
     }
