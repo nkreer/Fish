@@ -19,62 +19,42 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace IRC;
+namespace IRC\Event\Command;
 
-class Command{
+use IRC\Channel;
+use IRC\Event\Event;
+use IRC\User;
+
+include("src/IRC/Event/Event.php");
+
+class CommandEvent extends Event{
 
     private $command;
     private $args;
-    private $connection;
-    private $prefix;
+    private $channel;
+    private $user;
 
-    public function __construct($command, $args, $prefix = ""){
+    public function __construct($command, $args, Channel $channel, User $user){
         $this->command = $command;
         $this->args = $args;
-        $this->prefix = $prefix;
+        $this->channel = $channel;
+        $this->user = $user;
     }
 
-    /**
-     * @return String
-     */
-    public function getPrefix(){
-        return $this->prefix;
-    }
-
-    /**
-     * @return String
-     */
     public function getCommand(){
         return $this->command;
     }
 
-    /**
-     * @return Array
-     */
     public function getArgs(){
         return $this->args;
     }
 
-    /**
-     * @param $arg
-     * @return mixed
-     */
-    public function getArg($arg){
-        return $this->args[$arg];
+    public function getChannel(){
+        return $this->channel;
     }
 
-    /**
-     * @return Connection
-     */
-    public function getConnection(){
-        return $this->connection;
-    }
-
-    /**
-     * @param Connection $connection
-     */
-    public function setConnection(Connection $connection){
-        $this->connection = $connection;
+    public function getUser(){
+        return $this->user;
     }
 
 }

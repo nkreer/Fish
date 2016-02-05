@@ -27,6 +27,10 @@ class EventHandler{
 
     private $listeners = [];
 
+    /**
+     * @param Listener $listener
+     * @param Plugin $plugin
+     */
     public function registerEvents(Listener $listener, Plugin $plugin){
         $this->listeners[$plugin->name][] = $listener;
     }
@@ -35,10 +39,16 @@ class EventHandler{
         $this->listeners = [];
     }
 
+    /**
+     * @param Plugin $plugin
+     */
     public function unregisterPlugin(Plugin $plugin){
         $this->listeners[$plugin->name] = [];
     }
 
+    /**
+     * @param Event $event
+     */
     public function callEvent(Event $event){
         foreach($this->listeners as $plugins){{
                 foreach($plugins as $listener){

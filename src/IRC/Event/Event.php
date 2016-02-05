@@ -25,10 +25,16 @@ class Event{
 
     private $cancelled = false;
 
+    /**
+     * @param bool|true $set
+     */
     public function setCancelled($set = true){
         $this->cancelled = $set;
     }
 
+    /**
+     * @return bool
+     */
     public function isCancelled(){
         return $this->cancelled;
     }

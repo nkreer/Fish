@@ -47,7 +47,7 @@ class Scheduler{
         $ids = [];
         $time = $interval;
         for($run = 1; $run <= $times; $run++){
-            $ids[$interval] = $this->scheduleDelayedTask($task, $time);
+            $ids[$time] = $this->scheduleDelayedTask($task, $time);
             $time += $interval;
         }
         return $ids;

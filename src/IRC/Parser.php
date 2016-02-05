@@ -24,16 +24,19 @@ namespace IRC;
 class Parser{
 
     public static function parse($command){
-        $line = explode(":", $command, 2);
-        $cmd = explode(" ", $line[0]);
-        $command = $cmd[0];
-        unset($cmd[0]);
-        if(isset($line[1])){
-            $cmd[] = $line[1];
+        if (substr($command, 0, 1) == ":"){
+            $prefix = substr($command, 1, strpos($command, " "));
+            $command = substr($command, strpos($command, " ") + 1);
+        } else {
+            $prefix = false;
         }
-        array_values($cmd);
 
-        return new Command($command, $line[0]);
+        $cmd = substr($command, 0, strpos($command, " "));
+        $cmd = strtoupper($cmd);
+        $args = str_replace("\r", "", substr($command, strpos($command, " ") + 1));
+        $args = explode(" ", $args);
+
+        return new Command($cmd, $args, $prefix);
     }
 
 }

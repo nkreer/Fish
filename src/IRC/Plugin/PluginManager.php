@@ -92,6 +92,7 @@ class PluginManager{
         if($this->hasPlugin($plugin->name)){
             Logger::info(BashColor::RED."Unloading plugin ".BashColor::BLUE.$plugin->name);
             unset($this->plugins[$plugin->name]);
+            $this->connection->getEventHandler()->unregisterPlugin($plugin);
         }
     }
 

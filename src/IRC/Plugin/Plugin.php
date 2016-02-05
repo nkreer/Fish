@@ -41,8 +41,6 @@ class Plugin{
      */
     public $class;
 
-    public $isEnabled = false;
-
     public function __construct($name, $main, Connection $connection){
         if(file_exists("plugins/".$name."/plugin.json")){
             Logger::info(BashColor::GREEN."Loading plugin ".BashColor::BLUE.$name);
@@ -58,14 +56,6 @@ class Plugin{
                 $this->class->onLoad(); //Call the onLoad method
             }
         }
-    }
-
-    public function enable(){
-        $this->isEnabled = true;
-    }
-
-    public function disable(){
-        $this->isEnabled = false;
     }
 
 }

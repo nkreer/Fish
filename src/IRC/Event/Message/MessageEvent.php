@@ -31,10 +31,16 @@ class MessageEvent extends Event{
         $this->message = $message;
     }
 
+    /**
+     * @param $message
+     */
     public function setMessage($message){
         $this->message = $message;
     }
 
+    /**
+     * @return string
+     */
     public function getMessage(){
         return $this->message;
     }

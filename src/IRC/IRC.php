@@ -21,6 +21,8 @@
 
 namespace IRC;
 
+use IRC\Event\Command\CommandEvent;
+use IRC\Event\Message\MessageReceiveEvent;
 use IRC\Event\Ping\PingEvent;
 use IRC\Utils\BashColor;
 use IRC\Utils\JsonConfig;
@@ -59,6 +61,7 @@ class IRC{
             $conf->setData("default_realname", "Fish - IRC Bot");
             $conf->setData("default_username", "Fish");
             $conf->setData("default_hostname", "Fish");
+            $conf->setData("command_prefix", [".", "!", "\\"]);
 
             $conf->save("fish.json");
             $this->config = $conf;
@@ -81,12 +84,36 @@ class IRC{
             foreach($this->connections as $connection){
                 $new = $connection->check();
                 if($new != false){
-                    if($new->getCommand() === "PING"){
-                        $ev = new PingEvent();
-                        $connection->getEventHandler()->callEvent($ev);
-                        if(!$ev->isCancelled()){
-                            $connection->sendData("PONG :".$new->getArgs()[0]);
-                        }
+                    switch($new->getCommand()){
+                        case 'PING':
+                            $ev = new PingEvent();
+                            $connection->getEventHandler()->callEvent($ev);
+                            if(!$ev->isCancelled()){
+                                $connection->sendData("PONG :".$new->getArgs()[0]);
+                            }
+                            break;
+                        case 'PRIVMSG':
+                            $user = new User($connection, $new->getPrefix());
+                            $arg = $new->getArgs();
+                            if($new->getArg(0) === $connection->nickname){
+                                $channel = new Channel($connection, $user->getNick());
+                            } else {
+                                $channel = new Channel($connection, $arg[0]);
+                            }
+                            unset($arg[0]);
+                            $args = explode(":", implode(" ", $arg), 2);
+                            if(!in_array($args[1][0], $this->config->getData("command_prefix"))){
+                                $ev = new MessageReceiveEvent($args[1], $user, $channel);
+                                $connection->getEventHandler()->callEvent($ev);
+                            } else {
+                                $args[1] = substr($args[1], 1);
+                                $args[1] = explode(" ", $args[1]);
+                                $cmd = $args[1][0];
+                                unset($args[1][0]);
+                                $ev = new CommandEvent($cmd, $args[1], $channel, $user);
+                                $connection->getEventHandler()->callEvent($ev);
+                            }
+                            break;
                     }
                 }
                 $connection->getScheduler()->call();
