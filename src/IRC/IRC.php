@@ -79,8 +79,8 @@ class IRC{
         while(true){
             foreach($this->connections as $connection){
                 $new = $connection->check();
+                $connection->getScheduler()->call();
             }
-            //TODO - Scheduler-Calls here
         }
     }
 

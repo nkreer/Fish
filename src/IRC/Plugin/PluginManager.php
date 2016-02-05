@@ -21,11 +21,19 @@
 
 namespace IRC\Plugin;
 
+use IRC\Connection;
+use IRC\Logger;
+use IRC\Utils\BashColor;
 use IRC\Utils\JsonConfig;
 
 class PluginManager{
 
     private $plugins = [];
+    private $connection;
+
+    public function __construct(Connection $connection){
+        $this->connection = $connection;
+    }
 
     /**
      * @param $name
@@ -54,12 +62,15 @@ class PluginManager{
                 $json->loadFile("plugins/".$name."/plugin.json");
                 $json = $json->getConfig();
 
-                $plugin = new Plugin($name, $json["main"]);
+                $plugin = new Plugin($name, $json["main"], $this->connection);
                 $plugin->name = $name;
                 $plugin->description = $json["description"];
                 $plugin->apiVersion = $json["api"];
                 $plugin->version = $json["version"];
                 $plugin->author = $json["author"];
+                if(isset($json["commands"])){
+                    $plugin->commands = $json["commands"];
+                }
                 $key = count($this->plugins);
                 $this->plugins[$plugin->name] = $plugin;
                 return $key;
@@ -73,6 +84,7 @@ class PluginManager{
      */
     public function unloadPlugin(Plugin $plugin){
         if($this->hasPlugin($plugin->name)){
+            Logger::info(BashColor::RED."Unloading plugin ".BashColor::BLUE.$plugin->name);
             unset($this->plugins[$plugin->name]);
         }
     }

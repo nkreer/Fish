@@ -21,6 +21,7 @@
 
 namespace IRC\Plugin;
 
+use IRC\Connection;
 use IRC\Logger;
 use IRC\Utils\BashColor;
 
@@ -31,6 +32,7 @@ class Plugin{
     public $apiVersion;
     public $version;
     public $author;
+    public $commands = [];
 
     public $reflectionClass;
 
@@ -41,7 +43,7 @@ class Plugin{
 
     public $isEnabled = false;
 
-    public function __construct($name, $main){
+    public function __construct($name, $main, Connection $connection){
         if(file_exists("plugins/".$name."/plugin.json")){
             Logger::info(BashColor::GREEN."Loading plugin ".BashColor::BLUE.$name);
 
@@ -50,6 +52,7 @@ class Plugin{
             $class = new \ReflectionClass($name."\\".$info->getBasename(".php")); //Taking care of using the correct namespace
             $this->class = $class->newInstanceWithoutConstructor();
             $this->reflectionClass = $class;
+            $this->class->connection = $connection;
             if($this->reflectionClass->hasMethod("onLoad")){
                 $this->class->onLoad(); //Call the onLoad method
             }

@@ -28,7 +28,9 @@ class Parser{
         $line[0] = explode(" ", $line[0]);
         $command = $line[0][0];
         unset($line[0][0]);
-        $line[0][] = $line[1];
+        if(isset($line[1])){
+            $line[0][] = $line[1];
+        }
         array_values($line[0]);
 
         return new Command($command, $line[0]);

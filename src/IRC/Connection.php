@@ -25,6 +25,7 @@ use IRC\Event\EventHandler;
 use IRC\Event\Whois\WhoisSendEvent;
 use IRC\Plugin\PluginManager;
 use IRC\Scheduler\Scheduler;
+use IRC\Utils\BashColor;
 
 class Connection{
 
@@ -68,7 +69,7 @@ class Connection{
         $this->address = $address;
         $this->port = $port;
 
-        $this->pluginManager = new PluginManager();
+        $this->pluginManager = new PluginManager($this);
         $this->eventHandler = new EventHandler();
         $this->scheduler = new Scheduler();
     }
@@ -97,7 +98,7 @@ class Connection{
             $data = implode(" ", $data);
             $parsed = Parser::parse($data);
             $parsed->setConnection($this);
-            Logger::info($this->getAddress()."  ".$data);
+            //Logger::info($this->getAddress()."  ".$data);
             return $parsed;
         }
         return false;
@@ -133,12 +134,12 @@ class Connection{
      */
     public function sendData($data){
         fwrite($this->socket, $data."\n");
-        Logger::info($this->getAddress()." > ".$data);
+        //Logger::info($this->getAddress()." > ".$data);
     }
 
     public function whoisUser(User $user){
         $ev = new WhoisSendEvent($user);
-        //TODO - Call event
+        $this->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
             $this->sendData("WHOIS ".$user->getNick());
         }
@@ -149,8 +150,28 @@ class Connection{
      * @param Channel $channel
      */
     public function joinChannel(Channel $channel){
-        $this->channels[] = $channel;
+        $this->channels[$channel->getName()] = $channel;
         $this->sendData("JOIN :".$channel->getName());
+        Logger::info("Joining channel ".BashColor::PURPLE.$channel->getName());
+    }
+
+    /**
+     * @param Channel $channel
+     */
+    public function partChannel(Channel $channel){
+        if($this->isInChannel($channel)){
+            Logger::info("Leaving channel ".BashColor::PURPLE.$channel->getName());
+            $this->sendData("PART :".$channel->getName());
+            unset($this->channels[$channel->getName()]);
+        }
+    }
+
+    /**
+     * @param Channel $channel
+     * @return bool
+     */
+    public function isInChannel(Channel $channel){
+        return isset($this->channels[$channel->getName()]);
     }
 
     /**
@@ -158,6 +179,12 @@ class Connection{
      */
     public function getChannels(){
         return $this->channels;
+    }
+
+    public function changeNick($nick){
+        Logger::info("Changing nick from ".BashColor::PURPLE.$this->nickname.BashColor::WHITE." to ".BashColor::PURPLE.$nick);
+        $this->nickname = $nick;
+        $this->sendData("NICK ".$nick);
     }
 
     /**

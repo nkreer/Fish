@@ -29,7 +29,6 @@ class Channel{
      * @var String
      */
     private $name;
-    private $modes;
 
     private $connection;
 
@@ -51,7 +50,7 @@ class Channel{
      */
     public function sendMessage($message){
         $ev = new MessageSendEvent($message);
-        //TODO - Call the event
+        $this->connection->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
             $this->connection->sendData("PRIVMSG ".$this->getName()." :".$message);
         }

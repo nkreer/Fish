@@ -30,7 +30,10 @@ class PluginBase{
      * @var Connection
      */
     public $connection;
-    public $id;
+
+    public function getConnection(){
+        return $this->connection;
+    }
 
     public function getClient(){
         return IRC::getInstance();
