@@ -21,6 +21,7 @@
 
 namespace IRC\Event;
 
+use IRC\Logger;
 use IRC\Plugin\Plugin;
 
 class EventHandler{
@@ -43,7 +44,8 @@ class EventHandler{
      * @param Plugin $plugin
      */
     public function unregisterPlugin(Plugin $plugin){
-        $this->listeners[$plugin->name] = [];
+        unset($this->listeners[$plugin->name]);
+        Logger::info("Removing Events from ".$plugin->name);
     }
 
     /**

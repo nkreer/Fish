@@ -26,12 +26,23 @@ class Scheduler{
     private $tasks = [];
 
     /**
+     * Schedule a task
      * @param TaskInterface $task
      * @param $when
      * @return String
      */
     public function scheduleDelayedTask(TaskInterface $task, $when){
         $when = time() + $when;
+        $this->tasks[$when][] = $task;
+        return $when." ".(count($this->tasks[$when]) - 1);
+    }
+
+    /**
+     * @param TaskInterface $task
+     * @param $when
+     * @return string
+     */
+    public function scheduleTaskForTime(TaskInterface $task, $when){
         $this->tasks[$when][] = $task;
         return $when." ".(count($this->tasks[$when]) - 1);
     }

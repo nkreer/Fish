@@ -105,6 +105,9 @@ class IRC{
                             if(!in_array($args[1][0], $this->config->getData("command_prefix"))){
                                 $ev = new MessageReceiveEvent($args[1], $user, $channel);
                                 $connection->getEventHandler()->callEvent($ev);
+                                if(!$ev->isCancelled()){
+                                    Logger::info(BashColor::HIGHLIGHT.$ev->getUser()->getNick().":".BashColor::REMOVE." ".$ev->getMessage());
+                                }
                             } else {
                                 $args[1] = substr($args[1], 1);
                                 $args[1] = explode(" ", $args[1]);

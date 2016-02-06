@@ -46,15 +46,18 @@ class Plugin{
             Logger::info(BashColor::GREEN."Loading plugin ".BashColor::BLUE.$name);
 
             $info = new \SplFileInfo("plugins/".$name."/".$main);
-            include("plugins/".$name."/".$main);
+            include_once("plugins/".$name."/".$main);
             $class = new \ReflectionClass($name."\\".$info->getBasename(".php")); //Taking care of using the correct namespace
             $this->class = $class->newInstanceWithoutConstructor();
             $this->reflectionClass = $class;
             $this->class->connection = $connection;
             $this->class->plugin = $this;
-            if($this->reflectionClass->hasMethod("onLoad")){
-                $this->class->onLoad(); //Call the onLoad method
-            }
+        }
+    }
+
+    public function load(){
+        if($this->reflectionClass->hasMethod("onLoad")){
+            $this->class->onLoad(); //Call the onLoad method
         }
     }
 

@@ -79,6 +79,7 @@ class PluginManager{
 
                 $key = count($this->plugins);
                 $this->plugins[$plugin->name] = $plugin;
+                $plugin->load();
                 return $key;
             }
         }
