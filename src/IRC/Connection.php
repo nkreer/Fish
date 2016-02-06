@@ -131,7 +131,7 @@ class Connection{
      */
     public function sendData($data){
         fwrite($this->socket, $data."\n");
-        //Logger::info($this->getAddress()." > ".$data);
+        Logger::info($this->getAddress()." > ".$data);
     }
 
     public function whoisUser($name){

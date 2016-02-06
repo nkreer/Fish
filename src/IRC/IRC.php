@@ -113,6 +113,7 @@ class IRC{
                                 $args[1] = explode(" ", $args[1]);
                                 $cmd = $args[1][0];
                                 unset($args[1][0]);
+                                Logger::info(BashColor::HIGHLIGHT.$user->getNick()." > ".$cmd." ".implode(" ", $args[1]));
                                 $ev = new CommandEvent($cmd, $args[1], $channel, $user);
                                 $connection->getEventHandler()->callEvent($ev);
                             }
