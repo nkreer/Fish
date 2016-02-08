@@ -22,6 +22,7 @@
 namespace IRC;
 
 use IRC\Event\Command\CommandEvent;
+use IRC\Event\Command\CommandLineEvent;
 use IRC\Event\Message\MessageReceiveEvent;
 use IRC\Event\Ping\PingEvent;
 use IRC\Utils\BashColor;
@@ -70,6 +71,7 @@ class IRC{
             $conf->loadFile("fish.json");
             $this->config = $conf;
         }
+        stream_set_blocking(STDIN, 0);
     }
 
     public function getConfig(){
@@ -81,6 +83,10 @@ class IRC{
      */
     public function run(){
         while(true){
+            $data = fgets(STDIN); //Read from STDIN and check for commands
+            if(!empty($data)){
+                $event = new CommandLineEvent(str_replace("\n", "", $data));
+            }
             foreach($this->connections as $connection){
                 $new = $connection->check();
                 if($new != false){
@@ -89,8 +95,9 @@ class IRC{
                             $ev = new PingEvent();
                             $connection->getEventHandler()->callEvent($ev);
                             if(!$ev->isCancelled()){
-                                $connection->sendData("PONG :".$new->getArgs()[0]);
+                                $connection->sendData("PONG ".$new->getArgs()[0]); //Reply to Pings
                             }
+                            unset($ev); //Remove it from the memory
                             break;
                         case 'PRIVMSG':
                             $user = new User($connection, $new->getPrefix());
@@ -102,25 +109,33 @@ class IRC{
                             }
                             unset($arg[0]);
                             $args = explode(":", implode(" ", $arg), 2);
-                            if(!in_array($args[1][0], $this->config->getData("command_prefix"))){
+                            if(!in_array($args[1][0], $this->config->getData("command_prefix"))){ //Decide wether the message is a message or a command
                                 $ev = new MessageReceiveEvent($args[1], $user, $channel);
                                 $connection->getEventHandler()->callEvent($ev);
                                 if(!$ev->isCancelled()){
-                                    Logger::info(BashColor::HIGHLIGHT.$ev->getUser()->getNick().":".BashColor::REMOVE." ".$ev->getMessage());
+                                    Logger::info(BashColor::HIGHLIGHT.$ev->getChannel()->getName()." ".$ev->getUser()->getNick().":".BashColor::REMOVE." ".$ev->getMessage()); //Display the message to the console
                                 }
                             } else {
                                 $args[1] = substr($args[1], 1);
                                 $args[1] = explode(" ", $args[1]);
                                 $cmd = $args[1][0];
                                 unset($args[1][0]);
-                                Logger::info(BashColor::HIGHLIGHT.$user->getNick()." > ".$cmd." ".implode(" ", $args[1]));
+                                Logger::info(BashColor::CYAN.$user->getNick()." > ".$cmd." ".implode(" ", $args[1]));
                                 $ev = new CommandEvent($cmd, $args[1], $channel, $user);
                                 $connection->getEventHandler()->callEvent($ev);
                             }
+                            unset($ev); //Remove it from the memory
                             break;
                     }
                 }
                 $connection->getScheduler()->call();
+
+                if(isset($event)){
+                    $connection->getEventHandler()->callEvent($event); //The special CommandLineEvent gets called if it has been created earlier
+                }
+            }
+            if(isset($event)){
+                unset($event); //Destroy the event
             }
         }
     }
@@ -132,6 +147,7 @@ class IRC{
     public function addConnection(Connection $connection){
         if(!$this->isConnected($connection->getAddress())){
             Logger::info(BashColor::CYAN."Connecting to ".$connection->getAddress().":".$connection->getPort()."...");
+            //Setting up connection details
             $connection->nickname = $this->getConfig()->getData("default_nickname");
             $connection->realname = $this->getConfig()->getData("default_realname");
             $connection->username = $this->getConfig()->getData("default_username");

@@ -40,10 +40,10 @@ class Connection{
 
     private $socket;
 
-    public $nickname = "IRCBoot";
-    public $realname = IRC::CODENAME." v".IRC::VERSION;
-    public $username = "IRCBot";
-    public $hostname = "IRCBot";
+    public $nickname = "FishBot";
+    public $realname = "FISH (".IRC::CODENAME.") v".IRC::VERSION;
+    public $username = "Fish";
+    public $hostname = "Fish";
 
     /**
      * @var PluginManager
@@ -196,6 +196,22 @@ class Connection{
      */
     public function getPort(){
         return $this->port;
+    }
+
+    public function getNick(){
+        return $this->nickname;
+    }
+
+    public function getRealname(){
+        return $this->realname;
+    }
+
+    public function getUsername(){
+        return $this->getUsername();
+    }
+
+    public function getHost(){
+        return $this->hostname;
     }
 
 }
