@@ -90,6 +90,9 @@ class IRC{
             if(!empty($data)){
                 $event = new CommandLineEvent(str_replace("\n", "", $data));
             }
+            if(empty($this->connections)){
+                die(); //Kill the process if no connection
+            }
             foreach($this->connections as $connection){
                 $new = $connection->check();
                 if($new != false){
