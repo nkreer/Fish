@@ -24,6 +24,8 @@ namespace IRC\Event\Channel;
 use IRC\Channel;
 use IRC\Event\Event;
 
+include_once("IRC/Event/Event.php");
+
 class ChannelEvent extends Event{
 
     private $channel;
