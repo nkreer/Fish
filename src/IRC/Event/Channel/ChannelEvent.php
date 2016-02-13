@@ -19,42 +19,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace IRC\Event\Command;
+namespace IRC\Event\Channel;
 
 use IRC\Channel;
 use IRC\Event\Event;
-use IRC\User;
 
 include_once("src/IRC/Event/Event.php");
 
-class CommandEvent extends Event{
+class ChannelEvent extends Event{
 
-    private $command;
-    private $args;
     private $channel;
-    private $user;
 
-    public function __construct($command, $args, Channel $channel, User $user){
-        $this->command = $command;
-        $this->args = $args;
+    public function __construct(Channel $channel){
         $this->channel = $channel;
-        $this->user = $user;
-    }
-
-    public function getCommand(){
-        return $this->command;
-    }
-
-    public function getArgs(){
-        return $this->args;
     }
 
     public function getChannel(){
         return $this->channel;
-    }
-
-    public function getUser(){
-        return $this->user;
     }
 
 }

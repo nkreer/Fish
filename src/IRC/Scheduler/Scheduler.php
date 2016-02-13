@@ -24,6 +24,15 @@ namespace IRC\Scheduler;
 class Scheduler{
 
     private $tasks = [];
+    private $lastCall = 0;
+
+    public function __construct(){
+        $this->lastCall = time();
+    }
+
+    public function getLastCall(){
+        return $this->lastCall;
+    }
 
     /**
      * Schedule a task
@@ -77,8 +86,10 @@ class Scheduler{
         return false;
     }
 
-    public function call(){
-        $time = time();
+    public function call($time = -1){
+        if($time === -1){
+            $time = time();
+        }
         if(isset($this->tasks[$time])){
             foreach($this->tasks[$time] as $task){
                 if($task instanceof TaskInterface){
@@ -86,6 +97,10 @@ class Scheduler{
                 }
             }
             unset($this->tasks[$time]);
+        }
+
+        if($time == time()){
+            $this->lastCall = $time; //Overwrite the value if this is up to date
         }
     }
 
