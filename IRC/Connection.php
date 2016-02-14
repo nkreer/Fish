@@ -95,7 +95,7 @@ class Connection{
             $data = str_replace("\n", "", $next);
             $parsed = Parser::parse($data);
             $parsed->setConnection($this);
-            //Logger::info($this->getAddress()."  ".$data);
+            Logger::info($this->getAddress()."  ".$data);
             return $parsed;
         }
         return false;

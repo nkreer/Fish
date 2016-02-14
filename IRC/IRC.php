@@ -188,14 +188,16 @@ class IRC{
      * Add a connection
      * @param Connection $connection
      */
-    public function addConnection(Connection $connection){
+    public function addConnection(Connection $connection, $default = true){
         if(!$this->isConnected($connection->getAddress())){
             Logger::info(BashColor::CYAN."Connecting to ".$connection->getAddress().":".$connection->getPort()."...");
             //Setting up connection details
-            $connection->nickname = $this->getConfig()->getData("default_nickname");
-            $connection->realname = $this->getConfig()->getData("default_realname");
-            $connection->username = $this->getConfig()->getData("default_username");
-            $connection->hostname = $this->getConfig()->getData("default_hostname");
+            if($default === true){
+                $connection->nickname = $this->getConfig()->getData("default_nickname");
+                $connection->realname = $this->getConfig()->getData("default_realname");
+                $connection->username = $this->getConfig()->getData("default_username");
+                $connection->hostname = $this->getConfig()->getData("default_hostname");
+            }
             $result = $connection->connect();
             if($result instanceof Connection){
                 $this->connections[$connection->getAddress()] = $connection;
