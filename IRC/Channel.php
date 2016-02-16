@@ -49,7 +49,7 @@ class Channel{
      * @param $message
      */
     public function sendMessage($message){
-        $ev = new MessageSendEvent($message);
+        $ev = new MessageSendEvent($message, $this);
         $this->connection->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
             $this->connection->sendData("PRIVMSG ".$this->getName()." :".$message);
@@ -61,7 +61,7 @@ class Channel{
      * @param $message
      */
     public function sendAction($message){
-        $this->sendMessage(chr(1)."ACTION ".$message);
+        $this->sendMessage(chr(1)."ACTION ".$message.chr(1));
     }
 
     /**
@@ -69,7 +69,7 @@ class Channel{
      * @param $message
      */
     public function sendCTCP($message){
-        $this->sendMessage(chr(1)."CTCP ".$message);
+        $this->sendMessage(chr(1)."CTCP ".$message.chr(1));
     }
 
     /**

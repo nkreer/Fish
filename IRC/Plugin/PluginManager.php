@@ -101,6 +101,7 @@ class PluginManager{
     public function unloadPlugin(Plugin $plugin){
         if($this->hasPlugin($plugin->name)){
             Logger::info(BashColor::RED."Unloading plugin ".BashColor::BLUE.$plugin->name);
+            $plugin->unload();
             unset($this->plugins[$plugin->name]);
             $this->connection->getEventHandler()->unregisterPlugin($plugin);
         }

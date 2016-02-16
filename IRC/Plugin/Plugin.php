@@ -61,4 +61,10 @@ class Plugin{
         }
     }
 
+    public function unload(){
+        if($this->reflectionClass->hasMethod("onDisable")){
+            $this->class->onDisable(); //Call the onDisable method
+        }
+    }
+
 }

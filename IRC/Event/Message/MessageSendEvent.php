@@ -21,10 +21,19 @@
 
 namespace IRC\Event\Message;
 
+use IRC\Channel;
+
 class MessageSendEvent extends MessageEvent{
 
-    public function __construct($message){
+    private $channel;
+
+    public function __construct($message, Channel $channel){
         parent::__construct($message);
+        $this->channel = $channel;
+    }
+
+    public function getChannel(){
+        return $this->channel;
     }
 
 }
