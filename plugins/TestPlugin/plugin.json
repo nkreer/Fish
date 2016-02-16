@@ -1,0 +1,9 @@
+{
+  "author":"Your Name",
+  "version":1,
+  "api":1,
+  "name":"TestPlugin",
+  "description":"Hello World",
+  "main":"Main.php",
+  "load":false
+}
