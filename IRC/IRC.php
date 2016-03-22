@@ -65,7 +65,8 @@ class IRC{
             $conf->setData("default_realname", "Fish - IRC Bot");
             $conf->setData("default_username", "Fish");
             $conf->setData("default_hostname", "Fish");
-            $conf->setData("command_prefix", [".", "!", "\\"]);
+            $conf->setData("default_quitmsg", "Leaving");
+            $conf->setData("command_prefix", [".", "!", "\\", "@"]);
 
             $conf->save("fish.json");
             $this->config = $conf;
@@ -90,9 +91,11 @@ class IRC{
             if(!empty($data)){
                 $event = new CommandLineEvent(str_replace("\n", "", $data));
             }
+
             if(empty($this->connections)){
                 die(); //Kill the process if no connection
             }
+
             foreach($this->connections as $connection){
                 $new = $connection->check();
                 if($new != false){

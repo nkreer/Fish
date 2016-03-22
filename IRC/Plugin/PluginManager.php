@@ -97,6 +97,7 @@ class PluginManager{
 
     /**
      * @param Plugin $plugin
+     * @return bool
      */
     public function unloadPlugin(Plugin $plugin){
         if($this->hasPlugin($plugin->name)){
@@ -104,7 +105,10 @@ class PluginManager{
             $plugin->unload();
             unset($this->plugins[$plugin->name]);
             $this->connection->getEventHandler()->unregisterPlugin($plugin);
+            unset($plugin);
+            return true;
         }
+        return false;
     }
 
     /**
@@ -115,6 +119,7 @@ class PluginManager{
         return isset($this->plugins[$name]);
     }
 
+    /*
     public function reloadAll(){
         foreach($this->plugins as $plugin){
             $this->unloadPlugin($plugin);
@@ -128,13 +133,11 @@ class PluginManager{
         }
     }
 
-    /**
-     * @param Plugin $plugin
-     */
     public function reloadPlugin(Plugin $plugin){
         $name = $plugin->name;
         $this->unloadPlugin($plugin);
         $this->loadPlugin($name);
     }
+    */
 
 }

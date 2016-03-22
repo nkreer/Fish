@@ -90,6 +90,7 @@ class Scheduler{
         if($time === -1){
             $time = time();
         }
+
         if(isset($this->tasks[$time])){
             foreach($this->tasks[$time] as $task){
                 if($task instanceof TaskInterface){
