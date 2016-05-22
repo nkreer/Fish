@@ -1,5 +1,7 @@
 <?php
 
+ini_set('memory_limit','4G');
+
 if(!isset($argv[1])){
     die("Please supply an address to connect to.\n");
 }

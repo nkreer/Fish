@@ -19,24 +19,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace IRC\Event\Channel;
+namespace IRC\Utils;
 
-use IRC\Channel;
-use IRC\User;
+class IRCColors{
 
-class ChannelLeaveEvent extends ChannelEvent{
+    const WHITE = "\x030";
+    const BLACK = "\x031";
+    const DARK_BLUE = "\x032";
+    const DARK_GREEN = "\x033";
+    const RED = "\x034";
+    const DARK_RED = "\x035";
+    const PURPLE = "\x036";
+    const ORANGE = "\x037";
+    const YELLOW = "\x038";
+    const GREEN = "\x039";
+    const DARK_CYAN = "\x0310";
+    const CYAN = "\x0311";
+    const BLUE = "\x0312";
+    const PINK = "\x0313";
+    const DARK_GREY = "\x0314";
+    const GREY = "\x0315";
 
-    private $user;
-
-    public function __construct(Channel $channel, User $user){
-        parent::__construct($channel);
-    }
-
-    /**
-     * @return User
-     */
-    public function getUser(){
-        return $this->user;
-    }
+    const REMOVE = "\x03";
 
 }

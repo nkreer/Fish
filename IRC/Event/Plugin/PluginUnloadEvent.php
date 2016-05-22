@@ -19,24 +19,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace IRC\Event\Channel;
+namespace IRC\Event\Plugin;
 
-use IRC\Channel;
-use IRC\User;
-
-class ChannelLeaveEvent extends ChannelEvent{
-
-    private $user;
-
-    public function __construct(Channel $channel, User $user){
-        parent::__construct($channel);
-    }
-
-    /**
-     * @return User
-     */
-    public function getUser(){
-        return $this->user;
-    }
+class PluginUnloadEvent extends PluginEvent{
 
 }

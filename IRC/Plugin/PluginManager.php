@@ -22,6 +22,8 @@
 namespace IRC\Plugin;
 
 use IRC\Connection;
+use IRC\Event\Plugin\PluginLoadEvent;
+use IRC\Event\Plugin\PluginUnloadEvent;
 use IRC\IRC;
 use IRC\Logger;
 use IRC\Utils\BashColor;
@@ -85,10 +87,14 @@ class PluginManager{
                         $plugin->commands = $json["commands"];
                     }
 
-                    $key = count($this->plugins);
-                    $this->plugins[$plugin->name] = $plugin;
-                    $plugin->load();
-                    return $key;
+                    $ev = new PluginLoadEvent($plugin);
+                    $this->connection->getEventHandler()->callEvent($ev);
+                    if(!$ev->isCancelled()){
+                        $key = count($this->plugins);
+                        $this->plugins[$plugin->name] = $plugin;
+                        $plugin->load();
+                        return $key;
+                    }
                 }
             }
         }
@@ -101,12 +107,16 @@ class PluginManager{
      */
     public function unloadPlugin(Plugin $plugin){
         if($this->hasPlugin($plugin->name)){
-            Logger::info(BashColor::RED."Unloading plugin ".BashColor::BLUE.$plugin->name);
-            $plugin->unload();
-            unset($this->plugins[$plugin->name]);
-            $this->connection->getEventHandler()->unregisterPlugin($plugin);
-            unset($plugin);
-            return true;
+            $ev = new PluginUnloadEvent($plugin);
+            $this->connection->getEventHandler()->callEvent($ev);
+            if(!$ev->isCancelled()){
+                Logger::info(BashColor::RED."Unloading plugin ".BashColor::BLUE.$plugin->name);
+                $plugin->unload();
+                unset($this->plugins[$plugin->name]);
+                $this->connection->getEventHandler()->unregisterPlugin($plugin);
+                unset($plugin);
+                return true;
+            }
         }
         return false;
     }
