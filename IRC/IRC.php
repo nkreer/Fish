@@ -67,6 +67,7 @@ class IRC{
             $conf->setData("default_hostname", "Fish");
             $conf->setData("default_quitmsg", "Leaving");
             $conf->setData("command_prefix", [".", "!", "\\", "@"]);
+            $conf->setData("cpu_idle", 10);
 
             $conf->save("fish.json");
             $this->config = $conf;
@@ -184,6 +185,7 @@ class IRC{
             if(isset($event)){
                 unset($event); //Destroy the event
             }
+            usleep($this->config->getData("cpu_idle") * 1000);
         }
     }
 
