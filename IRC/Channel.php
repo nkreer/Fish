@@ -22,6 +22,7 @@
 namespace IRC;
 
 use IRC\Event\Message\MessageSendEvent;
+use IRC\Event\Notice\NoticeSendEvent;
 
 class Channel{
 
@@ -52,7 +53,18 @@ class Channel{
         $ev = new MessageSendEvent($message, $this);
         $this->connection->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
-            $this->connection->sendData("PRIVMSG ".$this->getName()." :".$message);
+            $this->connection->sendData("PRIVMSG ".$this->getName()." :".$ev->getMessage());
+        }
+    }
+
+    /**
+     * @param $notice
+     */
+    public function sendNotice($notice){
+        $ev = new NoticeSendEvent($notice, $this);
+        $this->connection->getEventHandler()->callEvent($ev);
+        if(!$ev->isCancelled()){
+            $this->connection->sendData("NOTICE ".$this->getName()." :".$ev->getNotice());
         }
     }
 

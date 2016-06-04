@@ -30,9 +30,11 @@ class User{
     }
 
     private $host;
+    private $connection;
 
     public function __construct(Connection $connection, $hostmask){
         $this->host = $hostmask;
+        $this->connection = $connection;
         self::$users[$connection->getAddress()][$this->getNick()] = $this;
     }
 
@@ -50,6 +52,22 @@ class User{
      */
     public function getHostmask(){
         return $this->host;
+    }
+
+    /**
+     * @param $message
+     */
+    public function sendMessage($message){
+        $channel = new Channel($this->connection, $this->getNick());
+        $channel->sendMessage($message);
+    }
+
+    /**
+     * @param $notice
+     */
+    public function sendNotice($notice){
+        $channel = new Channel($this->connection, $this->getNick());
+        $channel->sendNotice($notice);
     }
 
 }
