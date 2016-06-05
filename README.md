@@ -1,11 +1,20 @@
 # Fish
 
 Fish is an IRC-Bot with a powerful plugin API written in PHP.
-It is licensed under the GPLv3.
+It is licensed under the [GPL Version 3](LICENSE).
+
+## Extend
+
+Several plugins have already been written for Fish: 
+
+- [Scripts](https://github.com/nkreer/Fish-Scripts) enables you to add simple custom commands to the bot, written in any language
+- Many more, closed source plugins
+
+If you want me to add your plugin to the list, open a pull request or message me
 
 ## Features
 
-Fish offers various (already usable!) features for interaction with one or more IRC Channels or Servers.
+Fish offers various (already usable!) features for interaction with one or more IRC channels or servers: 
 
 - Multi-Server support
 - Fully object oriented plugin API to extend it to your needs
@@ -24,11 +33,11 @@ Fish offers various (already usable!) features for interaction with one or more 
 
 ## Contribute
 
-All contributions and Pull Requests are welcome. Just keep in mind to keep using the original coding style.
+All contributions and Pull Requests are welcome. Just stick to the original coding style, please.
 
 ## Plugins
 
 Fish was designed with plugins in mind.
 Using Fish's very simple plugin API, you can extend the software to your needs.
 You can find a small tutorial on plugins [here](http://nkreer.github.io/Fish).
-We aim to provide backwards-compatibility for all plugins throughout all minor releases.
+I aim to provide backwards-compatibility for all plugins throughout all minor releases of the software.
