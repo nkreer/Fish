@@ -192,6 +192,7 @@ class IRC{
     /**
      * Add a connection
      * @param Connection $connection
+     * @param $default
      */
     public function addConnection(Connection $connection, $default = true){
         if(!$this->isConnected($connection->getAddress())){

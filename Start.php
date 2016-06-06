@@ -6,8 +6,8 @@ if(!isset($argv[1])){
     die("Please supply an address to connect to.\n");
 }
 
-$address = $argv[1];
-$port = (isset($argv[2]) ? $argv[2] : 6667); //Standard IRC port
+$address = (empty($argv[3]) ? "ssl://".$argv[1] : $argv[1]);
+$port = (isset($argv[2]) ? $argv[2] : 6697); //Standard IRC port, encrypted
 
 includeFiles("IRC/");
 
