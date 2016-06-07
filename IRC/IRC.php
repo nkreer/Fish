@@ -105,22 +105,9 @@ class IRC{
             foreach($this->connections as $connection){
                 $new = $connection->check();
                 if($new != false){
-                    switch($new->getCommand()){
-                        case 'PING':
-                            PING::run($new, $connection, $this->config);
-                            break;
-                        case 'PRIVMSG':
-                            PRIVMSG::run($new, $connection, $this->config);
-                            break;
-                        case 'JOIN':
-                            JOIN::run($new, $connection, $this->config);
-                            break;
-                        case 'PART':
-                            PART::run($new, $connection, $this->config);
-                            break;
-                        case 'QUIT':
-                            QUIT::run($new, $connection, $this->config);
-                            break;
+                    $function = strtoupper($new->getCommand());
+                    if(function_exists($function."::run")){
+                        call_user_func($function."::run", [$new, $connection, $this->getConfig()]);
                     }
                 }
 

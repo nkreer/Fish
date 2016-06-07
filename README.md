@@ -1,7 +1,5 @@
 # Fish
 
-![Image of Fish](http://images.clipartpanda.com/fish-clipart-fish-images-fish-clipart-vector-illustrations.png)
-
 Fish is an IRC-Bot with a powerful plugin API written in PHP.
 It is distributed under the terms and conditions of the [GPL Version 3](LICENSE).
 
