@@ -44,6 +44,8 @@ class Channel{
     private $name;
 
     private $connection;
+    private $users = [];
+    public $topic = "";
 
     public function __construct(Connection $connection, $name){
         $this->name = $name;
@@ -105,6 +107,59 @@ class Channel{
             return true;
         }
         return false;
+    }
+
+    public function clearUserList(){
+        $this->users = [];
+    }
+
+    /**
+     * @return array
+     */
+    public function getUsers(){
+        return $this->users;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function addUser(User $user){
+        $this->users[$user->getNick()] = $user;
+    }
+
+    /**
+     * @param $nick
+     * @return bool
+     */
+    public function removeUser($nick){
+        if(isset($this->users[$nick])){
+            unset($this->users[$nick]);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param $nick
+     * @return bool
+     */
+    public function hasUser($nick){
+        return isset($this->users[$nick]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTopic(){
+        return $this->topic;
+    }
+
+    /**
+     * @param $text
+     */
+    public function setTopic($text){
+        $this->topic = $text;
+        $this->connection->sendData("TOPIC ".$this->getName()." :".$text);
     }
 
 }

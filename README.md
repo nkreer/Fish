@@ -1,6 +1,6 @@
 # Fish
 
-Fish is an IRC-Bot with a powerful plugin API written in PHP.
+Fish is an IRC-Bot with a powerful plugin API written in PHP. 
 It is distributed under the terms and conditions of the [GPL Version 3](LICENSE).
 
 ## Installation
@@ -8,7 +8,7 @@ It is distributed under the terms and conditions of the [GPL Version 3](LICENSE)
 Fish has been tested on 
 
 * Mac OS X 10.11 El Capitan
-* Debian
+* Debian 8 (Jessie)
 
 and is working with PHP 7.0.x. I am not providing support for PHP 5.
 
