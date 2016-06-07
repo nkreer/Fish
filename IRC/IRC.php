@@ -46,8 +46,10 @@ class IRC{
     public $connections = [];
 
     private $config;
+    public $devmode;
 
-    public function __construct(){
+    public function __construct($dev = false){
+        $this->devmode = $dev;
         self::$instance = $this;
         Logger::info(BashColor::GREEN."Starting Fish (".self::CODENAME.") v".self::VERSION.BashColor::YELLOW." (API v".self::API_VERSION.")");
         @mkdir("plugins/");

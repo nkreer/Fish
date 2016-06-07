@@ -33,7 +33,7 @@ class Channel{
             return self::$channels[$connection->getAddress()][$name];
         } else {
             $channel = new Channel($connection, $name);
-            self::$channels[$connection->getAddress()][$name];
+            self::$channels[$connection->getAddress()][$name] = $channel;
             return $channel;
         }
     }
