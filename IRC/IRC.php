@@ -28,6 +28,11 @@ use IRC\Event\Command\CommandEvent;
 use IRC\Event\Command\CommandLineEvent;
 use IRC\Event\Message\MessageReceiveEvent;
 use IRC\Event\Ping\PingEvent;
+use IRC\Protocol\JOIN;
+use IRC\Protocol\PART;
+use IRC\Protocol\PING;
+use IRC\Protocol\PRIVMSG;
+use IRC\Protocol\QUIT;
 use IRC\Utils\BashColor;
 use IRC\Utils\JsonConfig;
 
@@ -102,68 +107,19 @@ class IRC{
                 if($new != false){
                     switch($new->getCommand()){
                         case 'PING':
-                            $ev = new PingEvent();
-                            $connection->getEventHandler()->callEvent($ev);
-                            if(!$ev->isCancelled()){
-                                $connection->sendData("PONG ".$new->getArgs()[0]); //Reply to Pings
-                            }
-                            unset($ev); //Remove it from the memory
+                            PING::run($new, $connection, $this->config);
                             break;
                         case 'PRIVMSG':
-                            $user = new User($connection, $new->getPrefix());
-                            $arg = $new->getArgs();
-                            if($new->getArg(0) === $connection->nickname){
-                                $channel = new Channel($connection, $user->getNick());
-                            } else {
-                                $channel = new Channel($connection, $arg[0]);
-                            }
-                            unset($arg[0]);
-                            $args = explode(":", implode(" ", $arg), 2);
-                            if(!in_array($args[1][0], $this->config->getData("command_prefix"))){ //Decide wether the message is a message or a command
-                                $ev = new MessageReceiveEvent($args[1], $user, $channel);
-                                $connection->getEventHandler()->callEvent($ev);
-                                if(!$ev->isCancelled()){
-                                    Logger::info(BashColor::HIGHLIGHT.$ev->getChannel()->getName()." ".$ev->getUser()->getNick().":".BashColor::REMOVE." ".$ev->getMessage()); //Display the message to the console
-                                }
-                            } else {
-                                $args[1] = substr($args[1], 1);
-                                $args[1] = explode(" ", $args[1]);
-                                $cmd = $args[1][0];
-                                unset($args[1][0]);
-                                Logger::info(BashColor::CYAN.$user->getNick()." > ".$cmd." ".implode(" ", $args[1]));
-                                $ev = new CommandEvent($cmd, $args[1], $channel, $user);
-                                $connection->getEventHandler()->callEvent($ev);
-                            }
-                            unset($ev); //Remove it from the memory
+                            PRIVMSG::run($new, $connection, $this->config);
                             break;
                         case 'JOIN':
-                            //Tell the plugins that a user joined
-                            $channel = new Channel($connection, str_replace(":", "", $new->getArg(0)));
-                            $user = new User($connection, $new->getPrefix());
-                            $ev = new JoinChannelEvent($channel, $user);
-                            $connection->getEventHandler()->callEvent($ev);
-                            if(!$ev->isCancelled()){
-                                Logger::info($user->getNick()." joined ".$channel->getName());
-                            }
+                            JOIN::run($new, $connection, $this->config);
                             break;
                         case 'PART':
-                            //Tell the plugins that a user parted
-                            $channel = new Channel($connection, str_replace(":", "", $new->getArg(0)));
-                            $user = new User($connection, $new->getPrefix());
-                            $ev = new ChannelLeaveEvent($channel, $user);
-                            $connection->getEventHandler()->callEvent($ev);
-                            if(!$ev->isCancelled()){
-                                Logger::info($user->getNick()." left ".$channel->getName());
-                            }
+                            PART::run($new, $connection, $this->config);
                             break;
                         case 'QUIT':
-                            //Tell the plugins that a user quit
-                            $user = new User($connection, $new->getPrefix());
-                            $ev = new UserQuitEvent($user);
-                            $connection->getEventHandler()->callEvent($ev);
-                            if(!$ev->isCancelled()){
-                                Logger::info($user->getNick()." quit");
-                            }
+                            QUIT::run($new, $connection, $this->config);
                             break;
                     }
                 }

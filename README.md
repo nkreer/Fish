@@ -1,7 +1,14 @@
 # Fish
 
+![Image of Fish](http://images.clipartpanda.com/fish-clipart-fish-images-fish-clipart-vector-illustrations.png)
+
 Fish is an IRC-Bot with a powerful plugin API written in PHP.
-It is licensed under the [GPL Version 3](LICENSE).
+It is distributed under the terms and conditions of the [GPL Version 3](LICENSE).
+
+## Installation
+
+To install Fish, make sure you have composer installed. Simply clone the repository and run
+> composer install
 
 ## Extend
 

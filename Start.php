@@ -9,19 +9,8 @@ if(!isset($argv[1])){
 $address = (empty($argv[3]) ? "ssl://".$argv[1] : $argv[1]);
 $port = (isset($argv[2]) ? $argv[2] : 6697); //Standard IRC port, encrypted
 
-includeFiles("IRC/");
+include_once("vendor/autoload.php");
 
 $irc = new \IRC\IRC();
 $irc->addConnection(new \IRC\Connection($address, $port));
 $irc->run();
-
-function includeFiles($baseDir){
-    $dir = scandir($baseDir);
-    foreach($dir as $element){
-        if(is_file($baseDir.$element)){
-            include_once($baseDir.$element);
-        } elseif(is_dir($baseDir.$element) and $element != ".." and $element != "."){
-            includeFiles($baseDir.$element."/");
-        }
-    }
-}

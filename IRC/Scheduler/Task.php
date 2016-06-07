@@ -21,8 +21,6 @@
 
 namespace IRC\Scheduler;
 
-include("TaskInterface.php");
-
 abstract class Task implements TaskInterface{
 
 }
