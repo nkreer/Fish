@@ -105,9 +105,9 @@ class IRC{
             foreach($this->connections as $connection){
                 $new = $connection->check();
                 if($new != false){
-                    $function = strtoupper($new->getCommand());
-                    if(function_exists($function."::run")){
-                        call_user_func($function."::run", [$new, $connection, $this->getConfig()]);
+                    $function = '\IRC\Protocol\\'.strtoupper($new->getCommand());
+                    if(method_exists($function, "run")){
+                        call_user_func($function."::run", $new, $connection, $this->getConfig());
                     }
                 }
 
