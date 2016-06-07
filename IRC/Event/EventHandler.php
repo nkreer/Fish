@@ -58,8 +58,11 @@ class EventHandler{
                         $eventClass = new \ReflectionClass($event);
                         $reflectionClass = new \ReflectionClass($listener);
                         $eventName = "on".$eventClass->getShortName();
+                        $eventGroupName = "on".$eventClass->getParentClass()->getShortName();
                         if($reflectionClass->hasMethod($eventName)){
                             $listener->$eventName($event);
+                        } elseif($reflectionClass->hasMethod("on".$eventGroupName)){
+                            $listener->$eventGroupName($event);
                         }
                     }
                 }

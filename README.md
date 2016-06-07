@@ -5,6 +5,13 @@ It is distributed under the terms and conditions of the [GPL Version 3](LICENSE)
 
 ## Installation
 
+Fish has been tested on 
+
+* Mac OS X 10.11 El Capitan
+* Debian
+
+and is working with PHP 7.0.x. I am not providing support for PHP 5.
+
 To install Fish, make sure you have composer installed. Simply clone the repository and run
 > composer install
 
