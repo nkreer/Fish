@@ -26,6 +26,18 @@ use IRC\Event\Notice\NoticeSendEvent;
 
 class Channel{
 
+    private static $channels = [];
+    
+    public static function getChannel(Connection $connection, $name){
+        if(isset(self::$channels[$connection->getAddress()][$name])){
+            return self::$channels[$connection->getAddress()][$name];
+        } else {
+            $channel = new Channel($connection, $name);
+            self::$channels[$connection->getAddress()][$name];
+            return $channel;
+        }
+    }
+    
     /**
      * @var String
      */

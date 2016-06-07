@@ -21,19 +21,22 @@
 
 namespace IRC\Event\Notice;
 
-use IRC\Channel;
+use IRC\User;
 
-class NoticeSendEvent extends NoticeEvent{
+class NoticeReceiveEvent extends NoticeEvent{
 
-    private $channel;
+    private $user;
 
-    public function __construct($notice, Channel $channel){
+    public function __construct($notice, User $user){
         parent::__construct($notice);
-        $this->channel = $channel;
+        $this->user = $user;
     }
 
-    public function getChannel(){
-        return $this->channel;
+    /**
+     * @return User
+     */
+    public function getUser(){
+        return $this->user;
     }
     
 }

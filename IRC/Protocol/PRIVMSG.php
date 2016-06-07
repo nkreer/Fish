@@ -34,12 +34,12 @@ use IRC\Utils\JsonConfig;
 class PRIVMSG implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){
-        $user = new User($connection, $command->getPrefix());
+        $user = User::getUser($connection, $command->getPrefix());
         $arg = $command->getArgs();
         if($command->getArg(0) === $connection->nickname){
-            $channel = new Channel($connection, $user->getNick());
+            $channel = Channel::getChannel($connection, $user->getNick());
         } else {
-            $channel = new Channel($connection, $arg[0]);
+            $channel = Channel::getChannel($connection, $arg[0]);
         }
         unset($arg[0]);
         $args = explode(":", implode(" ", $arg), 2);

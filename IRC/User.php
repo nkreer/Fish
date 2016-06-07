@@ -26,7 +26,13 @@ class User{
     private static $users = [];
 
     public static function getUser(Connection $connection, $name){
-        return self::$users[$connection->getAddress()][$name];
+        if(isset(self::$users[$connection->getAddress()][$name])){
+            return self::$users[$connection->getAddress()][$name];
+        } else {
+            $user = new User($connection, $name);
+            self::$users[$connection->getAddress()][$name] = $user;
+            return $user;
+        }
     }
 
     private $host;
@@ -35,7 +41,6 @@ class User{
     public function __construct(Connection $connection, $hostmask){
         $this->host = $hostmask;
         $this->connection = $connection;
-        self::$users[$connection->getAddress()][$this->getNick()] = $this;
     }
 
     /**

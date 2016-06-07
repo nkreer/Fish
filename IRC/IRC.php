@@ -21,18 +21,7 @@
 
 namespace IRC;
 
-use IRC\Event\Channel\ChannelLeaveEvent;
-use IRC\Event\Channel\JoinChannelEvent;
-use IRC\Event\Channel\UserQuitEvent;
-use IRC\Event\Command\CommandEvent;
 use IRC\Event\Command\CommandLineEvent;
-use IRC\Event\Message\MessageReceiveEvent;
-use IRC\Event\Ping\PingEvent;
-use IRC\Protocol\JOIN;
-use IRC\Protocol\PART;
-use IRC\Protocol\PING;
-use IRC\Protocol\PRIVMSG;
-use IRC\Protocol\QUIT;
 use IRC\Utils\BashColor;
 use IRC\Utils\JsonConfig;
 

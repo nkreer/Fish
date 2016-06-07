@@ -33,8 +33,8 @@ class PART implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){
         //Tell the plugins that a user has parted
-        $channel = new Channel($connection, str_replace(":", "", $command->getArg(0)));
-        $user = new User($connection, $command->getPrefix());
+        $channel = Channel::getChannel($connection, str_replace(":", "", $command->getArg(0)));
+        $user = User::getUser($connection, $command->getPrefix());
         $ev = new ChannelLeaveEvent($channel, $user);
         $connection->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){

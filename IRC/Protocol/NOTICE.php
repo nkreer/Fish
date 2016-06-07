@@ -24,21 +24,27 @@ namespace IRC\Protocol;
 use IRC\Channel;
 use IRC\Command;
 use IRC\Connection;
-use IRC\Event\Channel\JoinChannelEvent;
+use IRC\Event\Notice\NoticeReceiveEvent;
 use IRC\Logger;
 use IRC\User;
+use IRC\Utils\BashColor;
 use IRC\Utils\JsonConfig;
 
-class JOIN implements ProtocolCommand{
+class NOTICE implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){
-        //Tell the plugins that a user has joined
-        $channel = Channel::getChannel($connection, str_replace(":", "", $command->getArg(0)));
         $user = User::getUser($connection, $command->getPrefix());
-        $ev = new JoinChannelEvent($channel, $user);
+        $arg = $command->getArgs();
+        if($command->getArg(0) === $connection->nickname){
+            $channel = Channel::getChannel($connection, $user->getNick());
+        } else {
+            $channel = Channel::getChannel($connection, $arg[0]);
+        }
+        unset($arg[0]);
+        $ev = new NoticeReceiveEvent($arg[1], $user, $channel);
         $connection->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
-            Logger::info($user->getNick()." joined ".$channel->getName());
+            Logger::info(BashColor::HIGHLIGHT.$ev->getUser()->getNick().": ".$ev->getNotice()); //Display the notice to the console
         }
     }
 
