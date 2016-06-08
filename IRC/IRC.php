@@ -79,51 +79,54 @@ class IRC{
         return $this->config;
     }
 
+    private function cycle(){
+        $data = fgets(STDIN); //Read from STDIN and check for commands
+        if(!empty($data)){
+            $event = new CommandLineEvent(str_replace("\n", "", $data));
+        }
+
+        foreach($this->connections as $connection){
+            $new = $connection->check();
+            if($new != false){
+                $command = $new->getCommand();
+                if(is_numeric($command)){
+                    $command = "_".$command;
+                }
+                $function = '\IRC\Protocol\\'.strtoupper($command);
+                if(method_exists($function, "run")){
+                    call_user_func($function."::run", $new, $connection, $this->getConfig());
+                }
+            }
+
+            //Do catchup calls if we've missed any
+            if(time() - $connection->getScheduler()->getLastCall() >= 2){
+                for($time = time(); $time > $connection->getScheduler()->getLastCall(); $time--){
+                    $connection->getScheduler()->call($time);
+                }
+            }
+
+            //Regularly run scheduler
+            $connection->getScheduler()->call();
+            if(isset($event)){
+                $connection->getEventHandler()->callEvent($event); //The special CommandLineEvent gets called if it has been created earlier
+            }
+        }
+
+        if(isset($event)){
+            unset($event); //Destroy the event
+        }
+    }
+
     /**
-     * This keeps all the connections alive
+     * This keeps everything alive
      */
     public function run(){
         while(true){
-            $data = fgets(STDIN); //Read from STDIN and check for commands
-            if(!empty($data)){
-                $event = new CommandLineEvent(str_replace("\n", "", $data));
-            }
-
             if(empty($this->connections)){
-                die(); //Kill the process if no connection
+                die("No more connections."); //Kill the process if no connection
             }
-
-            foreach($this->connections as $connection){
-                $new = $connection->check();
-                if($new != false){
-                    $command = $new->getCommand();
-                    if(is_numeric($command)){
-                        $command = "_".$command;
-                    }
-                    $function = '\IRC\Protocol\\'.strtoupper($command);
-                    if(method_exists($function, "run")){
-                        call_user_func($function."::run", $new, $connection, $this->getConfig());
-                    }
-                }
-
-                //Do catchup calls if we've missed any
-                if(time() - $connection->getScheduler()->getLastCall() >= 2){
-                    for($time = time(); $time > $connection->getScheduler()->getLastCall(); $time--){
-                        $connection->getScheduler()->call($time);
-                    }
-                }
-
-                //Regularly run scheduler
-                $connection->getScheduler()->call();
-                if(isset($event)){
-                    $connection->getEventHandler()->callEvent($event); //The special CommandLineEvent gets called if it has been created earlier
-                }
-
-            }
-            if(isset($event)){
-                unset($event); //Destroy the event
-            }
-            usleep($this->config->getData("cpu_idle") * 1000);
+            $this->cycle();
+            usleep($this->config->getData("cpu_idle") * 1000); //Chill
         }
     }
 
