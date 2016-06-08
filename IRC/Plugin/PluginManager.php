@@ -106,6 +106,7 @@ class PluginManager{
                 $plugin->unload();
                 unset($this->plugins[$plugin->name]);
                 $this->connection->getEventHandler()->unregisterPlugin($plugin);
+                $this->connection->getScheduler()->cancelPluginTasks($plugin);
                 unset($plugin);
                 return true;
             }

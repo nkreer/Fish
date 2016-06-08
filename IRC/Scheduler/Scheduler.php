@@ -21,17 +21,36 @@
 
 namespace IRC\Scheduler;
 
+use IRC\Plugin\Plugin;
+use IRC\Plugin\PluginBase;
+
 class Scheduler{
 
     private $tasks = [];
+    private $plugins = [];
+
     private $lastCall = 0;
 
     public function __construct(){
         $this->lastCall = time();
     }
 
+    /**
+     * @return int
+     */
     public function getLastCall(){
         return $this->lastCall;
+    }
+
+    /**
+     * @param PluginBase $plugin
+     */
+    public function cancelPluginTasks(Plugin $plugin){
+        if(!empty($this->plugins[$plugin->name])){
+            foreach($this->plugins[$plugin->name] as $id){
+                $this->cancelTask($id);
+            }
+        }
     }
 
     /**
@@ -43,7 +62,11 @@ class Scheduler{
     public function scheduleDelayedTask(TaskInterface $task, $when){
         $when = time() + $when;
         $this->tasks[$when][] = $task;
-        return $when." ".(count($this->tasks[$when]) - 1);
+        $id = $when." ".(count($this->tasks[$when]) - 1);
+        if($task instanceof PluginTask){
+            $this->plugins[$task->getOwner()->getPlugin()->name][] = $id;
+        }
+        return $id;
     }
 
     /**
@@ -53,7 +76,11 @@ class Scheduler{
      */
     public function scheduleTaskForTime(TaskInterface $task, $when){
         $this->tasks[$when][] = $task;
-        return $when." ".(count($this->tasks[$when]) - 1);
+        $id = $when." ".(count($this->tasks[$when]) - 1);
+        if($task instanceof PluginTask){
+            $this->plugins[$task->getOwner()->getPlugin()->name][] = $id;
+        }
+        return $id;
     }
 
     /**
@@ -69,6 +96,12 @@ class Scheduler{
         for($run = 1; $run <= $times; $run++){
             $ids[$time] = $this->scheduleDelayedTask($task, $time);
             $time += $interval;
+        }
+
+        if($task instanceof PluginTask){
+            foreach($ids as $id){
+                $this->plugins[$task->getOwner()->getPlugin()->name][] = $id;
+            }
         }
         return $ids;
     }
