@@ -24,6 +24,7 @@ namespace IRC\Protocol;
 use IRC\Channel;
 use IRC\Command;
 use IRC\Connection;
+use IRC\Event\Channel\BotJoinChannelEvent;
 use IRC\Event\Channel\JoinChannelEvent;
 use IRC\Logger;
 use IRC\User;
@@ -35,7 +36,11 @@ class JOIN implements ProtocolCommand{
         //Tell the plugins that a user has joined
         $channel = Channel::getChannel($connection, str_replace(":", "", $command->getArg(0)));
         $user = User::getUser($connection, $command->getPrefix());
-        $ev = new JoinChannelEvent($channel, $user);
+        if($user->getNick() === $connection->getNick()){
+            $ev = new BotJoinChannelEvent($channel, $user);
+        } else {
+            $ev = new JoinChannelEvent($channel, $user);
+        }
         $connection->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
             Logger::info($user->getNick()." joined ".$channel->getName());

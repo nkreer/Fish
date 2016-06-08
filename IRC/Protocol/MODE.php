@@ -39,15 +39,13 @@ class MODE implements ProtocolCommand{
         if($channel->getName() === $connection->getNick()){
             $ev = new MyModesChangeEvent($mode, $user, $channel);
             $connection->getEventHandler()->callEvent($ev);
+        } elseif(empty($command->getArg(2))){
+            $ev = new ChannelModeChangeEvent($mode, $user, $channel);
+            $connection->getEventHandler()->callEvent($ev);
         } else {
             $nick = $command->getArg(2);
-            if($nick !== $connection->getNick()){
-                $ev = new UserModeChangeEvent($mode, $user, $channel, $nick);
-                $connection->getEventHandler()->callEvent($ev);
-            } elseif (empty($nick)){
-                $ev = new ChannelModeChangeEvent($mode, $user, $channel);
-                $connection->getEventHandler()->callEvent($ev);
-            }
+            $ev = new UserModeChangeEvent($mode, $user, $channel, $nick);
+            $connection->getEventHandler()->callEvent($ev);
         }
     }
 
