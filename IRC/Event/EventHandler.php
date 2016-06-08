@@ -32,8 +32,12 @@ class EventHandler{
      * @param Listener $listener
      * @param Plugin $plugin
      */
-    public function registerEvents(Listener $listener, Plugin $plugin){
-        $this->listeners[$plugin->name][] = $listener;
+    public function registerEvents(Listener $listener, Plugin $plugin = null, $priority = EventPriority::LOWEST){
+        if($plugin instanceof Plugin){
+            $this->listeners[$priority][$plugin->name][] = $listener;
+        } else {
+            $this->listeners[$priority][] = $listener;
+        }
     }
 
     public function unregisterAll(){
@@ -43,27 +47,33 @@ class EventHandler{
     /**
      * @param Plugin $plugin
      */
-    public function unregisterPlugin(Plugin $plugin){
-        unset($this->listeners[$plugin->name]);
-        Logger::info("Removing Events from ".$plugin->name);
+    public function unregisterPlugin(Plugin $plugin, $priority = EventPriority::LOWEST){
+        unset($this->listeners[$priority][$plugin->name]);
+    }
+
+    private function runEvent(Event $event, Listener $listener){
+        $eventClass = new \ReflectionClass($event);
+        $reflectionClass = new \ReflectionClass($listener);
+        $eventName = "on".$eventClass->getShortName();
+        $eventGroupName = "on".$eventClass->getParentClass()->getShortName();
+        if($reflectionClass->hasMethod($eventName)){
+            $listener->$eventName($event);
+        } elseif($reflectionClass->hasMethod("on".$eventGroupName)){
+            $listener->$eventGroupName($event);
+        }
     }
 
     /**
      * @param Event $event
      */
     public function callEvent(Event $event){
-        foreach($this->listeners as $plugins){{
-                foreach($plugins as $listener){
-                    if($listener instanceof Listener){
-                        $eventClass = new \ReflectionClass($event);
-                        $reflectionClass = new \ReflectionClass($listener);
-                        $eventName = "on".$eventClass->getShortName();
-                        $eventGroupName = "on".$eventClass->getParentClass()->getShortName();
-                        if($reflectionClass->hasMethod($eventName)){
-                            $listener->$eventName($event);
-                        } elseif($reflectionClass->hasMethod("on".$eventGroupName)){
-                            $listener->$eventGroupName($event);
-                        }
+        foreach($this->listeners as $priority){
+            foreach($priority as $listener){
+                if($listener instanceof Listener){
+                    $this->runEvent($event, $listener);
+                } else {
+                    foreach($listener as $plugin){
+                        $this->runEvent($event, $plugin);
                     }
                 }
             }
