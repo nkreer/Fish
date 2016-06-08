@@ -87,12 +87,23 @@ class Connection{
     }
 
     /**
-     * Check for things
+     * @return string
      */
-    public function check(){
-        $next = fgets($this->socket);
-        if(!empty($next)){
-            $data = str_replace("\n", "", $next);
+    public function read(){
+        return fgets($this->socket);
+    }
+
+    /**
+     * @param $message
+     * @return bool|Command
+     */
+    public function check($message = true){
+        if($message === true){
+            $message = $this->read();
+        }
+
+        if(!empty($message)){
+            $data = str_replace("\n", "", $message);
             $parsed = Parser::parse($data);
             $parsed->setConnection($this);
             if(IRC::getInstance()->devmode){
@@ -102,6 +113,7 @@ class Connection{
         }
         return false;
     }
+
     /**
      * Connect with the server
      * @return $this|bool
