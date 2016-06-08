@@ -33,6 +33,7 @@ class Plugin{
     public $version;
     public $author;
     public $commands = [];
+    public $main;
 
     public $reflectionClass;
 
@@ -41,12 +42,21 @@ class Plugin{
      */
     public $class;
 
-    public function __construct($name, $main, Connection $connection){
+    public function __construct($name, $json, Connection $connection){
         if(file_exists("plugins/".$name."/plugin.json")){
             Logger::info(BashColor::GREEN."Loading plugin ".BashColor::BLUE.$name);
 
-            $info = new \SplFileInfo("plugins/".$name."/".$main);
-            include_once("plugins/".$name."/".$main);
+            $this->description = $json["description"];
+            $this->apiVersion = $json["api"];
+            $this->version = $json["version"];
+            $this->author = $json["author"];
+            $this->main = $json["main"];
+            if(isset($json["commands"])){
+                $this->commands = $json["commands"];
+            }
+
+            $info = new \SplFileInfo("plugins/".$name."/".$this->main);
+            include_once("plugins/".$name."/".$this->main);
             $class = new \ReflectionClass($name."\\".$info->getBasename(".php")); //Taking care of using the correct namespace
             $this->class = $class->newInstanceWithoutConstructor();
             $this->reflectionClass = $class;

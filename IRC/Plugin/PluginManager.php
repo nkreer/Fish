@@ -66,35 +66,27 @@ class PluginManager{
      * @return bool|int
      */
     public function loadPlugin($name, $force = false){
-        if(is_dir("plugins/".$name)){
-            if(file_exists("plugins/".$name."/plugin.json")){
-                $json = new JsonConfig();
-                $json->loadFile("plugins/".$name."/plugin.json");
-                $json = $json->getConfig();
+        if(file_exists("plugins/".$name."/plugin.json")){
+            $json = new JsonConfig();
+            $json->loadFile("plugins/".$name."/plugin.json");
+            $json = $json->getConfig();
 
-                if(isset($json["load"]) and $json["load"] !== false or $force == true){
-                    if($json["api"] != IRC::API_VERSION){
-                        Logger::info(BashColor::YELLOW."Plugin ".$name." is not supported by this version of Fish.");
-                    }
+            if(isset($json["load"]) and $json["load"] !== false or $force == true){
+                if($json["api"] != IRC::API_VERSION){
+                    Logger::info(BashColor::YELLOW."Plugin ".$name." is not supported by this version of Fish.");
+                }
 
-                    $plugin = new Plugin($name, $json["main"], $this->connection);
-                    $plugin->name = $name;
-                    $plugin->description = $json["description"];
-                    $plugin->apiVersion = $json["api"];
-                    $plugin->version = $json["version"];
-                    $plugin->author = $json["author"];
-                    if(isset($json["commands"])){
-                        $plugin->commands = $json["commands"];
-                    }
+                $plugin = new Plugin($name, $json, $this->connection);
 
-                    $ev = new PluginLoadEvent($plugin);
-                    $this->connection->getEventHandler()->callEvent($ev);
-                    if(!$ev->isCancelled()){
-                        $key = count($this->plugins);
-                        $this->plugins[$plugin->name] = $plugin;
-                        $plugin->load();
-                        return $key;
-                    }
+                $ev = new PluginLoadEvent($plugin);
+                $this->connection->getEventHandler()->callEvent($ev);
+                if(!$ev->isCancelled()){
+                    $key = count($this->plugins);
+                    $this->plugins[$plugin->name] = $plugin;
+                    $plugin->load();
+                    return $key;
+                } else {
+                    unset($plugin); // Don't keep it loaded
                 }
             }
         }

@@ -1,5 +1,7 @@
 {
   "autoload":{
-    "psr-4": {"IRC\\": "IRC/"}
+    "psr-4": {
+      "IRC\\": "IRC/"
+    }
   }
 }
