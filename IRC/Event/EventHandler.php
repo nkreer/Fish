@@ -76,6 +76,12 @@ class EventHandler{
                         $this->runEvent($event, $plugin);
                     }
                 }
+                if($event->hasStopped()){
+                    break;
+                }
+            }
+            if($event->hasStopped()){
+                break;
             }
         }
     }

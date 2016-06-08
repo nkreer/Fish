@@ -24,7 +24,8 @@ namespace IRC\Event;
 class Event{
 
     private $cancelled = false;
-
+    private $stop = false;
+    
     /**
      * @param bool|true $set
      */
@@ -37,6 +38,21 @@ class Event{
      */
     public function isCancelled(){
         return $this->cancelled;
+    }
+
+    /**
+     * Stop the event call
+     */
+    public function stopCall(){
+        $this->stop = true;
+    }
+
+    /**
+     * Check if the call has been stopped
+     * @return bool
+     */
+    public function hasStopped(){
+        return $this->stop;
     }
 
 }
