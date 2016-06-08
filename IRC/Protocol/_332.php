@@ -33,9 +33,9 @@ class _332 implements ProtocolCommand{
         $args = $command->getArgs();
         $channel = Channel::getChannel($connection, $args[1]);
         for($a = 0; $a <= 1; $a++) unset($args[$a]);
-        $topic = explode(":", implode(" ", $args), 2);
+        $topic = explode(":", implode(" ", $args), 2)[1];
         $channel->topic = $topic;
-        $ev = new TopicReceiveEvent($topic);
+        $ev = new TopicReceiveEvent($topic, $channel);
         $connection->getEventHandler()->callEvent($ev);
     }
 

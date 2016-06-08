@@ -35,8 +35,8 @@ class TOPIC implements ProtocolCommand{
         $user = User::getUser($connection, $command->getPrefix());
         $args = $command->getArgs();
         for($a = 0; $a <= 0; $a++) unset($args[$a]);
-        $topic = explode(":", implode(" ", $args), 2);
-        $ev = new TopicChangeEvent($channel, $user, $topic);
+        $topic = explode(":", implode(" ", $args), 2)[1];
+        $ev = new TopicChangeEvent($topic, $channel, $user);
         $connection->getEventHandler()->callEvent($ev);
     }
 
