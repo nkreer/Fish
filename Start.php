@@ -11,6 +11,6 @@ $port = (isset($argv[2]) ? $argv[2] : 6697); //Standard IRC port, encrypted
 
 include_once("vendor/autoload.php");
 
-$irc = new \IRC\IRC(false);
+$irc = new \IRC\IRC(true);
 $irc->addConnection(new \IRC\Connection($address, $port));
 $irc->run();

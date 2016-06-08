@@ -45,7 +45,9 @@ class Channel{
 
     private $connection;
     private $users = [];
+
     public $topic = "";
+    public $topicTime = 0;
 
     public function __construct(Connection $connection, $name){
         $this->name = $name;
@@ -160,6 +162,14 @@ class Channel{
     public function setTopic($text){
         $this->topic = $text;
         $this->connection->sendData("TOPIC ".$this->getName()." :".$text);
+        $this->topicTime = time();
+    }
+
+    /**
+     * @return int
+     */
+    public function getLastTopicTime(){
+        return $this->topicTime;
     }
 
 }
