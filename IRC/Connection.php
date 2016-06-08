@@ -25,6 +25,7 @@ use IRC\Event\EventHandler;
 use IRC\Event\Whois\WhoisSendEvent;
 use IRC\Plugin\PluginManager;
 use IRC\Scheduler\Scheduler;
+use IRC\Tracking\UserTracker;
 use IRC\Utils\BashColor;
 
 class Connection{
@@ -61,6 +62,11 @@ class Connection{
     private $scheduler;
 
     /**
+     * @var array
+     */
+    private $trackers = [];
+
+    /**
      * @var Channel[]
      */
     private $channels = [];
@@ -72,6 +78,8 @@ class Connection{
         $this->pluginManager = new PluginManager($this);
         $this->eventHandler = new EventHandler();
         $this->scheduler = new Scheduler();
+
+        $this->trackers[] = new UserTracker($this);
     }
 
     public function getPluginManager(){
