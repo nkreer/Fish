@@ -29,6 +29,11 @@ use IRC\Logger;
 use IRC\User;
 use IRC\Utils\JsonConfig;
 
+/**
+ * Someone left a channel
+ * Class PART
+ * @package IRC\Protocol
+ */
 class PART implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){

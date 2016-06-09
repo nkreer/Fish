@@ -27,6 +27,11 @@ use IRC\Connection;
 use IRC\Event\Topic\TopicReceiveEvent;
 use IRC\Utils\JsonConfig;
 
+/**
+ * Receive topic
+ * Class _332
+ * @package IRC\Protocol
+ */
 class _332 implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){

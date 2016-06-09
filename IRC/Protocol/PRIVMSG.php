@@ -31,6 +31,11 @@ use IRC\User;
 use IRC\Utils\BashColor;
 use IRC\Utils\JsonConfig;
 
+/**
+ * Someone sent a message
+ * Class PRIVMSG
+ * @package IRC\Protocol
+ */
 class PRIVMSG implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){

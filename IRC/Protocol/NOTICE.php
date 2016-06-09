@@ -30,8 +30,13 @@ use IRC\User;
 use IRC\Utils\BashColor;
 use IRC\Utils\JsonConfig;
 
+/**
+ * Someone sends a notice
+ * Class NOTICE
+ * @package IRC\Protocol
+ */
 class NOTICE implements ProtocolCommand{
-
+    
     public static function run(Command $command, Connection $connection, JsonConfig $config){
         $user = User::getUser($connection, $command->getPrefix());
         $arg = $command->getArgs();

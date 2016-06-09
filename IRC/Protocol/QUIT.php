@@ -28,6 +28,11 @@ use IRC\Logger;
 use IRC\User;
 use IRC\Utils\JsonConfig;
 
+/**
+ * Someone quit their connection
+ * Class QUIT
+ * @package IRC\Protocol
+ */
 class QUIT implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){

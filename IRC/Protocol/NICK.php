@@ -28,6 +28,11 @@ use IRC\Logger;
 use IRC\User;
 use IRC\Utils\JsonConfig;
 
+/**
+ * Someone changes nick
+ * Class NICK
+ * @package IRC\Protocol
+ */
 class NICK implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){

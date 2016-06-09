@@ -30,6 +30,11 @@ use IRC\Logger;
 use IRC\User;
 use IRC\Utils\JsonConfig;
 
+/**
+ * Someone joins a channel
+ * Class JOIN
+ * @package IRC\Protocol
+ */
 class JOIN implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){

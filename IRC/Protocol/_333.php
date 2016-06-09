@@ -26,6 +26,11 @@ use IRC\Command;
 use IRC\Connection;
 use IRC\Utils\JsonConfig;
 
+/**
+ * Time when topic has been set
+ * Class _333
+ * @package IRC\Protocol
+ */
 class _333 implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){

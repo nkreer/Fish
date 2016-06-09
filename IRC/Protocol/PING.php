@@ -26,6 +26,11 @@ use IRC\Connection;
 use IRC\Event\Ping\PingEvent;
 use IRC\Utils\JsonConfig;
 
+/**
+ * Ping received
+ * Class PING
+ * @package IRC\Protocol
+ */
 class PING implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){

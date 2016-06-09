@@ -28,6 +28,11 @@ use IRC\Event\Topic\TopicChangeEvent;
 use IRC\User;
 use IRC\Utils\JsonConfig;
 
+/**
+ * A topic has been changed
+ * Class TOPIC
+ * @package IRC\Protocol
+ */
 class TOPIC implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){

@@ -30,6 +30,11 @@ use IRC\Event\Mode\UserModeChangeEvent;
 use IRC\User;
 use IRC\Utils\JsonConfig;
 
+/**
+ * Modes change
+ * Class MODE
+ * @package IRC\Protocol
+ */
 class MODE implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){
