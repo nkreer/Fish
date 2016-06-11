@@ -40,10 +40,12 @@ class PART implements ProtocolCommand{
         //Tell the plugins that a user has parted
         $channel = Channel::getChannel($connection, str_replace(":", "", $command->getArg(0)));
         $user = User::getUser($connection, $command->getPrefix());
-        $ev = new ChannelLeaveEvent($channel, $user);
-        $connection->getEventHandler()->callEvent($ev);
-        if(!$ev->isCancelled()){
-            Logger::info($user->getNick()." left ".$channel->getName());
+        if($user instanceof User){
+            $ev = new ChannelLeaveEvent($channel, $user);
+            $connection->getEventHandler()->callEvent($ev);
+            if(!$ev->isCancelled()){
+                Logger::info($user->getNick()." left ".$channel->getName());
+            }
         }
     }
 

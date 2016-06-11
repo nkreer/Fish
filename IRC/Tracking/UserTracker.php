@@ -27,6 +27,7 @@ use IRC\Event\Channel\JoinChannelEvent;
 use IRC\Event\Channel\UserQuitEvent;
 use IRC\Event\Listener;
 use IRC\Event\Message\MessageReceiveEvent;
+use IRC\User;
 
 class UserTracker implements Listener{
 
@@ -42,14 +43,17 @@ class UserTracker implements Listener{
     }
 
     public function onJoinChannelEvent(JoinChannelEvent $event){
-        if(!$event->getChannel()->hasUser($event->getUser()->getNick())){
-            $event->getChannel()->addUser($event->getUser());
+        $user = User::getUser($this->getConnection(), $event->getUser()->getHostmask());
+        if(!$event->getChannel()->hasUser($user->getNick())){
+            $event->getChannel()->addUser($user);
         }
     }
 
     public function onChannelLeaveEvent(ChannelLeaveEvent $event){
-        if($event->getChannel()->hasUser($event->getUser()->getNick())){
-            $event->getChannel()->removeUser($event->getUser()->getNick());
+        if($event->getUser() instanceof User){
+            if($event->getChannel()->hasUser($event->getUser()->getNick())){
+                $event->getChannel()->removeUser($event->getUser()->getNick());
+            }
         }
     }
 
@@ -62,7 +66,11 @@ class UserTracker implements Listener{
     public function onUserQuitEvent(UserQuitEvent $event){
         foreach($this->getConnection()->getChannels() as $channel){
             if($channel->hasUser($event->getUser()->getNick())){
-                $channel->removeUser($event->getUser()->getNick());
+                $ev = new ChannelLeaveEvent($channel, $event->getUser());
+                $this->getConnection()->getEventHandler()->callEvent($ev);
+                if(!$ev->isCancelled()){
+                    $channel->removeUser($event->getUser()->getNick());
+                }
             }
         }
     }
