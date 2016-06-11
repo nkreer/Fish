@@ -55,11 +55,7 @@ class PRIVMSG implements ProtocolCommand{
 			$args[1] = explode(" ", $args[1], 2);
 			$ctcp_command = str_replace(chr(1), "", $args[1][0]);
 			unset($args[1][0]);
-			if(!empty($args[1][1])){
-				$ev = new CTCPReceiveEvent($user, $ctcp_command, implode(" ", $args[1][1]));
-			} else {
-				$ev = new CTCPReceiveEvent($user, $ctcp_command);
-			}
+			$ev = new CTCPReceiveEvent($user, $ctcp_command);
 			$connection->getEventHandler()->callEvent($ev);
 			if(empty($args[1][1])){
 				if($reply = IRC::getInstance()->getConfig()->getData("default_ctcp_replies")[$ctcp_command]){
