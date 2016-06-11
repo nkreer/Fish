@@ -25,6 +25,21 @@ class User{
 
     private static $users = [];
 
+    /**
+     * @param Connection $connection
+     * @param $nick
+     * @return bool|User
+     */
+    public static function getUserByNick(Connection $connection, $nick){
+        foreach(self::$users[$connection->getAddress()] as $mask => $user){
+            $parse = self::parseNick($mask);
+            if($parse === $nick){
+                return $user;
+            }
+        }
+        return false;
+    }
+
     public static function getUser(Connection $connection, $name){
         if(isset(self::$users[$connection->getAddress()][$name])){
             return self::$users[$connection->getAddress()][$name];
@@ -50,12 +65,14 @@ class User{
     private $address = "";
     private $separator = "";
     
-    public function __construct(Connection $connection, $hostmask){
+    public $identified = false; 
+    
+    public function __construct(Connection $connection, String $hostmask){
         $this->host = $hostmask;
         $this->connection = $connection;
-        $this->nick = $this->parseNick();
-        $this->address = $this->parseAddress();
-        $this->separator = $this->parseSeparator();
+        $this->nick = self::parseNick($hostmask);
+        $this->address = self::parseAddress($hostmask);
+        $this->separator = self::parseSeparator($hostmask);
     }
 
     public function getAddress(){
@@ -66,12 +83,32 @@ class User{
         return $this->nick;
     }
     
+    public function isIdentified(){
+        return $this->identified;
+    }
+
+    public function getSeparator(){
+        return $this->separator;
+    }
+
+    public function updateAuthenticationStatus(){
+        $this->connection->sendData("WHOIS ".$this->getNick());
+    }
+
+    /**
+    * Get the hostmask
+    * @return String
+    */
+    public function getHostmask(){
+        return $this->host;
+    }
+    
     /**
      * Get the address
      * @return string
      */
-    private function parseAddress(){
-        $address = explode("@", $this->getHostmask())[1];
+    private static function parseAddress($host){
+        $address = explode("@", $host)[1];
         if(!empty($address)){
             return $address;
         }
@@ -80,35 +117,24 @@ class User{
     
     /**
      * Get the nickname
+     * @param $host
      * @return String
      */
-    private function parseNick(){
-        return str_replace(":", "", substr($this->host, 0, strpos($this->host, "!")));
-    }
-
-    public function getSeparator(){
-        return $this->separator;
+    private static function parseNick($host){
+        return str_replace(":", "", substr($host, 0, strpos($host, "!")));
     }
 
     /**
      * @return string
      */
-    private function parseSeparator(){
-        $mark = strpos($this->getHostmask(), "!");
+    private static function parseSeparator($host){
+        $mark = strpos($host, "!");
         if($mark !== false){
-            if($this->getHostmask()[$mark + 1] === "~"){
+            if($host[$mark + 1] === "~"){
                 return "!~";
             }
         }
         return "!";
-    }
-
-    /**
-     * Get the hostmask
-     * @return String
-     */
-    public function getHostmask(){
-        return $this->host;
     }
 
     /**

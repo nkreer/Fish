@@ -43,9 +43,8 @@ class UserTracker implements Listener{
     }
 
     public function onJoinChannelEvent(JoinChannelEvent $event){
-        $user = User::getUser($this->getConnection(), $event->getUser()->getHostmask());
-        if(!$event->getChannel()->hasUser($user->getNick())){
-            $event->getChannel()->addUser($user);
+        if(!$event->getChannel()->hasUser($event->getUser()->getNick())){
+            $event->getChannel()->addUser($event->getUser());
         }
     }
 

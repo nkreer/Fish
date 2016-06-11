@@ -19,7 +19,7 @@ To install Fish, make sure you have composer installed. Simply clone the reposit
 
 Several plugins have already been written for Fish: 
 
-- [Scripts](https://github.com/nkreer/Fish-Scripts) enables you to add simple custom commands to the bot, written in any language
+- [Scripts](https://github.com/nkreer/Fish-Scripts) enables you to add simple custom commands to the bot
 - Many more, closed source plugins
 
 If you want me to add your plugin to the list, open a pull request or message me
@@ -37,8 +37,6 @@ Fish offers various (already usable!) features for interaction with one or more 
 ## TODO
 
 - Support the entire IRC Protocol
-- Add more events for plugins
-- Add user authentication
 - Add a real commands system
 - Implement "help" commands right into the bot
 - Implement full plugin reloading without having to restart the software
@@ -46,10 +44,3 @@ Fish offers various (already usable!) features for interaction with one or more 
 ## Contribute
 
 All contributions and Pull Requests are welcome. Just stick to the original coding style, please.
-
-## Plugins
-
-Fish was designed with plugins in mind.
-Using Fish's very simple plugin API, you can extend the software to your needs.
-You can find a small tutorial on plugins [here](http://nkreer.github.io/Fish).
-I aim to provide backwards-compatibility for all plugins throughout all minor releases of the software.

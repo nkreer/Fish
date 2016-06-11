@@ -64,6 +64,7 @@ class IRC{
             $conf->setData("default_quitmsg", "Leaving");
             $conf->setData("command_prefix", [".", "!", "\\", "@"]);
             $conf->setData("cpu_idle", 10);
+            $conf->setData("authentication_ttl", 1200);
 
             $conf->save("fish.json");
             $this->config = $conf;
