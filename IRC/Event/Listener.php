@@ -21,6 +21,6 @@
 
 namespace IRC\Event;
 
-interface Listener {
+interface Listener{
 
 }

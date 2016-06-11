@@ -22,5 +22,5 @@
 namespace IRC\Event\Channel;
 
 class BotJoinChannelEvent extends JoinChannelEvent{
-    
+
 }

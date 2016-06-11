@@ -26,17 +26,17 @@ use IRC\User;
 
 class ChannelLeaveEvent extends ChannelEvent{
 
-    private $user;
+	private $user;
 
-    public function __construct(Channel $channel, User $user){
-        parent::__construct($channel);
-    }
+	public function __construct(Channel $channel, User $user){
+		parent::__construct($channel);
+	}
 
-    /**
-     * @return User
-     */
-    public function getUser(){
-        return $this->user;
-    }
+	/**
+	 * @return User
+	 */
+	public function getUser(){
+		return $this->user;
+	}
 
 }

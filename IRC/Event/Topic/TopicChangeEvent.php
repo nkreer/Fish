@@ -25,16 +25,16 @@ use IRC\Channel;
 use IRC\User;
 
 class TopicChangeEvent extends TopicEvent{
-    
-    private $user;
-    
-    public function __construct($topic, Channel $channel, User $user){
-        parent::__construct($topic, $channel);
-        $this->user = $user;
-    }
-    
-    public function getUser(){
-        return $this->user;
-    }
+
+	private $user;
+
+	public function __construct($topic, Channel $channel, User $user){
+		parent::__construct($topic, $channel);
+		$this->user = $user;
+	}
+
+	public function getUser(){
+		return $this->user;
+	}
 
 }

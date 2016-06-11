@@ -23,6 +23,6 @@ namespace IRC\Scheduler;
 
 interface TaskInterface{
 
-    public function onRun();
+	public function onRun();
 
 }

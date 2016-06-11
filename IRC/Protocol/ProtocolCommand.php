@@ -27,6 +27,6 @@ use IRC\Utils\JsonConfig;
 
 interface ProtocolCommand{
 
-    public static function run(Command $command, Connection $connection, JsonConfig $config);
-    
+	public static function run(Command $command, Connection $connection, JsonConfig $config);
+
 }

@@ -23,20 +23,20 @@ namespace IRC;
 
 class Parser{
 
-    public static function parse(String $command) : Command{
-        if (substr($command, 0, 1) == ":"){
-            $prefix = substr($command, 1, strpos($command, " "));
-            $command = substr($command, strpos($command, " ") + 1);
-        } else {
-            $prefix = false;
-        }
+	public static function parse(String $command) : Command{
+		if(substr($command, 0, 1) == ":"){
+			$prefix = substr($command, 1, strpos($command, " "));
+			$command = substr($command, strpos($command, " ") + 1);
+		} else{
+			$prefix = false;
+		}
 
-        $cmd = substr($command, 0, strpos($command, " "));
-        $cmd = strtoupper($cmd);
-        $args = str_replace("\r", "", substr($command, strpos($command, " ") + 1));
-        $args = explode(" ", $args);
+		$cmd = substr($command, 0, strpos($command, " "));
+		$cmd = strtoupper($cmd);
+		$args = str_replace("\r", "", substr($command, strpos($command, " ") + 1));
+		$args = explode(" ", $args);
 
-        return new Command($cmd, $args, $prefix);
-    }
+		return new Command($cmd, $args, $prefix);
+	}
 
 }

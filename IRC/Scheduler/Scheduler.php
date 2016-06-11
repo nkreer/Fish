@@ -26,116 +26,116 @@ use IRC\Plugin\PluginBase;
 
 class Scheduler{
 
-    private $tasks = [];
-    private $plugins = [];
+	private $tasks = [];
+	private $plugins = [];
 
-    private $lastCall = 0;
+	private $lastCall = 0;
 
-    public function __construct(){
-        $this->lastCall = time();
-    }
+	public function __construct(){
+		$this->lastCall = time();
+	}
 
-    /**
-     * @return int
-     */
-    public function getLastCall(){
-        return $this->lastCall;
-    }
+	/**
+	 * @return int
+	 */
+	public function getLastCall(){
+		return $this->lastCall;
+	}
 
-    /**
-     * @param PluginBase $plugin
-     */
-    public function cancelPluginTasks(Plugin $plugin){
-        if(!empty($this->plugins[$plugin->name])){
-            foreach($this->plugins[$plugin->name] as $id){
-                $this->cancelTask($id);
-            }
-        }
-    }
+	/**
+	 * @param PluginBase $plugin
+	 */
+	public function cancelPluginTasks(Plugin $plugin){
+		if(!empty($this->plugins[$plugin->name])){
+			foreach($this->plugins[$plugin->name] as $id){
+				$this->cancelTask($id);
+			}
+		}
+	}
 
-    /**
-     * Schedule a task
-     * @param TaskInterface $task
-     * @param $when
-     * @return String
-     */
-    public function scheduleDelayedTask(TaskInterface $task, int $when) : String{
-        $when = time() + $when;
-        $this->tasks[$when][] = $task;
-        $id = $when." ".(count($this->tasks[$when]) - 1);
-        if($task instanceof PluginTask){
-            $this->plugins[$task->getOwner()->getPlugin()->name][] = $id;
-        }
-        return $id;
-    }
+	/**
+	 * Schedule a task
+	 * @param TaskInterface $task
+	 * @param $when
+	 * @return String
+	 */
+	public function scheduleDelayedTask(TaskInterface $task, int $when) : String{
+		$when = time() + $when;
+		$this->tasks[$when][] = $task;
+		$id = $when." ".(count($this->tasks[$when]) - 1);
+		if($task instanceof PluginTask){
+			$this->plugins[$task->getOwner()->getPlugin()->name][] = $id;
+		}
+		return $id;
+	}
 
-    /**
-     * @param TaskInterface $task
-     * @param $when
-     * @return string
-     */
-    public function scheduleTaskForTime(TaskInterface $task, int $when) : String{
-        $this->tasks[$when][] = $task;
-        $id = $when." ".(count($this->tasks[$when]) - 1);
-        if($task instanceof PluginTask){
-            $this->plugins[$task->getOwner()->getPlugin()->name][] = $id;
-        }
-        return $id;
-    }
+	/**
+	 * @param TaskInterface $task
+	 * @param $when
+	 * @return string
+	 */
+	public function scheduleTaskForTime(TaskInterface $task, int $when) : String{
+		$this->tasks[$when][] = $task;
+		$id = $when." ".(count($this->tasks[$when]) - 1);
+		if($task instanceof PluginTask){
+			$this->plugins[$task->getOwner()->getPlugin()->name][] = $id;
+		}
+		return $id;
+	}
 
-    /**
-     * Register the same task multiple times
-     * @param TaskInterface $task
-     * @param $interval
-     * @param $times
-     * @return array
-     */
-    public function scheduleMultipleDelayedTask(TaskInterface $task, int $interval, int $times) : array{
-        $ids = [];
-        $time = $interval;
-        for($run = 1; $run <= $times; $run++){
-            $ids[$time] = $this->scheduleDelayedTask($task, $time);
-            $time += $interval;
-        }
+	/**
+	 * Register the same task multiple times
+	 * @param TaskInterface $task
+	 * @param $interval
+	 * @param $times
+	 * @return array
+	 */
+	public function scheduleMultipleDelayedTask(TaskInterface $task, int $interval, int $times) : array{
+		$ids = [];
+		$time = $interval;
+		for($run = 1; $run <= $times; $run++){
+			$ids[$time] = $this->scheduleDelayedTask($task, $time);
+			$time += $interval;
+		}
 
-        if($task instanceof PluginTask){
-            foreach($ids as $id){
-                $this->plugins[$task->getOwner()->getPlugin()->name][] = $id;
-            }
-        }
-        return $ids;
-    }
+		if($task instanceof PluginTask){
+			foreach($ids as $id){
+				$this->plugins[$task->getOwner()->getPlugin()->name][] = $id;
+			}
+		}
+		return $ids;
+	}
 
-    /**
-     * @param $id
-     * @return bool
-     */
-    public function cancelTask(String $id) : bool{
-        $id = explode(" ", $id);
-        if(isset($this->tasks[$id[0]][$id[1]])){
-            unset($this->tasks[$id[0]][$id[1]]);
-            return true;
-        }
-        return false;
-    }
+	/**
+	 * @param $id
+	 * @return bool
+	 */
+	public function cancelTask(String $id) : bool{
+		$id = explode(" ", $id);
+		if(isset($this->tasks[$id[0]][$id[1]])){
+			unset($this->tasks[$id[0]][$id[1]]);
+			return true;
+		}
+		return false;
+	}
 
-    public function call(int $time = -1){
-        if($time === -1){
-            $time = time();
-        }
+	public function call(int $time = -1){
+		if($time === -1){
+			$time = time();
+		}
 
-        if(isset($this->tasks[$time])){
-            foreach($this->tasks[$time] as $task){
-                if($task instanceof TaskInterface){
-                    $task->onRun();
-                }
-            }
-            unset($this->tasks[$time]);
-        }
+		if(isset($this->tasks[$time])){
+			foreach($this->tasks[$time] as $task){
+				if($task instanceof TaskInterface){
+					$task->onRun();
+				}
+			}
+			unset($this->tasks[$time]);
+		}
 
-        if($time == time()){
-            $this->lastCall = $time; //Overwrite the value if this is up to date
-        }
-    }
+		if($time == time()){
+			$this->lastCall = $time; //Overwrite the value if this is up to date
+		}
+	}
 
 }

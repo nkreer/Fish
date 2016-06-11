@@ -25,15 +25,15 @@ use IRC\Channel;
 
 class MessageSendEvent extends MessageEvent{
 
-    private $channel;
+	private $channel;
 
-    public function __construct($message, Channel $channel){
-        parent::__construct($message);
-        $this->channel = $channel;
-    }
+	public function __construct($message, Channel $channel){
+		parent::__construct($message);
+		$this->channel = $channel;
+	}
 
-    public function getChannel(){
-        return $this->channel;
-    }
+	public function getChannel(){
+		return $this->channel;
+	}
 
 }

@@ -27,54 +27,54 @@ use IRC\Utils\BashColor;
 
 class Plugin{
 
-    public $name;
-    public $description;
-    public $apiVersion;
-    public $version;
-    public $author;
-    public $commands = [];
-    public $main;
+	public $name;
+	public $description;
+	public $apiVersion;
+	public $version;
+	public $author;
+	public $commands = [];
+	public $main;
 
-    public $reflectionClass;
+	public $reflectionClass;
 
-    /**
-     * @var PluginBase
-     */
-    public $class;
+	/**
+	 * @var PluginBase
+	 */
+	public $class;
 
-    public function __construct(String $name, array $json, Connection $connection){
-        if(file_exists("plugins/".$name."/plugin.json")){
-            Logger::info(BashColor::GREEN."Loading plugin ".BashColor::BLUE.$name);
+	public function __construct(String $name, array $json, Connection $connection){
+		if(file_exists("plugins/".$name."/plugin.json")){
+			Logger::info(BashColor::GREEN."Loading plugin ".BashColor::BLUE.$name);
 
-            $this->description = $json["description"];
-            $this->apiVersion = $json["api"];
-            $this->version = $json["version"];
-            $this->author = $json["author"];
-            $this->main = $json["main"];
-            if(isset($json["commands"])){
-                $this->commands = $json["commands"];
-            }
+			$this->description = $json["description"];
+			$this->apiVersion = $json["api"];
+			$this->version = $json["version"];
+			$this->author = $json["author"];
+			$this->main = $json["main"];
+			if(isset($json["commands"])){
+				$this->commands = $json["commands"];
+			}
 
-            $info = new \SplFileInfo("plugins/".$name."/".$this->main);
-            include_once("plugins/".$name."/".$this->main);
-            $class = new \ReflectionClass($name."\\".$info->getBasename(".php")); //Taking care of using the correct namespace
-            $this->class = $class->newInstanceWithoutConstructor();
-            $this->reflectionClass = $class;
-            $this->class->connection = $connection;
-            $this->class->plugin = $this;
-        }
-    }
+			$info = new \SplFileInfo("plugins/".$name."/".$this->main);
+			include_once("plugins/".$name."/".$this->main);
+			$class = new \ReflectionClass($name."\\".$info->getBasename(".php")); //Taking care of using the correct namespace
+			$this->class = $class->newInstanceWithoutConstructor();
+			$this->reflectionClass = $class;
+			$this->class->connection = $connection;
+			$this->class->plugin = $this;
+		}
+	}
 
-    public function load(){
-        if($this->reflectionClass->hasMethod("onLoad")){
-            $this->class->onLoad(); //Call the onLoad method
-        }
-    }
+	public function load(){
+		if($this->reflectionClass->hasMethod("onLoad")){
+			$this->class->onLoad(); //Call the onLoad method
+		}
+	}
 
-    public function unload(){
-        if($this->reflectionClass->hasMethod("onDisable")){
-            $this->class->onDisable(); //Call the onDisable method
-        }
-    }
+	public function unload(){
+		if($this->reflectionClass->hasMethod("onDisable")){
+			$this->class->onDisable(); //Call the onDisable method
+		}
+	}
 
 }

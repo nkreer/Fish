@@ -36,21 +36,21 @@ use IRC\Utils\JsonConfig;
  * @package IRC\Protocol
  */
 class NOTICE implements ProtocolCommand{
-    
-    public static function run(Command $command, Connection $connection, JsonConfig $config){
-        $user = User::getUser($connection, $command->getPrefix());
-        $arg = $command->getArgs();
-        if($command->getArg(0) === $connection->nickname){
-            $channel = Channel::getChannel($connection, $user->getNick());
-        } else {
-            $channel = Channel::getChannel($connection, $arg[0]);
-        }
-        unset($arg[0]);
-        $ev = new NoticeReceiveEvent(implode(" ", $arg), $user, $channel);
-        $connection->getEventHandler()->callEvent($ev);
-        if(!$ev->isCancelled()){
-            Logger::info(BashColor::HIGHLIGHT.$ev->getUser()->getNick().": ".$ev->getNotice().BashColor::REMOVE); //Display the notice to the console
-        }
-    }
+
+	public static function run(Command $command, Connection $connection, JsonConfig $config){
+		$user = User::getUser($connection, $command->getPrefix());
+		$arg = $command->getArgs();
+		if($command->getArg(0) === $connection->nickname){
+			$channel = Channel::getChannel($connection, $user->getNick());
+		} else{
+			$channel = Channel::getChannel($connection, $arg[0]);
+		}
+		unset($arg[0]);
+		$ev = new NoticeReceiveEvent(implode(" ", $arg), $user, $channel);
+		$connection->getEventHandler()->callEvent($ev);
+		if(!$ev->isCancelled()){
+			Logger::info(BashColor::HIGHLIGHT.$ev->getUser()->getNick().": ".$ev->getNotice().BashColor::REMOVE); //Display the notice to the console
+		}
+	}
 
 }

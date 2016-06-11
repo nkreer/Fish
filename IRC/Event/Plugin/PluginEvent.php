@@ -26,14 +26,14 @@ use IRC\Plugin\Plugin;
 
 class PluginEvent extends Event{
 
-    private $plugin;
+	private $plugin;
 
-    public function __construct(Plugin $plugin){
-        $this->plugin = $plugin;
-    }
+	public function __construct(Plugin $plugin){
+		$this->plugin = $plugin;
+	}
 
-    public function getPlugin(){
-        return $this->plugin;
-    }
+	public function getPlugin(){
+		return $this->plugin;
+	}
 
 }

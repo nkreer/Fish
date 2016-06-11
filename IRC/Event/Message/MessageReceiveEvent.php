@@ -26,27 +26,27 @@ use IRC\User;
 
 class MessageReceiveEvent extends MessageEvent{
 
-    private $user;
-    private $channel;
+	private $user;
+	private $channel;
 
-    public function __construct($message, User $user, Channel $channel){
-        parent::__construct($message);
-        $this->channel = $channel;
-        $this->user = $user;
-    }
+	public function __construct($message, User $user, Channel $channel){
+		parent::__construct($message);
+		$this->channel = $channel;
+		$this->user = $user;
+	}
 
-    /**
-     * @return User
-     */
-    public function getUser(){
-        return $this->user;
-    }
+	/**
+	 * @return User
+	 */
+	public function getUser(){
+		return $this->user;
+	}
 
-    /**
-     * @return Channel
-     */
-    public function getChannel(){
-        return $this->channel;
-    }
+	/**
+	 * @return Channel
+	 */
+	public function getChannel(){
+		return $this->channel;
+	}
 
 }

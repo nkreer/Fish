@@ -28,14 +28,14 @@ include_once("IRC/Event/Event.php");
 
 class ChannelEvent extends Event{
 
-    private $channel;
+	private $channel;
 
-    public function __construct(Channel $channel){
-        $this->channel = $channel;
-    }
+	public function __construct(Channel $channel){
+		$this->channel = $channel;
+	}
 
-    public function getChannel(){
-        return $this->channel;
-    }
+	public function getChannel(){
+		return $this->channel;
+	}
 
 }

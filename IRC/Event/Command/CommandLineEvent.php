@@ -25,14 +25,14 @@ use IRC\Event\Event;
 
 class CommandLineEvent extends Event{
 
-    private $message;
+	private $message;
 
-    public function __construct($message){
-        $this->message = $message;
-    }
+	public function __construct($message){
+		$this->message = $message;
+	}
 
-    public function getMessage(){
-        return $this->message;
-    }
+	public function getMessage(){
+		return $this->message;
+	}
 
 }

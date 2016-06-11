@@ -26,18 +26,18 @@ use IRC\User;
 
 class UserModeChangeEvent extends ModeEvent{
 
-    private $nick;
-    
-    public function __construct($mode, User $by, Channel $channel, $nick){
-        parent::__construct($mode, $by, $channel);
-        $this->nick = $nick;
-    }
+	private $nick;
 
-    /**
-     * @return string
-     */
-    public function getUser(){
-        return $this->nick;
-    }
+	public function __construct($mode, User $by, Channel $channel, $nick){
+		parent::__construct($mode, $by, $channel);
+		$this->nick = $nick;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getUser(){
+		return $this->nick;
+	}
 
 }
