@@ -39,7 +39,6 @@ Fish offers various (already usable!) features for interaction with one or more 
 - Support the entire IRC Protocol
 - Add a real commands system
 - Implement "help" commands right into the bot
-- Implement full plugin reloading without having to restart the software
 
 ## Contribute
 

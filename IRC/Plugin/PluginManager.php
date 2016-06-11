@@ -21,6 +21,7 @@
 
 namespace IRC\Plugin;
 
+use Composer\Autoload\ClassLoader;
 use IRC\Connection;
 use IRC\Event\Plugin\PluginLoadEvent;
 use IRC\Event\Plugin\PluginUnloadEvent;
@@ -33,9 +34,16 @@ class PluginManager{
 
 	private $plugins = [];
 	private $connection;
+	private $classLoader;
 
 	public function __construct(Connection $connection){
 		$this->connection = $connection;
+		$this->classLoader = new ClassLoader();
+		$this->classLoader->register();
+	}
+
+	public function getClassLoader(){
+		return $this->classLoader;
 	}
 
 	/**
@@ -75,6 +83,8 @@ class PluginManager{
 				if($json["api"] != IRC::API_VERSION){
 					Logger::info(BashColor::YELLOW."Plugin ".$name." is not supported by this version of Fish.");
 				}
+
+				$this->getClassLoader()->addPsr4($name."\\", "plugins/".$name."/");
 
 				$plugin = new Plugin($name, $json, $this->connection);
 

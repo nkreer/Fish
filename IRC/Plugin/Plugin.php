@@ -21,6 +21,7 @@
 
 namespace IRC\Plugin;
 
+use Composer\Autoload\ClassLoader;
 use IRC\Connection;
 use IRC\Logger;
 use IRC\Utils\BashColor;
@@ -46,6 +47,7 @@ class Plugin{
 		if(file_exists("plugins/".$name."/plugin.json")){
 			Logger::info(BashColor::GREEN."Loading plugin ".BashColor::BLUE.$name);
 
+			$this->name = $json["name"];
 			$this->description = $json["description"];
 			$this->apiVersion = $json["api"];
 			$this->version = $json["version"];
@@ -56,8 +58,7 @@ class Plugin{
 			}
 
 			$info = new \SplFileInfo("plugins/".$name."/".$this->main);
-			include_once("plugins/".$name."/".$this->main);
-			$class = new \ReflectionClass($name."\\".$info->getBasename(".php")); //Taking care of using the correct namespace
+			$class = new \ReflectionClass("\\".$name."\\".$info->getBasename(".php")); //Taking care of using the correct namespace
 			$this->class = $class->newInstanceWithoutConstructor();
 			$this->reflectionClass = $class;
 			$this->class->connection = $connection;

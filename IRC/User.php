@@ -50,9 +50,9 @@ class User{
 	 * @return string
 	 */
 	private static function parseAddress(String $host) : String{
-		$address = explode("@", $host)[1];
-		if(!empty($address)){
-			return $address;
+		$address = explode("@", $host);
+		if(!empty($address) and isset($address[1])){
+			return $address[1];
 		}
 		return "";
 	}
