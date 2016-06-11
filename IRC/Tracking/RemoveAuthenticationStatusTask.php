@@ -34,6 +34,7 @@ class RemoveAuthenticationStatusTask extends Task{
 
     public function onRun(){
         $this->user->identified = false;
+        $this->user->updateAuthenticationStatus();
     }
 
 }
