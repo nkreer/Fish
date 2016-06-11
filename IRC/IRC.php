@@ -36,7 +36,7 @@ class IRC{
     /**
      * @return IRC
      */
-    public static function getInstance(){
+    public static function getInstance() : IRC{
         return self::$instance;
     }
 
@@ -48,7 +48,7 @@ class IRC{
     private $config;
     public $devmode;
 
-    public function __construct($dev = false){
+    public function __construct(bool $dev = false){
         $this->devmode = $dev;
         self::$instance = $this;
         Logger::info(BashColor::GREEN."Starting Fish (".self::CODENAME.") v".self::VERSION.BashColor::YELLOW." (API v".self::API_VERSION.")");
@@ -77,7 +77,7 @@ class IRC{
         stream_set_blocking(STDIN, 0);
     }
 
-    public function getConfig(){
+    public function getConfig() : JsonConfig{
         return $this->config;
     }
 
@@ -137,7 +137,7 @@ class IRC{
      * @param Connection $connection
      * @param $default
      */
-    public function addConnection(Connection $connection, $default = true){
+    public function addConnection(Connection $connection, bool $default = true) : bool{
         if(!$this->isConnected($connection->getAddress())){
             Logger::info(BashColor::CYAN."Connecting to ".$connection->getAddress().":".$connection->getPort()."...");
             //Setting up connection details
@@ -151,12 +151,14 @@ class IRC{
             if($result instanceof Connection){
                 $this->connections[$connection->getAddress()] = $connection;
                 Logger::info(BashColor::GREEN."Connected to ".$connection->getAddress().":".$connection->getPort());
+                return true;
             } else {
                 Logger::info(BashColor::RED."Can't connect to ".$connection->getAddress().":".$connection->getPort());
             }
         } else {
             Logger::info(BashColor::RED."Can't connect to ".$connection->getAddress().":".$connection->getPort().": Already connected");
         }
+        return false;
     }
 
     /**
@@ -165,7 +167,7 @@ class IRC{
      * @param String $quitMessage
      * @return bool
      */
-    public function removeConnection(Connection $connection, $quitMessage = self::CODENAME." v".self::VERSION){
+    public function removeConnection(Connection $connection, String $quitMessage = self::CODENAME." v".self::VERSION) : bool{
         if($this->isConnected($connection->getAddress())){
             Logger::info(BashColor::RED."Disconnecting ".$connection->getAddress().":".$connection->getPort());
             $connection->disconnect($quitMessage);
@@ -179,7 +181,7 @@ class IRC{
      * @param $address
      * @return bool
      */
-    public function isConnected($address){
+    public function isConnected(String $address) : bool{
         return isset($this->connections[$address]);
     }
 

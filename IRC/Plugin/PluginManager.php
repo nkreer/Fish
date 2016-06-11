@@ -41,7 +41,7 @@ class PluginManager{
     /**
      * @return Plugin[]
      */
-    public function getPlugins(){
+    public function getPlugins() : array{
         return $this->plugins;
     }
 
@@ -49,7 +49,7 @@ class PluginManager{
      * @param $name
      * @return Plugin|NULL
      */
-    public function getPlugin($name){
+    public function getPlugin(String $name){
         return $this->plugins[$name];
     }
 
@@ -65,7 +65,7 @@ class PluginManager{
      * @param $name
      * @return bool|int
      */
-    public function loadPlugin($name, $force = false){
+    public function loadPlugin(String $name, bool $force = false){
         if(file_exists("plugins/".$name."/plugin.json")){
             $json = new JsonConfig();
             $json->loadFile("plugins/".$name."/plugin.json");
@@ -97,7 +97,7 @@ class PluginManager{
      * @param Plugin $plugin
      * @return bool
      */
-    public function unloadPlugin(Plugin $plugin){
+    public function unloadPlugin(Plugin $plugin) : bool{
         if($this->hasPlugin($plugin->name)){
             $ev = new PluginUnloadEvent($plugin);
             $this->connection->getEventHandler()->callEvent($ev);
@@ -118,29 +118,8 @@ class PluginManager{
      * @param $name
      * @return bool
      */
-    public function hasPlugin($name){
+    public function hasPlugin($name) : bool{
         return isset($this->plugins[$name]);
     }
-
-    /*
-    public function reloadAll(){
-        foreach($this->plugins as $plugin){
-            $this->unloadPlugin($plugin);
-        }
-
-        $plugins = scandir("plugins/");
-        foreach($plugins as $plugin){
-            if(is_dir("plugins/".$plugin)){
-                $this->loadPlugin($plugin);
-            }
-        }
-    }
-
-    public function reloadPlugin(Plugin $plugin){
-        $name = $plugin->name;
-        $this->unloadPlugin($plugin);
-        $this->loadPlugin($name);
-    }
-    */
 
 }

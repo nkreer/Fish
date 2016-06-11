@@ -25,7 +25,7 @@ use IRC\Utils\BashColor;
 
 class Logger{
 
-    public static function info($info){
+    public static function info(String $info){
         echo date("H:i:s")."  ".$info."\n".BashColor::REMOVE;
     }
 

@@ -71,7 +71,7 @@ class Connection{
      */
     private $channels = [];
 
-    public function __construct($address, $port){
+    public function __construct(String $address, int $port){
         $this->address = $address;
         $this->port = $port;
 
@@ -82,22 +82,22 @@ class Connection{
         $this->trackers[] = new UserTracker($this);
     }
 
-    public function getPluginManager(){
+    public function getPluginManager() : PluginManager{
         return $this->pluginManager;
     }
 
-    public function getEventHandler(){
+    public function getEventHandler() : EventHandler{
         return $this->eventHandler;
     }
 
-    public function getScheduler(){
+    public function getScheduler() : Scheduler{
         return $this->scheduler;
     }
 
     /**
      * @return string
      */
-    public function read(){
+    public function read() : String{
         return fgets($this->socket);
     }
 
@@ -105,7 +105,7 @@ class Connection{
      * @param $message
      * @return bool|Command
      */
-    public function check($message = true){
+    public function check(bool $message = true){
         if($message === true){
             $message = $this->read();
         }
@@ -142,7 +142,7 @@ class Connection{
         $this->sendData("NICK ".$this->nickname);
     }
 
-    public function disconnect($message = "Quit"){
+    public function disconnect(String $message = "Quit"){
         $this->sendData("QUIT :".$message);
         fclose($this->socket);
     }
@@ -151,18 +151,10 @@ class Connection{
      * Send something to the server
      * @param String $data
      */
-    public function sendData($data){
+    public function sendData(String $data){
         fwrite($this->socket, $data."\n");
         if(IRC::getInstance()->devmode){
             Logger::info($this->getAddress()." > ".$data);
-        }
-    }
-
-    public function whoisUser($name){
-        $ev = new WhoisSendEvent($name);
-        $this->getEventHandler()->callEvent($ev);
-        if(!$ev->isCancelled()){
-            $this->sendData("WHOIS ".$name);
         }
     }
 
@@ -198,11 +190,11 @@ class Connection{
     /**
      * @return Channel[]
      */
-    public function getChannels(){
+    public function getChannels() : array{
         return $this->channels;
     }
 
-    public function changeNick($nick){
+    public function changeNick(String $nick){
         Logger::info("Changing nick from ".BashColor::PURPLE.$this->nickname.BashColor::WHITE." to ".BashColor::PURPLE.$nick);
         $this->nickname = $nick;
         $this->sendData("NICK ".$nick);
@@ -211,30 +203,30 @@ class Connection{
     /**
      * @return String
      */
-    public function getAddress(){
+    public function getAddress() : String{
         return $this->address;
     }
 
     /**
      * @return int
      */
-    public function getPort(){
+    public function getPort() : int{
         return $this->port;
     }
 
-    public function getNick(){
+    public function getNick() : String{
         return $this->nickname;
     }
 
-    public function getRealname(){
+    public function getRealname() : String{
         return $this->realname;
     }
 
-    public function getUsername(){
+    public function getUsername() : String{
         return $this->getUsername();
     }
 
-    public function getHost(){
+    public function getHost() : String{
         return $this->hostname;
     }
 

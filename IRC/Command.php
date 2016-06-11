@@ -28,7 +28,7 @@ class Command{
     private $connection;
     private $prefix;
 
-    public function __construct($command, $args, $prefix = ""){
+    public function __construct(String $command, array $args, String $prefix = ""){
         $this->command = $command;
         $this->args = $args;
         $this->prefix = $prefix;
@@ -37,21 +37,21 @@ class Command{
     /**
      * @return String
      */
-    public function getPrefix(){
+    public function getPrefix() : String{
         return $this->prefix;
     }
 
     /**
      * @return String
      */
-    public function getCommand(){
+    public function getCommand() : String{
         return $this->command;
     }
 
     /**
-     * @return Array
+     * @return []
      */
-    public function getArgs(){
+    public function getArgs() : array{
         return $this->args;
     }
 
@@ -66,7 +66,7 @@ class Command{
     /**
      * @return Connection
      */
-    public function getConnection(){
+    public function getConnection() : Connection{
         return $this->connection;
     }
 

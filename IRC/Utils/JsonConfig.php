@@ -25,19 +25,19 @@ class JsonConfig{
 
     private $config = [];
 
-    public function loadFile($filename){
+    public function loadFile(String $filename){
         $this->config = json_decode(file_get_contents($filename), true);
     }
 
-    public function setData($key, $value){
+    public function setData(String $key, $value){
         $this->config[$key] = $value;
     }
 
-    public function getData($key){
+    public function getData(String $key){
         return $this->config[$key];
     }
 
-    public function hasData($key){
+    public function hasData(String $key) : bool{
         return isset($this->config[$key]);
     }
 
@@ -45,7 +45,7 @@ class JsonConfig{
         return $this->config;
     }
 
-    public function save($filename){
+    public function save(String $filename){
         return file_put_contents($filename, json_encode($this->config, JSON_PRETTY_PRINT));
     }
 

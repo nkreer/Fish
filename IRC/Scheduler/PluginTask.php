@@ -34,7 +34,7 @@ abstract class PluginTask implements TaskInterface{
     /**
      * @return PluginBase
      */
-    public function getOwner(){
+    public function getOwner() : PluginBase{
         return $this->owner;
     }
     

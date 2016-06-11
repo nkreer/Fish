@@ -42,7 +42,7 @@ class Plugin{
      */
     public $class;
 
-    public function __construct($name, $json, Connection $connection){
+    public function __construct(String $name, array $json, Connection $connection){
         if(file_exists("plugins/".$name."/plugin.json")){
             Logger::info(BashColor::GREEN."Loading plugin ".BashColor::BLUE.$name);
 

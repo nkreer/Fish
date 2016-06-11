@@ -22,7 +22,9 @@
 namespace IRC\Plugin;
 
 use IRC\Connection;
+use IRC\Event\EventHandler;
 use IRC\IRC;
+use IRC\Scheduler\Scheduler;
 
 class PluginBase{
 
@@ -36,27 +38,27 @@ class PluginBase{
      */
     public $plugin;
 
-    public function getConnection(){
+    public function getConnection() : Connection{
         return $this->connection;
     }
 
-    public function getClient(){
+    public function getClient() : IRC{
         return IRC::getInstance();
     }
 
-    public function getPluginManager(){
+    public function getPluginManager() : PluginManager{
         return $this->connection->getPluginManager();
     }
 
-    public function getEventHandler(){
+    public function getEventHandler() : EventHandler{
         return $this->connection->getEventHandler();
     }
 
-    public function getScheduler(){
+    public function getScheduler() : Scheduler{
         return $this->connection->getScheduler();
     }
     
-    public function getPlugin(){
+    public function getPlugin() : Plugin{
         return $this->plugin;
     }
 

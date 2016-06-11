@@ -75,6 +75,7 @@ class User{
         $this->address = self::parseAddress($hostmask);
         $this->separator = self::parseSeparator($hostmask);
         if(is_file("users/".$this->getNick().".json")){
+            $this->updateAuthenticationStatus();
             $this->admin = json_decode(file_get_contents("users/".$this->getNick().".json"), true)["admin"];
             $this->remember();
         }
@@ -85,26 +86,26 @@ class User{
         return file_put_contents("users/".$this->getNick().".json", json_encode($options, JSON_PRETTY_PRINT));
     }
 
-    public function getAddress(){
+    public function getAddress() : String{
         return $this->address;
     }
     
-    public function getNick(){
+    public function getNick() : String{
         return $this->nick;
     }
     
-    public function isIdentified(){
+    public function isIdentified() : String{
         return $this->identified;
     }
 
-    public function isOperator(){
+    public function isOperator() : bool{
         if($this->isIdentified() and $this->admin){
             return true;
         }
         return false;
     }
 
-    public function getSeparator(){
+    public function getSeparator() : String{
         return $this->separator;
     }
 
@@ -116,7 +117,7 @@ class User{
     * Get the hostmask
     * @return String
     */
-    public function getHostmask(){
+    public function getHostmask() : String{
         return $this->host;
     }
     
@@ -124,7 +125,7 @@ class User{
      * Get the address
      * @return string
      */
-    private static function parseAddress($host){
+    private static function parseAddress(String $host) : String{
         $address = explode("@", $host)[1];
         if(!empty($address)){
             return $address;
@@ -137,14 +138,14 @@ class User{
      * @param $host
      * @return String
      */
-    private static function parseNick($host){
+    private static function parseNick(String $host) : String{
         return str_replace(":", "", substr($host, 0, strpos($host, "!")));
     }
 
     /**
      * @return string
      */
-    private static function parseSeparator($host){
+    private static function parseSeparator(String $host) : String{
         $mark = strpos($host, "!");
         if($mark !== false){
             if($host[$mark + 1] === "~"){
@@ -157,7 +158,7 @@ class User{
     /**
      * @param $message
      */
-    public function sendMessage($message){
+    public function sendMessage(String $message){
         $channel = new Channel($this->connection, $this->getNick());
         $channel->sendMessage($message);
     }
@@ -165,7 +166,7 @@ class User{
     /**
      * @param $notice
      */
-    public function sendNotice($notice){
+    public function sendNotice(String $notice){
         $channel = new Channel($this->connection, $this->getNick());
         $channel->sendNotice($notice);
     }

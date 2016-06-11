@@ -23,7 +23,7 @@ namespace IRC;
 
 class Parser{
 
-    public static function parse($command){
+    public static function parse(String $command) : Command{
         if (substr($command, 0, 1) == ":"){
             $prefix = substr($command, 1, strpos($command, " "));
             $command = substr($command, strpos($command, " ") + 1);

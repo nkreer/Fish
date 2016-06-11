@@ -28,7 +28,7 @@ class Channel{
 
     private static $channels = [];
     
-    public static function getChannel(Connection $connection, $name){
+    public static function getChannel(Connection $connection, String $name){
         if(isset(self::$channels[$connection->getAddress()][$name])){
             return self::$channels[$connection->getAddress()][$name];
         } else {
@@ -49,7 +49,7 @@ class Channel{
     public $topic = "";
     public $topicTime = 0;
 
-    public function __construct(Connection $connection, $name){
+    public function __construct(Connection $connection, String $name){
         $this->name = $name;
         $this->connection = $connection;
     }
@@ -57,7 +57,7 @@ class Channel{
     /**
      * @return String
      */
-    public function getName(){
+    public function getName() : String{
         return $this->name;
     }
 
@@ -65,7 +65,7 @@ class Channel{
      * Send a message
      * @param $message
      */
-    public function sendMessage($message){
+    public function sendMessage(String $message){
         $ev = new MessageSendEvent($message, $this);
         $this->connection->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
@@ -76,7 +76,7 @@ class Channel{
     /**
      * @param $notice
      */
-    public function sendNotice($notice){
+    public function sendNotice(String $notice){
         $ev = new NoticeSendEvent($notice, $this);
         $this->connection->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
@@ -88,7 +88,7 @@ class Channel{
      * Send an action
      * @param $message
      */
-    public function sendAction($message){
+    public function sendAction(String $message){
         $this->sendMessage(chr(1)."ACTION ".$message.chr(1));
     }
 
@@ -96,7 +96,7 @@ class Channel{
      * Send CTCP
      * @param $message
      */
-    public function sendCTCP($message){
+    public function sendCTCP(String $message){
         $this->sendMessage(chr(1)."CTCP ".$message.chr(1));
     }
 
@@ -104,7 +104,7 @@ class Channel{
      * Check if this channel is a query
      * @return bool
      */
-    public function isQuery(){
+    public function isQuery() : bool{
         if($this->getName()[0] != "#"){
             return true;
         }
@@ -118,7 +118,7 @@ class Channel{
     /**
      * @return array
      */
-    public function getUsers(){
+    public function getUsers() : array{
         return $this->users;
     }
 
@@ -133,7 +133,7 @@ class Channel{
      * @param $nick
      * @return bool
      */
-    public function removeUser($nick){
+    public function removeUser(String $nick) : bool{
         if(isset($this->users[$nick])){
             unset($this->users[$nick]);
             return true;
@@ -145,21 +145,21 @@ class Channel{
      * @param $nick
      * @return bool
      */
-    public function hasUser($nick){
+    public function hasUser($nick) : bool{
         return isset($this->users[$nick]);
     }
 
     /**
      * @return string
      */
-    public function getTopic(){
+    public function getTopic() : String{
         return $this->topic;
     }
 
     /**
      * @param $text
      */
-    public function setTopic($text){
+    public function setTopic(String $text){
         $this->topic = $text;
         $this->connection->sendData("TOPIC ".$this->getName()." :".$text);
         $this->topicTime = time();

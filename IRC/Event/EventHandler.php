@@ -33,7 +33,7 @@ class EventHandler{
      * @param Plugin|null $plugin
      * @param int $priority
      */
-    public function registerEvents(Listener $listener, Plugin $plugin = null, $priority = EventPriority::LOWEST){
+    public function registerEvents(Listener $listener, Plugin $plugin = null, int $priority = EventPriority::LOWEST){
         if($plugin instanceof Plugin){
             $this->listeners[$priority][$plugin->name][] = $listener;
         } else {
@@ -52,7 +52,7 @@ class EventHandler{
     /**
      * @param Plugin $plugin
      */
-    public function unregisterPlugin(Plugin $plugin, $priority = EventPriority::LOWEST){
+    public function unregisterPlugin(Plugin $plugin, int $priority = EventPriority::LOWEST){
         unset($this->listeners[$priority][$plugin->name]);
     }
 

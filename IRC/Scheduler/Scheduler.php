@@ -59,7 +59,7 @@ class Scheduler{
      * @param $when
      * @return String
      */
-    public function scheduleDelayedTask(TaskInterface $task, $when){
+    public function scheduleDelayedTask(TaskInterface $task, int $when) : String{
         $when = time() + $when;
         $this->tasks[$when][] = $task;
         $id = $when." ".(count($this->tasks[$when]) - 1);
@@ -74,7 +74,7 @@ class Scheduler{
      * @param $when
      * @return string
      */
-    public function scheduleTaskForTime(TaskInterface $task, $when){
+    public function scheduleTaskForTime(TaskInterface $task, int $when) : String{
         $this->tasks[$when][] = $task;
         $id = $when." ".(count($this->tasks[$when]) - 1);
         if($task instanceof PluginTask){
@@ -90,7 +90,7 @@ class Scheduler{
      * @param $times
      * @return array
      */
-    public function scheduleMultipleDelayedTask(TaskInterface $task, $interval, $times){
+    public function scheduleMultipleDelayedTask(TaskInterface $task, int $interval, int $times) : array{
         $ids = [];
         $time = $interval;
         for($run = 1; $run <= $times; $run++){
@@ -110,7 +110,7 @@ class Scheduler{
      * @param $id
      * @return bool
      */
-    public function cancelTask($id){
+    public function cancelTask(String $id) : bool{
         $id = explode(" ", $id);
         if(isset($this->tasks[$id[0]][$id[1]])){
             unset($this->tasks[$id[0]][$id[1]]);
@@ -119,7 +119,7 @@ class Scheduler{
         return false;
     }
 
-    public function call($time = -1){
+    public function call(int $time = -1){
         if($time === -1){
             $time = time();
         }
