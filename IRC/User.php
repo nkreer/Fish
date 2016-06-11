@@ -60,7 +60,8 @@ class User{
 
     private $host;
     private $connection;
-    
+    private $admin = false;
+
     private $nick = "";
     private $address = "";
     private $separator = "";
@@ -73,6 +74,15 @@ class User{
         $this->nick = self::parseNick($hostmask);
         $this->address = self::parseAddress($hostmask);
         $this->separator = self::parseSeparator($hostmask);
+        if(is_file("users/".$this->getNick().".json")){
+            $this->admin = json_decode(file_get_contents("users/".$this->getNick().".json"), true)["admin"];
+            $this->remember();
+        }
+    }
+
+    public function remember(){
+        $options = ["name" => $this->getNick(), "admin" => $this->admin, "lastSeen" => time()];
+        return file_put_contents("users/".$this->getNick().".json", json_encode($options, JSON_PRETTY_PRINT));
     }
 
     public function getAddress(){
@@ -85,6 +95,13 @@ class User{
     
     public function isIdentified(){
         return $this->identified;
+    }
+
+    public function isOperator(){
+        if($this->isIdentified() and $this->admin){
+            return true;
+        }
+        return false;
     }
 
     public function getSeparator(){
