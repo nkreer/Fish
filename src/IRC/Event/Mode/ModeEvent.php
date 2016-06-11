@@ -27,9 +27,9 @@ use IRC\User;
 
 class ModeEvent extends Event{
 
-	private $mode;
-	private $by;
-	private $channel;
+	protected $mode;
+	protected $by;
+	protected $channel;
 
 	public function __construct($mode, User $by, Channel $channel){
 		$this->mode = $mode;

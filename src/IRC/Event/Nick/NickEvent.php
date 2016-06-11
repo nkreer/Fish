@@ -25,7 +25,7 @@ use IRC\Event\Event;
 
 class NickEvent extends Event{
 
-	private $nick;
+	protected $nick;
 
 	public function __construct($nick){
 		$this->nick = $nick;

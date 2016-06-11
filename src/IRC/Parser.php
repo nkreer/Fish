@@ -36,7 +36,7 @@ class Parser{
 		$args = str_replace("\r", "", substr($command, strpos($command, " ") + 1));
 		$args = explode(" ", $args);
 
-		return new Command($cmd, $args, $prefix);
+		return new Command($cmd, $args, $prefix, $command);
 	}
 
 }

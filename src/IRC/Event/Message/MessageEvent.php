@@ -25,7 +25,7 @@ use IRC\Event\Event;
 
 class MessageEvent extends Event{
 
-	private $message = "";
+	protected $message = "";
 
 	public function __construct($message){
 		$this->message = $message;

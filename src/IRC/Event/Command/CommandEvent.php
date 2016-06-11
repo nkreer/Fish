@@ -27,10 +27,10 @@ use IRC\User;
 
 class CommandEvent extends Event{
 
-	private $command;
-	private $args;
-	private $channel;
-	private $user;
+	protected $command;
+	protected $args;
+	protected $channel;
+	protected $user;
 
 	public function __construct($command, $args, Channel $channel, User $user){
 		$this->command = $command;

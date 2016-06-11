@@ -66,6 +66,7 @@ class IRC{
 			$conf->setData("command_prefix", [".", "!", "\\", "@"]);
 			$conf->setData("cpu_idle", 10);
 			$conf->setData("authentication_ttl", 1200);
+			$conf->setData("default_ctcp_replies", ["VERSION" => "Fish ".self::VERSION]);
 
 			$conf->save("fish.json");
 			$this->config = $conf;

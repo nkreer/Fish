@@ -19,27 +19,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace IRC\Event\Topic;
+namespace IRC\Event\CTCP;
 
-use IRC\Channel;
-use IRC\Event\Event;
+class CTCPSendEvent extends CTCPEvent{
 
-class TopicEvent extends Event{
-
-	protected $topic;
-	protected $channel;
-
-	public function __construct($topic, Channel $channel){
-		$this->topic = $topic;
-		$this->channel = $channel;
+	public function setMessage(String $message){
+		$this->message = $message;
 	}
-
-	public function getTopic(){
-		return $this->topic;
-	}
-
-	public function getChannel(){
-		return $this->channel;
-	}
-
+	
 }

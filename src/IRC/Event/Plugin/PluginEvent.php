@@ -26,7 +26,7 @@ use IRC\Plugin\Plugin;
 
 class PluginEvent extends Event{
 
-	private $plugin;
+	protected $plugin;
 
 	public function __construct(Plugin $plugin){
 		$this->plugin = $plugin;

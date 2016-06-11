@@ -19,27 +19,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace IRC\Event\Topic;
+namespace IRC\Event\CTCP;
 
-use IRC\Channel;
 use IRC\Event\Event;
+use IRC\User;
 
-class TopicEvent extends Event{
+class CTCPEvent extends Event{
 
-	protected $topic;
-	protected $channel;
+	protected $user;
+	protected $message;
+	protected $command;
 
-	public function __construct($topic, Channel $channel){
-		$this->topic = $topic;
-		$this->channel = $channel;
+	public function __construct(User $user, String $command, String $message = ""){
+		$this->user = $user;
+		$this->message = $message;
+		$this->command = $command;
 	}
 
-	public function getTopic(){
-		return $this->topic;
+	public function getCommand() : String{
+		return $this->command;
+	}
+	
+	public function getMessage() : String{
+		return $this->message;
 	}
 
-	public function getChannel(){
-		return $this->channel;
+	public function getUser() : User{
+		return $this->user;
 	}
 
 }

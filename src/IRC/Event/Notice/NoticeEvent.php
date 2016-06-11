@@ -25,7 +25,7 @@ use IRC\Event\Event;
 
 class NoticeEvent extends Event{
 
-	private $notice = "";
+	protected $notice = "";
 
 	public function __construct($notice){
 		$this->notice = $notice;

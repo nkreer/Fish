@@ -25,7 +25,10 @@ use IRC\Channel;
 use IRC\Command;
 use IRC\Connection;
 use IRC\Event\Command\CommandEvent;
+use IRC\Event\CTCP\CTCPReceiveEvent;
+use IRC\Event\CTCP\CTCPSendEvent;
 use IRC\Event\Message\MessageReceiveEvent;
+use IRC\IRC;
 use IRC\Logger;
 use IRC\User;
 use IRC\Utils\BashColor;
@@ -43,18 +46,39 @@ class PRIVMSG implements ProtocolCommand{
 		$arg = $command->getArgs();
 		if($command->getArg(0) === $connection->nickname){
 			$channel = Channel::getChannel($connection, $user->getNick());
-		} else{
+		} else {
 			$channel = Channel::getChannel($connection, $arg[0]);
 		}
 		unset($arg[0]);
 		$args = explode(":", implode(" ", $arg), 2);
-		if(!in_array($args[1][0], $config->getData("command_prefix"))){ //Decide whether the message is a message or a command
+		if($args[1][0] === chr(1)){ //Check whether the message is a ctcp, message or command
+			$args[1] = explode(" ", $args[1], 2);
+			$ctcp_command = str_replace(chr(1), "", $args[1][0]);
+			unset($args[1][0]);
+			if(!empty($args[1][1])){
+				$ev = new CTCPReceiveEvent($user, $ctcp_command, implode(" ", $args[1][1]));
+			} else {
+				$ev = new CTCPReceiveEvent($user, $ctcp_command);
+			}
+			$connection->getEventHandler()->callEvent($ev);
+			if(empty($args[1][1])){
+				if($reply = IRC::getInstance()->getConfig()->getData("default_ctcp_replies")[$ctcp_command]){
+					if($reply !== null){
+						$ev = new CTCPSendEvent($user, $ctcp_command, $reply);
+						$connection->getEventHandler()->callEvent($ev);
+						if(!$ev->isCancelled()){
+							$user->sendNotice(chr(1).$ctcp_command." ".$ev->getMessage());
+						}
+					}
+				}
+			}
+		} elseif(!in_array($args[1][0], $config->getData("command_prefix"))) {
 			$ev = new MessageReceiveEvent($args[1], $user, $channel);
 			$connection->getEventHandler()->callEvent($ev);
 			if(!$ev->isCancelled()){
 				Logger::info(BashColor::GREEN.$ev->getChannel()->getName()." ".$ev->getUser()->getNick().":".BashColor::REMOVE." ".$ev->getMessage()); //Display the message to the console
 			}
-		} else{
+		} else {
 			$args[1] = substr($args[1], 1);
 			$args[1] = explode(" ", $args[1]);
 			$cmd = $args[1][0];

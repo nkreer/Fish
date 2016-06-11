@@ -27,11 +27,17 @@ class Command{
 	private $args;
 	private $connection;
 	private $prefix;
+	private $original;
 
-	public function __construct(String $command, array $args, String $prefix = ""){
+	public function __construct(String $command, array $args, String $prefix = "", String $original = ""){
 		$this->command = $command;
 		$this->args = $args;
 		$this->prefix = $prefix;
+		$this->original = $original;
+	}
+
+	public function getOriginal() : String{
+		return $this->original;
 	}
 
 	/**
