@@ -21,7 +21,7 @@
 
 namespace IRC;
 
-use IRC\Event\Command\CommandLineEvent;
+use IRC\Event\Command\CommandLine\CommandLineEvent;
 use IRC\Utils\BashColor;
 use IRC\Utils\JsonConfig;
 

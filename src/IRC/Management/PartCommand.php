@@ -27,7 +27,7 @@ use IRC\Command\CommandExecutor;
 use IRC\Command\CommandInterface;
 use IRC\Command\CommandSender;
 use IRC\Connection;
-use IRC\Event\Command\Console;
+use IRC\Event\Command\CommandLine\Console;
 use IRC\User;
 
 class PartCommand extends Command implements CommandExecutor{
