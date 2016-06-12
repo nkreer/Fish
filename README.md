@@ -34,12 +34,6 @@ Fish offers various (already usable!) features for interaction with one or more 
 - Scheduler
 - and more!
 
-## TODO
-
-- Support the entire IRC Protocol
-- Implement "help" commands right into the bot
-- Implement permissions system
-
 ## Contribute
 
 All contributions and Pull Requests are welcome. Just stick to the original coding style, please.
