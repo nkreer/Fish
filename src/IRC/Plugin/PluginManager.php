@@ -57,12 +57,12 @@ class PluginManager{
 	public function getConnection(){
 		return $this->connection;
 	}
-	
+
 	public function command(Command\CommandInterface $command, array $args, CommandSender $sender, CommandSender $room){
 		$executor = $command->getExecutor();
 		if($executor instanceof Plugin){
 			return $this->getPlugin($executor->name)->command($command, $sender, $room, $args);
-		} else {
+		} else{
 			$reflection = new \ReflectionClass($executor);
 			if($reflection->hasMethod("onCommand")){
 				return $executor->onCommand($command, $sender, $room, $args);

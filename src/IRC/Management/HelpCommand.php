@@ -30,8 +30,8 @@ use IRC\Connection;
 class HelpCommand extends Command implements CommandExecutor{
 
 	private $connection;
-	
-	public function __construct(Connection $connection){ 
+
+	public function __construct(Connection $connection){
 		$this->connection = $connection;
 		parent::__construct("help", $this, "Command help", "help <page/command>");
 	}
@@ -55,7 +55,7 @@ class HelpCommand extends Command implements CommandExecutor{
 				$cmd = $this->connection->getCommandMap()->getCommand($args[1]);
 				if($cmd instanceof CommandInterface){
 					$sender->sendNotice($cmd->getCommand().": ".$cmd->getDescription()." (Usage: ".$cmd->getUsage().")");
-				} else {
+				} else{
 					$sender->sendNotice("Command not found.");
 				}
 			}

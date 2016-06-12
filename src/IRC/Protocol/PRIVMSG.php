@@ -47,7 +47,7 @@ class PRIVMSG implements ProtocolCommand{
 		$arg = $command->getArgs();
 		if($command->getArg(0) === $connection->nickname){
 			$channel = Channel::getChannel($connection, $user->getNick());
-		} else {
+		} else{
 			$channel = Channel::getChannel($connection, $arg[0]);
 		}
 		unset($arg[0]);
@@ -69,13 +69,13 @@ class PRIVMSG implements ProtocolCommand{
 					}
 				}
 			}
-		} elseif(!in_array($args[1][0], $config->getData("command_prefix"))) {
+		} elseif(!in_array($args[1][0], $config->getData("command_prefix"))){
 			$ev = new MessageReceiveEvent($args[1], $user, $channel);
 			$connection->getEventHandler()->callEvent($ev);
 			if(!$ev->isCancelled()){
 				Logger::info(BashColor::GREEN.$ev->getChannel()->getName()." ".$ev->getUser()->getNick().":".BashColor::REMOVE." ".$ev->getMessage()); //Display the message to the console
 			}
-		} else {
+		} else{
 			$args[1] = substr($args[1], 1);
 			$args[1] = explode(" ", $args[1]);
 			$cmd = $args[1][0];

@@ -88,7 +88,7 @@ class Plugin{
 			$this->class->onLoad(); //Call the onLoad method
 		}
 	}
-	
+
 	public function command(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
 		if($this->reflectionClass->hasMethod("onCommand")){
 			$return = $this->class->onCommand($command, $sender, $args);

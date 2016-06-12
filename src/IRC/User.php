@@ -48,6 +48,15 @@ class User implements CommandSender{
 	}
 
 	/**
+	 * Get the nickname
+	 * @param $host
+	 * @return String
+	 */
+	private static function parseNick(String $host) : String{
+		return str_replace(":", "", substr($host, 0, strpos($host, "!")));
+	}
+
+	/**
 	 * Get the address
 	 * @return string
 	 */
@@ -79,14 +88,6 @@ class User implements CommandSender{
 		return $this->nick;
 	}
 
-	/**
-	 * Alias for getNick
-	 * @return String
-	 */
-	public function getName() : String{
-		return $this->nick;
-	}
-	
 	public function updateAuthenticationStatus(){
 		$this->connection->sendData("WHOIS ".$this->getNick());
 	}
@@ -115,15 +116,6 @@ class User implements CommandSender{
 	}
 
 	/**
-	 * Get the nickname
-	 * @param $host
-	 * @return String
-	 */
-	private static function parseNick(String $host) : String{
-		return str_replace(":", "", substr($host, 0, strpos($host, "!")));
-	}
-
-	/**
 	 * @param Connection $connection
 	 * @param $name
 	 * @return User
@@ -144,6 +136,14 @@ class User implements CommandSender{
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Alias for getNick
+	 * @return String
+	 */
+	public function getName() : String{
+		return $this->nick;
 	}
 
 	/**

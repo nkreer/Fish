@@ -28,7 +28,7 @@ interface CommandInterface{
 	public function setExecutor(CommandExecutor $executor);
 
 	public function getCommand() : String;
-	
+
 	public function getDescription() : String;
 
 	public function setDescription(String $description);
@@ -36,11 +36,11 @@ interface CommandInterface{
 	public function getUsage() : String;
 
 	public function setUsage(String $usage);
-	
+
 	public function getAliases() : array;
-	
+
 	public function addAlias(String $alias);
-	
+
 	public function removeAlias(String $alias);
-	
+
 }

@@ -50,11 +50,11 @@ class PartCommand extends Command implements CommandExecutor{
 					}
 					$sender->sendNotice("Parted channel(s): ".implode(", ", $channels));
 					return true;
-				} else {
+				} else{
 					return false;
 				}
 			}
-		} else {
+		} else{
 			$sender->sendNotice("You don't have the permission to execute this command.");
 			return true;
 		}

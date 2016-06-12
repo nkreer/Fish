@@ -50,24 +50,11 @@ class CommandMap{
 	}
 
 	/**
-	 * @param CommandInterface $command
-	 * @param Plugin|null $plugin
+	 * @param String $label
 	 * @return bool
 	 */
-	public function registerCommand(CommandInterface $command, Plugin $plugin = null) : bool{
-		if(!$this->hasCommand($command->getCommand())){
-			$this->commands[$command->getCommand()] = $command;
-			foreach($command->getAliases() as $alias){
-				if(!$this->hasCommand($alias)){
-					$this->commands[$alias] = $command;
-				}
-			}
-			if($plugin instanceof Plugin){
-				$this->plugins[$plugin->name][$command->getCommand()] = $command;
-			}
-			return true;
-		}
-		return false;
+	public function hasCommand($label) : bool{
+		return isset($this->commands[$label]);
 	}
 
 	/**
@@ -85,6 +72,27 @@ class CommandMap{
 			}
 			if($plugin instanceof Plugin){
 				unset($this->plugins[$plugin->name][$command->getCommand()]);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @param CommandInterface $command
+	 * @param Plugin|null $plugin
+	 * @return bool
+	 */
+	public function registerCommand(CommandInterface $command, Plugin $plugin = null) : bool{
+		if(!$this->hasCommand($command->getCommand())){
+			$this->commands[$command->getCommand()] = $command;
+			foreach($command->getAliases() as $alias){
+				if(!$this->hasCommand($alias)){
+					$this->commands[$alias] = $command;
+				}
+			}
+			if($plugin instanceof Plugin){
+				$this->plugins[$plugin->name][$command->getCommand()] = $command;
 			}
 			return true;
 		}
@@ -116,14 +124,6 @@ class CommandMap{
 
 	/**
 	 * @param String $label
-	 * @return bool
-	 */
-	public function hasCommand($label) : bool{
-		return isset($this->commands[$label]);
-	}
-
-	/**
-	 * @param String $label
 	 * @return bool|Command
 	 */
 	public function getCommand(String $label){
@@ -132,5 +132,5 @@ class CommandMap{
 		}
 		return false;
 	}
-	
+
 }

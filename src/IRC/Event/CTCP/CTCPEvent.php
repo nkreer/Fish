@@ -39,7 +39,7 @@ class CTCPEvent extends Event{
 	public function getCommand() : String{
 		return $this->command;
 	}
-	
+
 	public function getMessage() : String{
 		return $this->message;
 	}

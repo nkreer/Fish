@@ -21,7 +21,6 @@
 
 namespace IRC\Event;
 
-use IRC\Logger;
 use IRC\Plugin\Plugin;
 
 class EventHandler{
@@ -58,22 +57,6 @@ class EventHandler{
 
 	/**
 	 * @param Event $event
-	 * @param Listener $listener
-	 */
-	private function runEvent(Event $event, Listener $listener){
-		$eventClass = new \ReflectionClass($event);
-		$reflectionClass = new \ReflectionClass($listener);
-		$eventName = "on".$eventClass->getShortName();
-		$eventGroupName = "on".$eventClass->getParentClass()->getShortName();
-		if($reflectionClass->hasMethod($eventName)){
-			$listener->$eventName($event);
-		} elseif($reflectionClass->hasMethod("on".$eventGroupName)){
-			$listener->$eventGroupName($event);
-		}
-	}
-
-	/**
-	 * @param Event $event
 	 */
 	public function callEvent(Event $event){
 		foreach($this->listeners as $priority){
@@ -92,6 +75,22 @@ class EventHandler{
 			if($event->hasStopped()){
 				break;
 			}
+		}
+	}
+
+	/**
+	 * @param Event $event
+	 * @param Listener $listener
+	 */
+	private function runEvent(Event $event, Listener $listener){
+		$eventClass = new \ReflectionClass($event);
+		$reflectionClass = new \ReflectionClass($listener);
+		$eventName = "on".$eventClass->getShortName();
+		$eventGroupName = "on".$eventClass->getParentClass()->getShortName();
+		if($reflectionClass->hasMethod($eventName)){
+			$listener->$eventName($event);
+		} elseif($reflectionClass->hasMethod("on".$eventGroupName)){
+			$listener->$eventGroupName($event);
 		}
 	}
 
