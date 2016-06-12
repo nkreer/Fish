@@ -86,9 +86,9 @@ class PRIVMSG implements ProtocolCommand{
 			if(!$ev->isCancelled()){
 				$cmd = $connection->getCommandMap()->getCommand($cmd);
 				if($cmd instanceof Command\Command){
-					$result = $connection->getPluginManager()->command($cmd, $args, $user, $channel);
+					$result = $connection->getPluginManager()->command($cmd, $args[1], $user, $channel);
 					if($result === false and $cmd->getUsage() !== ""){
-						$ev = new CommandSendUsageEvent($cmd, $user, $channel, $args);
+						$ev = new CommandSendUsageEvent($cmd, $user, $channel, $args[1]);
 						if(!$ev->isCancelled()){
 							$channel->sendMessage("Usage: ".$cmd->getUsage());
 						}

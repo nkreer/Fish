@@ -21,6 +21,8 @@
 
 namespace IRC\Command;
 
+use GuzzleHttp\Tests\Psr7\Str;
+
 class Command implements CommandInterface{
 
 	private $command;
@@ -40,7 +42,11 @@ class Command implements CommandInterface{
 	public function getExecutor() : CommandExecutor{
 		return $this->executor;
 	}
-	
+
+	public function setExecutor(CommandExecutor $executor){
+		$this->executor = $executor;
+	}
+
 	public function getCommand() : String{
 		return $this->command;
 	}
@@ -48,9 +54,17 @@ class Command implements CommandInterface{
 	public function getDescription() : String{
 		return $this->description;
 	}
-	
+
+	public function setDescription(String $description){
+		$this->description = $description;
+	}
+
 	public function getUsage() : String{
 		return $this->usage;
+	}
+
+	public function setUsage(String $usage){
+		$this->usage = $usage;
 	}
 	
 	public function getAliases() : array{

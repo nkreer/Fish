@@ -23,7 +23,7 @@ namespace IRC;
 
 use IRC\Command\CommandMap;
 use IRC\Event\EventHandler;
-use IRC\Event\Whois\WhoisSendEvent;
+use IRC\Management\OperatorCommands;
 use IRC\Plugin\PluginManager;
 use IRC\Scheduler\Scheduler;
 use IRC\Tracking\UserTracker;
@@ -82,6 +82,7 @@ class Connection{
 		$this->port = $port;
 
 		$this->commandMap = new CommandMap();
+		new OperatorCommands($this);
 		$this->pluginManager = new PluginManager($this);
 		$this->eventHandler = new EventHandler();
 		$this->scheduler = new Scheduler();

@@ -19,28 +19,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace IRC\Command;
+namespace IRC\Management;
 
-interface CommandInterface{
+use IRC\Connection;
 
-	public function getExecutor() : CommandExecutor;
+class OperatorCommands{
 
-	public function setExecutor(CommandExecutor $executor);
+	public function __construct(Connection $connection){
+		$connection->getCommandMap()->registerCommand(new JoinCommand($connection));
+		$connection->getCommandMap()->registerCommand(new PartCommand($connection));
+	}
 
-	public function getCommand() : String;
-	
-	public function getDescription() : String;
-
-	public function setDescription(String $description);
-
-	public function getUsage() : String;
-
-	public function setUsage(String $usage);
-	
-	public function getAliases() : array;
-	
-	public function addAlias(String $alias);
-	
-	public function removeAlias(String $alias);
-	
 }
