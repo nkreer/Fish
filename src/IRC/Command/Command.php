@@ -21,8 +21,6 @@
 
 namespace IRC\Command;
 
-use GuzzleHttp\Tests\Psr7\Str;
-
 class Command implements CommandInterface{
 
 	private $command;

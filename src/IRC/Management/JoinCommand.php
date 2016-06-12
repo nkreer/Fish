@@ -24,6 +24,7 @@ namespace IRC\Management;
 use IRC\Channel;
 use IRC\Command\Command;
 use IRC\Command\CommandExecutor;
+use IRC\Command\CommandInterface;
 use IRC\Command\CommandSender;
 use IRC\Connection;
 use IRC\Event\Command\Console;
@@ -35,31 +36,26 @@ class JoinCommand extends Command implements CommandExecutor{
 
 	public function __construct(Connection $connection){
 		$this->connection = $connection;
-		parent::__construct("join",
-							$this,
-							"Join channels",
-							"join #channel1,#channel2...");
+		parent::__construct("join", $this, "Join channels", "join <#channel1,#channel2...>");
 	}
 
-	public function onCommand(Command $command, CommandSender $sender, CommandSender $room, array $args){
+	public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
 		if($sender instanceof User and $sender->isOperator() || $sender instanceof Console){
-			switch(strtolower($command->getCommand())){
-				case 'join':
-					$channels = explode(",", $args[1]);
-					if(count($channels) >= 1 and !empty($channels)){
-						foreach($channels as $channel){
-							$channel = Channel::getChannel($this->connection, $channel);
-							$this->connection->joinChannel($channel);
-						}
-						$room->sendMessage("Joined channel(s): ".implode(", ", $channels));
-						return true;
-					} else {
-						return false;
+			if(strtolower($command->getCommand()) === "help"){
+				$channels = explode(",", $args[1]);
+				if(count($channels) >= 1 and !empty($channels)){
+					foreach($channels as $channel){
+						$channel = Channel::getChannel($this->connection, $channel);
+						$this->connection->joinChannel($channel);
 					}
-					break;
+					$sender->sendNotice("Joined channel(s): ".implode(", ", $channels));
+					return true;
+				} else {
+					return false;
+				}
 			}
 		} else {
-			$room->sendMessage("You don't have the permission to execute this command.");
+			$sender->sendNotice("You don't have the permission to execute this command.");
 			return true;
 		}
 		return false;

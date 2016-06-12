@@ -21,44 +21,45 @@
 
 namespace IRC\Management;
 
-use IRC\Channel;
 use IRC\Command\Command;
 use IRC\Command\CommandExecutor;
 use IRC\Command\CommandInterface;
 use IRC\Command\CommandSender;
 use IRC\Connection;
-use IRC\Event\Command\Console;
-use IRC\User;
 
-class PartCommand extends Command implements CommandExecutor{
+class HelpCommand extends Command implements CommandExecutor{
 
 	private $connection;
-
-	public function __construct(Connection $connection){
+	
+	public function __construct(Connection $connection){ 
 		$this->connection = $connection;
-		parent::__construct("part", $this, "Leave channels", "part <#channel1,#channel2...>");
+		parent::__construct("help", $this, "Command help", "help <page/command>");
 	}
 
 	public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
-		if($sender instanceof User and $sender->isOperator() || $sender instanceof Console){
-			if(strtolower($command->getCommand() === "part")){
-				$channels = explode(",", $args[1]);
-				if(count($channels) >= 1){
-					foreach($channels as $channel){
-						$channel = Channel::getChannel($this->connection, $channel);
-						$this->connection->partChannel($channel);
+		if(strtolower($command->getCommand()) === "help"){
+			if(is_numeric($args[1]) or empty($args[1])){
+				$page = $args[1];
+				if(empty($page)){
+					$page = 1;
+				}
+				$commands = $this->connection->getCommandMap()->getCommands();
+				$commands = array_values($commands);
+				$sender->sendNotice("Help page ".$page);
+				for($p = ($page - 1); $p <= ($page + 4); $p++){
+					if(isset($commands[$p]) and $commands[$p] instanceof CommandInterface){
+						$sender->sendNotice($commands[$p]->getCommand().": ".$commands[$p]->getDescription());
 					}
-					$sender->sendNotice("Parted channel(s): ".implode(", ", $channels));
-					return true;
+				}
+			} elseif(is_string($args[1])){
+				$cmd = $this->connection->getCommandMap()->getCommand($args[1]);
+				if($cmd instanceof CommandInterface){
+					$sender->sendNotice($cmd->getCommand().": ".$cmd->getDescription()." (Usage: ".$cmd->getUsage().")");
 				} else {
-					return false;
+					$sender->sendNotice("Command not found.");
 				}
 			}
-		} else {
-			$sender->sendNotice("You don't have the permission to execute this command.");
-			return true;
 		}
-		return false;
 	}
 
 }

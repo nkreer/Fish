@@ -29,6 +29,13 @@ class CommandMap{
 	private $plugins;
 
 	/**
+	 * @return Command[]
+	 */
+	public function getCommands() : array{
+		return $this->commands;
+	}
+
+	/**
 	 * @param CommandInterface $command
 	 * @param Plugin|null $plugin
 	 * @return bool

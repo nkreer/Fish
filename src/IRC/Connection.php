@@ -23,6 +23,7 @@ namespace IRC;
 
 use IRC\Command\CommandMap;
 use IRC\Event\EventHandler;
+use IRC\Management\ManagementCommands;
 use IRC\Management\OperatorCommands;
 use IRC\Plugin\PluginManager;
 use IRC\Scheduler\Scheduler;
@@ -82,7 +83,7 @@ class Connection{
 		$this->port = $port;
 
 		$this->commandMap = new CommandMap();
-		new OperatorCommands($this);
+		new ManagementCommands($this);
 		$this->pluginManager = new PluginManager($this);
 		$this->eventHandler = new EventHandler();
 		$this->scheduler = new Scheduler();

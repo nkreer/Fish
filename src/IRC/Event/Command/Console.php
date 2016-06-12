@@ -23,11 +23,16 @@ namespace IRC\Event\Command;
 
 use IRC\Command\CommandSender;
 use IRC\Logger;
+use IRC\Utils\BashColor;
 
 class Console implements CommandSender{
 
 	public function sendMessage(String $message){
 		Logger::info($message);
+	}
+
+	public function sendNotice(String $notice){
+		Logger::info(BashColor::RED.">> ".$notice);
 	}
 
 	public function getName(){
