@@ -74,9 +74,9 @@ class PluginManager{
 	 * @return bool|int
 	 */
 	public function loadPlugin(String $name, bool $force = false){
-		if(file_exists("plugins/".$name."/plugin.json")){
+		if(file_exists("plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR."plugin.json")){
 			$json = new JsonConfig();
-			$json->loadFile("plugins/".$name."/plugin.json");
+			$json->loadFile("plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR."plugin.json");
 			$json = $json->getConfig();
 
 			if(isset($json["load"]) and $json["load"] !== false or $force == true){
@@ -84,7 +84,7 @@ class PluginManager{
 					Logger::info(BashColor::YELLOW."Plugin ".$name." is not supported by this version of Fish.");
 				}
 
-				$this->getClassLoader()->addPsr4($name."\\", "plugins/".$name."/");
+				$this->getClassLoader()->addPsr4($name."\\", "plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR);
 
 				$plugin = new Plugin($name, $json, $this->connection);
 

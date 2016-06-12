@@ -44,7 +44,7 @@ class Plugin{
 	public $class;
 
 	public function __construct(String $name, array $json, Connection $connection){
-		if(file_exists("plugins/".$name."/plugin.json")){
+		if(file_exists("plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR."plugin.json")){
 			Logger::info(BashColor::GREEN."Loading plugin ".BashColor::BLUE.$name);
 
 			$this->name = $json["name"];
@@ -57,7 +57,7 @@ class Plugin{
 				$this->commands = $json["commands"];
 			}
 
-			$info = new \SplFileInfo("plugins/".$name."/".$this->main);
+			$info = new \SplFileInfo("plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.$this->main);
 			$class = new \ReflectionClass("\\".$name."\\".$info->getBasename(".php")); //Taking care of using the correct namespace
 			$this->class = $class->newInstanceWithoutConstructor();
 			$this->reflectionClass = $class;

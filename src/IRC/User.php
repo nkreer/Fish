@@ -38,9 +38,9 @@ class User{
 		$this->nick = self::parseNick($hostmask);
 		$this->address = self::parseAddress($hostmask);
 		$this->separator = self::parseSeparator($hostmask);
-		if(is_file("users/".$this->getNick().".json")){
+		if(is_file("users".DIRECTORY_SEPARATOR.$this->getNick().".json")){
 			$this->updateAuthenticationStatus();
-			$this->admin = json_decode(file_get_contents("users/".$this->getNick().".json"), true)["admin"];
+			$this->admin = json_decode(file_get_contents("users".DIRECTORY_SEPARATOR.$this->getNick().".json"), true)["admin"];
 			$this->remember();
 		}
 	}
@@ -83,7 +83,7 @@ class User{
 	 */
 	public function remember() : int{
 		$options = ["name" => $this->getNick(), "admin" => $this->admin, "lastSeen" => time()];
-		return file_put_contents("users/".$this->getNick().".json", json_encode($options, JSON_PRETTY_PRINT));
+		return file_put_contents("users".DIRECTORY_SEPARATOR.$this->getNick().".json", json_encode($options, JSON_PRETTY_PRINT));
 	}
 
 	/**
