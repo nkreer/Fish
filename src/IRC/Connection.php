@@ -82,6 +82,8 @@ class Connection{
 		$this->address = $address;
 		$this->port = $port;
 
+		@mkdir("users/".$this->getAddress()."/");
+		
 		$this->commandMap = new CommandMap();
 		new ManagementCommands($this);
 		$this->pluginManager = new PluginManager($this);
@@ -140,7 +142,7 @@ class Connection{
 	 * @return $this|bool
 	 */
 	public function connect(){
-		$this->socket = stream_socket_client($this->getAddress().":".$this->getPort());
+		$this->socket = stream_socket_client($this->address.":".$this->getPort());
 		if(is_resource($this->socket)){
 			stream_set_blocking($this->socket, 0);
 			$this->handshake();
@@ -217,7 +219,7 @@ class Connection{
 	 * @return String
 	 */
 	public function getAddress() : String{
-		return $this->address;
+		return str_replace("ssl://", "", $this->address);
 	}
 
 	/**
