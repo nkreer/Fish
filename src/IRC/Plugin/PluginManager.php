@@ -99,7 +99,7 @@ class PluginManager{
 	 * @return bool|int
 	 */
 	public function loadPlugin(String $name, bool $force = false){
-		if(file_exists("plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR."plugin.json")){
+		if(file_exists("plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR."plugin.json") && !$this->hasPlugin($name)){
 			$json = new JsonConfig();
 			$json->loadFile("plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR."plugin.json");
 			$json = $json->getConfig();
@@ -109,19 +109,33 @@ class PluginManager{
 					Logger::info(BashColor::YELLOW."Plugin ".$name." is not supported by this version of Fish.");
 				}
 
-				$this->getClassLoader()->addPsr4($name."\\", "plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR);
+				$success = true;
+				if(isset($json["depend"])){
+					foreach($json["depend"] as $dependency){
+						Logger::info(BashColor::YELLOW."Loading dependency ".$dependency);
+						$success = $this->loadPlugin($dependency, true);
+						if($success === false){
+							Logger::info(BashColor::RED."Couldn't find dependency ".$dependency);
+							break;
+						}
+					}
+				}
 
-				$plugin = new Plugin($name, $json, $this->getConnection());
+				if($success !== false){
+					$this->getClassLoader()->addPsr4($name."\\", "plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR);
 
-				$ev = new PluginLoadEvent($plugin);
-				$this->getConnection()->getEventHandler()->callEvent($ev);
-				if(!$ev->isCancelled()){
-					$key = count($this->plugins);
-					$this->plugins[$plugin->name] = $plugin;
-					$plugin->load();
-					return $key;
-				} else{
-					unset($plugin); // Don't keep it loaded
+					$plugin = new Plugin($name, $json, $this->getConnection());
+
+					$ev = new PluginLoadEvent($plugin);
+					$this->getConnection()->getEventHandler()->callEvent($ev);
+					if(!$ev->isCancelled()){
+						$key = count($this->plugins);
+						$this->plugins[$plugin->name] = $plugin;
+						$plugin->load();
+						return $key;
+					} else{
+						unset($plugin); // Don't keep it loaded
+					}
 				}
 			}
 		}
