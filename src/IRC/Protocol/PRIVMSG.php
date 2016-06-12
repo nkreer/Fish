@@ -25,6 +25,7 @@ use IRC\Channel;
 use IRC\Command;
 use IRC\Connection;
 use IRC\Event\Command\CommandEvent;
+use IRC\Event\Command\CommandSendUsageEvent;
 use IRC\Event\CTCP\CTCPReceiveEvent;
 use IRC\Event\CTCP\CTCPSendEvent;
 use IRC\Event\Message\MessageReceiveEvent;
@@ -82,6 +83,18 @@ class PRIVMSG implements ProtocolCommand{
 			Logger::info(BashColor::CYAN.$user->getNick()." > ".$cmd." ".implode(" ", $args[1]));
 			$ev = new CommandEvent($cmd, $args[1], $channel, $user);
 			$connection->getEventHandler()->callEvent($ev);
+			if(!$ev->isCancelled()){
+				$cmd = $connection->getCommandMap()->getCommand($cmd);
+				if($cmd instanceof Command\Command){
+					$result = $connection->getPluginManager()->command($cmd, $args, $user, $channel);
+					if($result === false and $cmd->getUsage() !== ""){
+						$ev = new CommandSendUsageEvent($cmd, $user, $channel, $args);
+						if(!$ev->isCancelled()){
+							$channel->sendMessage("Usage: ".$cmd->getUsage());
+						}
+					}
+				}
+			}
 		}
 	}
 

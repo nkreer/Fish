@@ -21,10 +21,11 @@
 
 namespace IRC;
 
+use IRC\Command\CommandSender;
 use IRC\Event\Message\MessageSendEvent;
 use IRC\Event\Notice\NoticeSendEvent;
 
-class Channel{
+class Channel implements CommandSender{
 
 	private static $channels = [];
 

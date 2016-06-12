@@ -21,12 +21,13 @@
 
 namespace IRC\Plugin;
 
+use IRC\Command\CommandExecutor;
 use IRC\Connection;
 use IRC\Event\EventHandler;
 use IRC\IRC;
 use IRC\Scheduler\Scheduler;
 
-class PluginBase{
+class PluginBase implements CommandExecutor{
 
 	/**
 	 * @var Connection

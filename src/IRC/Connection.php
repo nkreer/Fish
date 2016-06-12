@@ -21,6 +21,7 @@
 
 namespace IRC;
 
+use IRC\Command\CommandMap;
 use IRC\Event\EventHandler;
 use IRC\Event\Whois\WhoisSendEvent;
 use IRC\Plugin\PluginManager;
@@ -71,15 +72,25 @@ class Connection{
 	 */
 	private $channels = [];
 
+	/**
+	 * @var CommandMap
+	 */
+	private $commandMap;
+
 	public function __construct(String $address, int $port){
 		$this->address = $address;
 		$this->port = $port;
 
+		$this->commandMap = new CommandMap();
 		$this->pluginManager = new PluginManager($this);
 		$this->eventHandler = new EventHandler();
 		$this->scheduler = new Scheduler();
 
 		$this->trackers[] = new UserTracker($this);
+	}
+
+	public function getCommandMap() : CommandMap{
+		return $this->commandMap;
 	}
 
 	public function getPluginManager() : PluginManager{

@@ -21,7 +21,9 @@
 
 namespace IRC;
 
-class User{
+use IRC\Command\CommandSender;
+
+class User implements CommandSender{
 
 	private static $users = [];
 	public $identified = false;
@@ -70,10 +72,21 @@ class User{
 		return "!";
 	}
 
+	/**
+	 * @return String
+	 */
 	public function getNick() : String{
 		return $this->nick;
 	}
 
+	/**
+	 * Alias for getNick
+	 * @return String
+	 */
+	public function getName() : String{
+		return $this->nick;
+	}
+	
 	public function updateAuthenticationStatus(){
 		$this->connection->sendData("WHOIS ".$this->getNick());
 	}
@@ -110,6 +123,11 @@ class User{
 		return str_replace(":", "", substr($host, 0, strpos($host, "!")));
 	}
 
+	/**
+	 * @param Connection $connection
+	 * @param $name
+	 * @return User
+	 */
 	public static function getUser(Connection $connection, $name){
 		if(isset(self::$users[$connection->getAddress()][$name])){
 			return self::$users[$connection->getAddress()][$name];
@@ -128,10 +146,16 @@ class User{
 		return false;
 	}
 
-	public function getAddress() : bool{
+	/**
+	 * @return String
+	 */
+	public function getAddress() : String{
 		return $this->address;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isOperator() : bool{
 		if($this->isIdentified() and $this->admin){
 			return true;
@@ -139,10 +163,16 @@ class User{
 		return false;
 	}
 
+	/**
+	 * @return String
+	 */
 	public function isIdentified() : String{
 		return $this->identified;
 	}
 
+	/**
+	 * @return String
+	 */
 	public function getSeparator() : String{
 		return $this->separator;
 	}

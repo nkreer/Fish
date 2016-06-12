@@ -37,8 +37,8 @@ Fish offers various (already usable!) features for interaction with one or more 
 ## TODO
 
 - Support the entire IRC Protocol
-- Add a real commands system
 - Implement "help" commands right into the bot
+- Implement permissions system
 
 ## Contribute
 

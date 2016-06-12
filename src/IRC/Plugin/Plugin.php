@@ -22,6 +22,9 @@
 namespace IRC\Plugin;
 
 use Composer\Autoload\ClassLoader;
+use IRC\Command\Command;
+use IRC\Command\CommandInterface;
+use IRC\Command\CommandSender;
 use IRC\Connection;
 use IRC\Logger;
 use IRC\Utils\BashColor;
@@ -53,16 +56,30 @@ class Plugin{
 			$this->version = $json["version"];
 			$this->author = $json["author"];
 			$this->main = $json["main"];
-			if(isset($json["commands"])){
-				$this->commands = $json["commands"];
-			}
 
+			//Instantiating plugins
 			$info = new \SplFileInfo("plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.$this->main);
 			$class = new \ReflectionClass("\\".$name."\\".$info->getBasename(".php")); //Taking care of using the correct namespace
 			$this->class = $class->newInstanceWithoutConstructor();
 			$this->reflectionClass = $class;
 			$this->class->connection = $connection;
 			$this->class->plugin = $this;
+
+			//Registering commands
+			if(isset($json["commands"])){
+				$this->commands = $json["commands"];
+				foreach($this->commands as $command => $settings){
+					$description = (isset($settings["description"]) ? $settings["description"] : "");
+					$usage = (isset($settings["usage"]) ? $settings["usage"] : $command);
+					$command = new Command($command, $this->class, $description, $usage);
+					if(isset($settings["aliases"]) && is_array($settings["aliases"])){
+						foreach($settings["aliases"] as $alias){
+							$command->addAlias($alias);
+						}
+					}
+					$connection->getCommandMap()->registerCommand($command);
+				}
+			}
 		}
 	}
 
@@ -70,6 +87,14 @@ class Plugin{
 		if($this->reflectionClass->hasMethod("onLoad")){
 			$this->class->onLoad(); //Call the onLoad method
 		}
+	}
+	
+	public function command(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
+		if($this->reflectionClass->hasMethod("onCommand")){
+			$return = $this->class->onCommand($command, $sender, $args);
+			return ($return === null ? false : $return);
+		}
+		return false;
 	}
 
 	public function unload(){

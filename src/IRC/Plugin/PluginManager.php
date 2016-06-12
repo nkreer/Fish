@@ -22,6 +22,8 @@
 namespace IRC\Plugin;
 
 use Composer\Autoload\ClassLoader;
+use IRC\Command;
+use IRC\Command\CommandSender;
 use IRC\Connection;
 use IRC\Event\Plugin\PluginLoadEvent;
 use IRC\Event\Plugin\PluginUnloadEvent;
@@ -42,8 +44,31 @@ class PluginManager{
 		$this->classLoader->register();
 	}
 
+	/**
+	 * @return ClassLoader
+	 */
 	public function getClassLoader(){
 		return $this->classLoader;
+	}
+
+	/**
+	 * @return Connection
+	 */
+	public function getConnection(){
+		return $this->connection;
+	}
+	
+	public function command(Command\CommandInterface $command, array $args, CommandSender $sender, CommandSender $room){
+		$executor = $command->getExecutor();
+		if($executor instanceof Plugin){
+			return $this->getPlugin($executor->name)->command($command, $sender, $room, $args);
+		} else {
+			$reflection = new \ReflectionClass($executor);
+			if($reflection->hasMethod("onCommand")){
+				return $executor->onCommand($command, $sender, $room, $args);
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -86,10 +111,10 @@ class PluginManager{
 
 				$this->getClassLoader()->addPsr4($name."\\", "plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR);
 
-				$plugin = new Plugin($name, $json, $this->connection);
+				$plugin = new Plugin($name, $json, $this->getConnection());
 
 				$ev = new PluginLoadEvent($plugin);
-				$this->connection->getEventHandler()->callEvent($ev);
+				$this->getConnection()->getEventHandler()->callEvent($ev);
 				if(!$ev->isCancelled()){
 					$key = count($this->plugins);
 					$this->plugins[$plugin->name] = $plugin;
@@ -110,13 +135,14 @@ class PluginManager{
 	public function unloadPlugin(Plugin $plugin) : bool{
 		if($this->hasPlugin($plugin->name)){
 			$ev = new PluginUnloadEvent($plugin);
-			$this->connection->getEventHandler()->callEvent($ev);
+			$this->getConnection()->getEventHandler()->callEvent($ev);
 			if(!$ev->isCancelled()){
 				Logger::info(BashColor::RED."Unloading plugin ".BashColor::BLUE.$plugin->name);
 				$plugin->unload();
 				unset($this->plugins[$plugin->name]);
-				$this->connection->getEventHandler()->unregisterPlugin($plugin);
-				$this->connection->getScheduler()->cancelPluginTasks($plugin);
+				$this->getConnection()->getCommandMap()->unregisterPlugin($plugin);
+				$this->getConnection()->getEventHandler()->unregisterPlugin($plugin);
+				$this->getConnection()->getScheduler()->cancelPluginTasks($plugin);
 				unset($plugin);
 				return true;
 			}
