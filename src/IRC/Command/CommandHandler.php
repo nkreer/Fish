@@ -24,26 +24,72 @@ namespace IRC\Command;
 use IRC\Channel;
 use IRC\Connection;
 use IRC\Event\Command\CommandSendUsageTextEvent;
+use IRC\IRC;
+use IRC\Management\SpamProtectionResetTask;
 use IRC\User;
 
 class CommandHandler{
 
     private $connection;
     private $timers;
+    private $config;
 
     public function __construct(Connection $connection){
         $this->connection = $connection;
+        $this->config = IRC::getInstance()->getConfig()->getData("spam_protection");
     }
 
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function unblockUser(User $user) : bool{
+        if(isset($this->timers[$user->getAddress()])){
+            unset($this->timers[$user->getAddress()]);
+        }
+        return true;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function isBlocked(User $user) : bool{
+        if($this->config["enabled"]){
+            if($this->config["disable_ops"] !== true and $user->isOperator() || !$user->isOperator()){
+                if(isset($this->timers[$user->getAddress()])){
+                    $this->timers[$user->getAddress()] += 1;
+                    if($this->timers[$user->getAddress()] >= $this->config["max_commands"]){
+                        return true;
+                    }
+                } else {
+                    $this->timers[$user->getAddress()] = 1;
+                    $this->connection->getScheduler()->scheduleDelayedTask(new SpamProtectionResetTask($this, $user), $this->config["time"]);
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param $cmd
+     * @param User $user
+     * @param Channel $channel
+     * @param $args
+     */
     public function handleCommand($cmd, User $user, Channel $channel, $args){
         $cmd = $this->connection->getCommandMap()->getCommand($cmd);
         if($cmd instanceof CommandInterface){
-            $result = $this->connection->getPluginManager()->command($cmd, $args[1], $user, $channel);
-            if($result === false and $cmd->getUsage() !== ""){
-                $ev = new CommandSendUsageTextEvent($cmd, $user, $channel, $args[1]);
-                if(!$ev->isCancelled()){
-                    $channel->sendNotice("Usage: ".$cmd->getUsage());
+            if($this->isBlocked($user) === false){
+                $result = $this->connection->getPluginManager()->command($cmd, $args[1], $user, $channel);
+                if($result === false and $cmd->getUsage() !== ""){
+                    $ev = new CommandSendUsageTextEvent($cmd, $user, $channel, $args[1]);
+                    if(!$ev->isCancelled()){
+                        $user->sendNotice("Usage: ".$cmd->getUsage());
+                    }
                 }
+            } else {
+                $user->sendNotice($this->config["message"]);
             }
         }
     }

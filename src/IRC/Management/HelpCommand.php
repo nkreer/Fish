@@ -39,9 +39,10 @@ class HelpCommand extends Command implements CommandExecutor{
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
         if(strtolower($command->getCommand()) === "help"){
             if(is_numeric($args[1]) or empty($args[1])){
-                $page = $args[1];
-                if(empty($page)){
+                if(empty($args[1])){
                     $page = 1;
+                } else {
+                    $page = $args[1];
                 }
                 $commands = $this->connection->getCommandMap()->getCommands();
                 $commands = array_values($commands);

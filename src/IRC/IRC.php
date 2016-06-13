@@ -66,7 +66,7 @@ class IRC{
             $conf->setData("cpu_idle", 10);
             $conf->setData("authentication_ttl", 1200);
             $conf->setData("default_ctcp_replies", ["VERSION" => "Fish ".self::VERSION]);
-            $conf->setData("spam_protection", ["enabled" => true, "max_commands" => 10, "time" => 60, "disable_ops" => true]);
+            $conf->setData("spam_protection", ["enabled" => true, "max_commands" => 10, "time" => 60, "disable_ops" => true, "message"=>"You're currently blocked from using commands because you were using too many."]);
 
             $conf->save("fish.json");
             $this->config = $conf;
