@@ -1,8 +1,13 @@
+# Fish 
 
 ![Image of a fish](http://orig07.deviantart.net/1524/f/2013/023/0/9/fish_png_by_heidyy12-d5sg0z8.png)
 
+![Chat](https://img.shields.io/badge/Chat%20on%20irc.rizon.net-%23fish--irc-brightgreen.svg)
+![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)
+[![Supported OSes](https://img.shields.io/badge/platform-MacOS%2C%20Linux-lightgrey.svg)](http://qchat.rizon.net/?randomnick=1&channels=fish-irc&prompt=1&uio=d4)
+
 Fish is an IRC-Bot with a powerful plugin API written in PHP. 
-It is distributed under the terms and conditions of the [GPL Version 3 License](LICENSE) which is distributed with this project.
+It is distributed under the terms and conditions of the [GPL Version 3 License](LICENSE)
 
 ## Installation
 
