@@ -21,12 +21,14 @@
 
 namespace IRC;
 
+use IRC\Authentication\AuthenticationStatus;
+use IRC\Authentication\UpdateAuthenticationStatusTask;
 use IRC\Command\CommandSender;
 
 class User implements CommandSender{
 
     private static $users = [];
-    public $identified = false;
+    public $identified = AuthenticationStatus::UNCHECKED;
     private $host;
     private $connection;
     private $admin = false;
@@ -89,7 +91,9 @@ class User implements CommandSender{
     }
 
     public function updateAuthenticationStatus(){
+        $this->identified = AuthenticationStatus::UNIDENTIFIED;
         $this->connection->sendData("WHOIS ".$this->getNick());
+        $this->connection->getScheduler()->scheduleDelayedTask(new UpdateAuthenticationStatusTask($this), IRC::getInstance()->getConfig()->getData("authentication_ttl"));
     }
 
     /**
@@ -166,7 +170,7 @@ class User implements CommandSender{
     /**
      * @return String
      */
-    public function isIdentified() : String{
+    public function getAuthenticationStatus() : String{
         return $this->identified;
     }
 

@@ -19,22 +19,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace IRC\Tracking;
+namespace IRC\Authentication;
 
-use IRC\Scheduler\Task;
-use IRC\User;
+class AuthenticationStatus{
 
-class RemoveAuthenticationStatusTask extends Task{
-
-    private $user;
-
-    public function __construct(User $user){
-        $this->user = $user;
-    }
-
-    public function onRun(){
-        $this->user->identified = false;
-        $this->user->updateAuthenticationStatus();
-    }
+    const IDENTIFIED = 1;
+    const UNIDENTIFIED = 2;
+    const UNCHECKED = 3;
 
 }

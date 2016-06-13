@@ -19,21 +19,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace IRC\Protocol;
+namespace IRC\Authentication;
 
-use IRC\Authentication\AuthenticationStatus;
-use IRC\Command;
-use IRC\Connection;
+use IRC\Scheduler\Task;
 use IRC\User;
-use IRC\Utils\JsonConfig;
 
-class _307 implements ProtocolCommand{
+class UpdateAuthenticationStatusTask extends Task{
 
-    public static function run(Command $command, Connection $connection, JsonConfig $config){
-        $user = User::getUserByNick($connection, $command->getArg(1));
-        if($user instanceof User){
-            $user->identified = AuthenticationStatus::IDENTIFIED;
-        }
+    private $user;
+
+    public function __construct(User $user){
+        $this->user = $user;
+    }
+
+    public function onRun(){
+        $this->user->updateAuthenticationStatus();
     }
 
 }
