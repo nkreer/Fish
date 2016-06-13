@@ -25,18 +25,18 @@ use IRC\User;
 
 class NoticeReceiveEvent extends NoticeEvent{
 
-	private $user;
+    private $user;
 
-	public function __construct($notice, User $user){
-		parent::__construct($notice);
-		$this->user = $user;
-	}
+    public function __construct($notice, User $user){
+        parent::__construct($notice);
+        $this->user = $user;
+    }
 
-	/**
-	 * @return User
-	 */
-	public function getUser(){
-		return $this->user;
-	}
+    /**
+     * @return User
+     */
+    public function getUser(){
+        return $this->user;
+    }
 
 }

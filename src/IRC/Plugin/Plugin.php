@@ -31,76 +31,76 @@ use IRC\Utils\BashColor;
 
 class Plugin{
 
-	public $name;
-	public $description;
-	public $apiVersion;
-	public $version;
-	public $author;
-	public $commands = [];
-	public $main;
+    public $name;
+    public $description;
+    public $apiVersion;
+    public $version;
+    public $author;
+    public $commands = [];
+    public $main;
 
-	public $reflectionClass;
+    public $reflectionClass;
 
-	/**
-	 * @var PluginBase
-	 */
-	public $class;
+    /**
+     * @var PluginBase
+     */
+    public $class;
 
-	public function __construct(String $name, array $json, Connection $connection){
-		if(file_exists("plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR."plugin.json")){
-			Logger::info(BashColor::GREEN."Loading plugin ".BashColor::BLUE.$name);
+    public function __construct(String $name, array $json, Connection $connection){
+        if(file_exists("plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR."plugin.json")){
+            Logger::info(BashColor::GREEN."Loading plugin ".BashColor::BLUE.$name);
 
-			$this->name = $json["name"];
-			$this->description = $json["description"];
-			$this->apiVersion = $json["api"];
-			$this->version = $json["version"];
-			$this->author = $json["author"];
-			$this->main = $json["main"];
+            $this->name = $json["name"];
+            $this->description = $json["description"];
+            $this->apiVersion = $json["api"];
+            $this->version = $json["version"];
+            $this->author = $json["author"];
+            $this->main = $json["main"];
 
-			//Instantiating plugins
-			$info = new \SplFileInfo("plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.$this->main);
-			$class = new \ReflectionClass("\\".$name."\\".$info->getBasename(".php")); //Taking care of using the correct namespace
-			$this->class = $class->newInstanceWithoutConstructor();
-			$this->reflectionClass = $class;
-			$this->class->connection = $connection;
-			$this->class->plugin = $this;
+            //Instantiating plugins
+            $info = new \SplFileInfo("plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.$this->main);
+            $class = new \ReflectionClass("\\".$name."\\".$info->getBasename(".php")); //Taking care of using the correct namespace
+            $this->class = $class->newInstanceWithoutConstructor();
+            $this->reflectionClass = $class;
+            $this->class->connection = $connection;
+            $this->class->plugin = $this;
 
-			//Registering commands
-			if(isset($json["commands"])){
-				$this->commands = $json["commands"];
-				foreach($this->commands as $command => $settings){
-					$description = (isset($settings["description"]) ? $settings["description"] : "");
-					$usage = (isset($settings["usage"]) ? $settings["usage"] : $command);
-					$command = new Command($command, $this->class, $description, $usage);
-					if(isset($settings["aliases"]) && is_array($settings["aliases"])){
-						foreach($settings["aliases"] as $alias){
-							$command->addAlias($alias);
-						}
-					}
-					$connection->getCommandMap()->registerCommand($command);
-				}
-			}
-		}
-	}
+            //Registering commands
+            if(isset($json["commands"])){
+                $this->commands = $json["commands"];
+                foreach($this->commands as $command => $settings){
+                    $description = (isset($settings["description"]) ? $settings["description"] : "");
+                    $usage = (isset($settings["usage"]) ? $settings["usage"] : $command);
+                    $command = new Command($command, $this->class, $description, $usage);
+                    if(isset($settings["aliases"]) && is_array($settings["aliases"])){
+                        foreach($settings["aliases"] as $alias){
+                            $command->addAlias($alias);
+                        }
+                    }
+                    $connection->getCommandMap()->registerCommand($command);
+                }
+            }
+        }
+    }
 
-	public function load(){
-		if($this->reflectionClass->hasMethod("onLoad")){
-			$this->class->onLoad(); //Call the onLoad method
-		}
-	}
+    public function load(){
+        if($this->reflectionClass->hasMethod("onLoad")){
+            $this->class->onLoad(); //Call the onLoad method
+        }
+    }
 
-	public function command(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
-		if($this->reflectionClass->hasMethod("onCommand")){
-			$return = $this->class->onCommand($command, $sender, $args);
-			return ($return === null ? false : $return);
-		}
-		return false;
-	}
+    public function command(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
+        if($this->reflectionClass->hasMethod("onCommand")){
+            $return = $this->class->onCommand($command, $sender, $args);
+            return ($return === null ? false : $return);
+        }
+        return false;
+    }
 
-	public function unload(){
-		if($this->reflectionClass->hasMethod("onDisable")){
-			$this->class->onDisable(); //Call the onDisable method
-		}
-	}
+    public function unload(){
+        if($this->reflectionClass->hasMethod("onDisable")){
+            $this->class->onDisable(); //Call the onDisable method
+        }
+    }
 
 }

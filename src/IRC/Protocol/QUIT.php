@@ -35,14 +35,14 @@ use IRC\Utils\JsonConfig;
  */
 class QUIT implements ProtocolCommand{
 
-	public static function run(Command $command, Connection $connection, JsonConfig $config){
-		//Tell the plugins that a user has quit
-		$user = User::getUser($connection, $command->getPrefix());
-		$ev = new UserQuitEvent($user);
-		$connection->getEventHandler()->callEvent($ev);
-		if(!$ev->isCancelled()){
-			Logger::info($user->getNick()." quit");
-		}
-	}
+    public static function run(Command $command, Connection $connection, JsonConfig $config){
+        //Tell the plugins that a user has quit
+        $user = User::getUser($connection, $command->getPrefix());
+        $ev = new UserQuitEvent($user);
+        $connection->getEventHandler()->callEvent($ev);
+        if(!$ev->isCancelled()){
+            Logger::info($user->getNick()." quit");
+        }
+    }
 
 }

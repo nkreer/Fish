@@ -23,30 +23,30 @@ namespace IRC\Utils;
 
 class JsonConfig{
 
-	private $config = [];
+    private $config = [];
 
-	public function loadFile(String $filename){
-		$this->config = json_decode(file_get_contents($filename), true);
-	}
+    public function loadFile(String $filename){
+        $this->config = json_decode(file_get_contents($filename), true);
+    }
 
-	public function setData(String $key, $value){
-		$this->config[$key] = $value;
-	}
+    public function setData(String $key, $value){
+        $this->config[$key] = $value;
+    }
 
-	public function getData(String $key){
-		return $this->config[$key];
-	}
+    public function getData(String $key){
+        return $this->config[$key];
+    }
 
-	public function hasData(String $key) : bool{
-		return isset($this->config[$key]);
-	}
+    public function hasData(String $key) : bool{
+        return isset($this->config[$key]);
+    }
 
-	public function getConfig(){
-		return $this->config;
-	}
+    public function getConfig(){
+        return $this->config;
+    }
 
-	public function save(String $filename){
-		return file_put_contents($filename, json_encode($this->config, JSON_PRETTY_PRINT));
-	}
+    public function save(String $filename){
+        return file_put_contents($filename, json_encode($this->config, JSON_PRETTY_PRINT));
+    }
 
 }

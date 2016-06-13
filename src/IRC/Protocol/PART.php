@@ -36,17 +36,17 @@ use IRC\Utils\JsonConfig;
  */
 class PART implements ProtocolCommand{
 
-	public static function run(Command $command, Connection $connection, JsonConfig $config){
-		//Tell the plugins that a user has parted
-		$channel = Channel::getChannel($connection, str_replace(":", "", $command->getArg(0)));
-		$user = User::getUser($connection, $command->getPrefix());
-		if($user instanceof User){
-			$ev = new ChannelLeaveEvent($channel, $user);
-			$connection->getEventHandler()->callEvent($ev);
-			if(!$ev->isCancelled()){
-				Logger::info($user->getNick()." left ".$channel->getName());
-			}
-		}
-	}
+    public static function run(Command $command, Connection $connection, JsonConfig $config){
+        //Tell the plugins that a user has parted
+        $channel = Channel::getChannel($connection, str_replace(":", "", $command->getArg(0)));
+        $user = User::getUser($connection, $command->getPrefix());
+        if($user instanceof User){
+            $ev = new ChannelLeaveEvent($channel, $user);
+            $connection->getEventHandler()->callEvent($ev);
+            if(!$ev->isCancelled()){
+                Logger::info($user->getNick()." left ".$channel->getName());
+            }
+        }
+    }
 
 }

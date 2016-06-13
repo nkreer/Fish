@@ -23,60 +23,61 @@ namespace IRC\Command;
 
 class Command implements CommandInterface{
 
-	private $command;
-	private $description;
-	private $usage;
-	private $aliases = [];
+    private $command;
+    private $description;
+    private $usage;
+    private $aliases = [];
 
-	private $executor;
+    private $executor;
 
-	public function __construct(String $command, CommandExecutor $executor, String $description = "", String $usage = ""){
-		$this->description = $description;
-		$this->usage = $usage;
-		$this->command = $command;
-		$this->executor = $executor;
-	}
+    public function __construct(String $command, CommandExecutor $executor, String $description = "",
+                                String $usage = ""){
+        $this->description = $description;
+        $this->usage = $usage;
+        $this->command = $command;
+        $this->executor = $executor;
+    }
 
-	public function getExecutor() : CommandExecutor{
-		return $this->executor;
-	}
+    public function getExecutor() : CommandExecutor{
+        return $this->executor;
+    }
 
-	public function setExecutor(CommandExecutor $executor){
-		$this->executor = $executor;
-	}
+    public function setExecutor(CommandExecutor $executor){
+        $this->executor = $executor;
+    }
 
-	public function getCommand() : String{
-		return $this->command;
-	}
+    public function getCommand() : String{
+        return $this->command;
+    }
 
-	public function getDescription() : String{
-		return $this->description;
-	}
+    public function getDescription() : String{
+        return $this->description;
+    }
 
-	public function setDescription(String $description){
-		$this->description = $description;
-	}
+    public function setDescription(String $description){
+        $this->description = $description;
+    }
 
-	public function getUsage() : String{
-		return $this->usage;
-	}
+    public function getUsage() : String{
+        return $this->usage;
+    }
 
-	public function setUsage(String $usage){
-		$this->usage = $usage;
-	}
+    public function setUsage(String $usage){
+        $this->usage = $usage;
+    }
 
-	public function getAliases() : array{
-		return $this->aliases;
-	}
+    public function getAliases() : array{
+        return $this->aliases;
+    }
 
-	public function addAlias(String $alias){
-		$this->aliases[$alias] = $alias;
-	}
+    public function addAlias(String $alias){
+        $this->aliases[$alias] = $alias;
+    }
 
-	public function removeAlias(String $alias){
-		if(isset($this->aliases[$alias])){
-			unset($this->aliases[$alias]);
-		}
-	}
+    public function removeAlias(String $alias){
+        if(isset($this->aliases[$alias])){
+            unset($this->aliases[$alias]);
+        }
+    }
 
 }

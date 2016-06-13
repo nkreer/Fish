@@ -25,10 +25,10 @@ use IRC\Connection;
 
 class ManagementCommands{
 
-	public function __construct(Connection $connection){
-		$connection->getCommandMap()->registerCommand(new JoinCommand($connection));
-		$connection->getCommandMap()->registerCommand(new PartCommand($connection));
-		$connection->getCommandMap()->registerCommand(new HelpCommand($connection));
-	}
+    public function __construct(Connection $connection){
+        $connection->getCommandMap()->registerCommand(new JoinCommand($connection));
+        $connection->getCommandMap()->registerCommand(new PartCommand($connection));
+        $connection->getCommandMap()->registerCommand(new HelpCommand($connection));
+    }
 
 }

@@ -32,217 +32,217 @@ use IRC\Utils\BashColor;
 
 class Connection{
 
-	/**
-	 * @var String
-	 */
-	private $address;
-	/**
-	 * @var int
-	 */
-	private $port;
+    /**
+     * @var String
+     */
+    private $address;
+    /**
+     * @var int
+     */
+    private $port;
 
-	private $socket;
+    private $socket;
 
-	public $nickname = "FishBot";
-	public $realname = "FISH (".IRC::CODENAME.") v".IRC::VERSION;
-	public $username = "Fish";
-	public $hostname = "Fish";
+    public $nickname = "FishBot";
+    public $realname = "FISH (".IRC::CODENAME.") v".IRC::VERSION;
+    public $username = "Fish";
+    public $hostname = "Fish";
 
-	/**
-	 * @var PluginManager
-	 */
-	private $pluginManager;
+    /**
+     * @var PluginManager
+     */
+    private $pluginManager;
 
-	/**
-	 * @var EventHandler
-	 */
-	private $eventHandler;
+    /**
+     * @var EventHandler
+     */
+    private $eventHandler;
 
-	/**
-	 * @var Scheduler
-	 */
-	private $scheduler;
+    /**
+     * @var Scheduler
+     */
+    private $scheduler;
 
-	/**
-	 * @var array
-	 */
-	private $trackers = [];
+    /**
+     * @var array
+     */
+    private $trackers = [];
 
-	/**
-	 * @var Channel[]
-	 */
-	private $channels = [];
+    /**
+     * @var Channel[]
+     */
+    private $channels = [];
 
-	/**
-	 * @var CommandMap
-	 */
-	private $commandMap;
+    /**
+     * @var CommandMap
+     */
+    private $commandMap;
 
-	public function __construct(String $address, int $port){
-		$this->address = $address;
-		$this->port = $port;
+    public function __construct(String $address, int $port){
+        $this->address = $address;
+        $this->port = $port;
 
-		@mkdir("users/".$this->getAddress()."/");
-		
-		$this->commandMap = new CommandMap();
-		new ManagementCommands($this);
-		$this->pluginManager = new PluginManager($this);
-		$this->eventHandler = new EventHandler();
-		$this->scheduler = new Scheduler();
+        @mkdir("users/".$this->getAddress()."/");
 
-		$this->trackers[] = new UserTracker($this);
-	}
+        $this->commandMap = new CommandMap();
+        new ManagementCommands($this);
+        $this->pluginManager = new PluginManager($this);
+        $this->eventHandler = new EventHandler();
+        $this->scheduler = new Scheduler();
 
-	public function getCommandMap() : CommandMap{
-		return $this->commandMap;
-	}
+        $this->trackers[] = new UserTracker($this);
+    }
 
-	public function getPluginManager() : PluginManager{
-		return $this->pluginManager;
-	}
+    public function getCommandMap() : CommandMap{
+        return $this->commandMap;
+    }
 
-	public function getEventHandler() : EventHandler{
-		return $this->eventHandler;
-	}
+    public function getPluginManager() : PluginManager{
+        return $this->pluginManager;
+    }
 
-	public function getScheduler() : Scheduler{
-		return $this->scheduler;
-	}
+    public function getEventHandler() : EventHandler{
+        return $this->eventHandler;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function read() : String{
-		return fgets($this->socket);
-	}
+    public function getScheduler() : Scheduler{
+        return $this->scheduler;
+    }
 
-	/**
-	 * @param $message
-	 * @return bool|Command
-	 */
-	public function check(bool $message = true){
-		if($message === true){
-			$message = $this->read();
-		}
+    /**
+     * @return string
+     */
+    public function read() : String{
+        return fgets($this->socket);
+    }
 
-		if(!empty($message)){
-			$data = str_replace("\n", "", $message);
-			$parsed = Parser::parse($data);
-			$parsed->setConnection($this);
-			if(IRC::getInstance()->devmode){
-				Logger::info($this->getAddress()."  ".$data);
-			}
-			return $parsed;
-		}
-		return false;
-	}
+    /**
+     * @param $message
+     * @return bool|Command
+     */
+    public function check(bool $message = true){
+        if($message === true){
+            $message = $this->read();
+        }
 
-	/**
-	 * Connect with the server
-	 * @return $this|bool
-	 */
-	public function connect(){
-		$this->socket = stream_socket_client($this->address.":".$this->getPort());
-		if(is_resource($this->socket)){
-			stream_set_blocking($this->socket, 0);
-			$this->handshake();
-			$this->getPluginManager()->loadAll();
-			return $this;
-		}
-		return false;
-	}
+        if(!empty($message)){
+            $data = str_replace("\n", "", $message);
+            $parsed = Parser::parse($data);
+            $parsed->setConnection($this);
+            if(IRC::getInstance()->devmode){
+                Logger::info($this->getAddress()."  ".$data);
+            }
+            return $parsed;
+        }
+        return false;
+    }
 
-	public function handshake(){
-		$this->sendData("USER ".$this->nickname." ".$this->hostname." ".$this->username." :".$this->realname);
-		$this->sendData("NICK ".$this->nickname);
-	}
+    /**
+     * Connect with the server
+     * @return $this|bool
+     */
+    public function connect(){
+        $this->socket = stream_socket_client($this->address.":".$this->getPort());
+        if(is_resource($this->socket)){
+            stream_set_blocking($this->socket, 0);
+            $this->handshake();
+            $this->getPluginManager()->loadAll();
+            return $this;
+        }
+        return false;
+    }
 
-	public function disconnect(String $message = "Quit"){
-		$this->sendData("QUIT :".$message);
-		fclose($this->socket);
-	}
+    public function handshake(){
+        $this->sendData("USER ".$this->nickname." ".$this->hostname." ".$this->username." :".$this->realname);
+        $this->sendData("NICK ".$this->nickname);
+    }
 
-	/**
-	 * Send something to the server
-	 * @param String $data
-	 */
-	public function sendData(String $data){
-		fwrite($this->socket, $data."\n");
-		if(IRC::getInstance()->devmode){
-			Logger::info($this->getAddress()." > ".$data);
-		}
-	}
+    public function disconnect(String $message = "Quit"){
+        $this->sendData("QUIT :".$message);
+        fclose($this->socket);
+    }
 
-	/**
-	 * Join a channel
-	 * @param Channel $channel
-	 */
-	public function joinChannel(Channel $channel){
-		$this->channels[$channel->getName()] = $channel;
-		$this->sendData("JOIN :".$channel->getName());
-		Logger::info("Joining channel ".BashColor::PURPLE.$channel->getName());
-	}
+    /**
+     * Send something to the server
+     * @param String $data
+     */
+    public function sendData(String $data){
+        fwrite($this->socket, $data."\n");
+        if(IRC::getInstance()->devmode){
+            Logger::info($this->getAddress()." > ".$data);
+        }
+    }
 
-	/**
-	 * @param Channel $channel
-	 */
-	public function partChannel(Channel $channel){
-		if($this->isInChannel($channel)){
-			Logger::info("Leaving channel ".BashColor::PURPLE.$channel->getName());
-			$this->sendData("PART :".$channel->getName());
-			unset($this->channels[$channel->getName()]);
-		}
-	}
+    /**
+     * Join a channel
+     * @param Channel $channel
+     */
+    public function joinChannel(Channel $channel){
+        $this->channels[$channel->getName()] = $channel;
+        $this->sendData("JOIN :".$channel->getName());
+        Logger::info("Joining channel ".BashColor::PURPLE.$channel->getName());
+    }
 
-	/**
-	 * @param Channel $channel
-	 * @return bool
-	 */
-	public function isInChannel(Channel $channel){
-		return isset($this->channels[$channel->getName()]);
-	}
+    /**
+     * @param Channel $channel
+     */
+    public function partChannel(Channel $channel){
+        if($this->isInChannel($channel)){
+            Logger::info("Leaving channel ".BashColor::PURPLE.$channel->getName());
+            $this->sendData("PART :".$channel->getName());
+            unset($this->channels[$channel->getName()]);
+        }
+    }
 
-	/**
-	 * @return Channel[]
-	 */
-	public function getChannels() : array{
-		return $this->channels;
-	}
+    /**
+     * @param Channel $channel
+     * @return bool
+     */
+    public function isInChannel(Channel $channel){
+        return isset($this->channels[$channel->getName()]);
+    }
 
-	public function changeNick(String $nick){
-		Logger::info("Changing nick from ".BashColor::PURPLE.$this->nickname.BashColor::WHITE." to ".BashColor::PURPLE.$nick);
-		$this->nickname = $nick;
-		$this->sendData("NICK ".$nick);
-	}
+    /**
+     * @return Channel[]
+     */
+    public function getChannels() : array{
+        return $this->channels;
+    }
 
-	/**
-	 * @return String
-	 */
-	public function getAddress() : String{
-		return str_replace("ssl://", "", $this->address);
-	}
+    public function changeNick(String $nick){
+        Logger::info("Changing nick from ".BashColor::PURPLE.$this->nickname.BashColor::WHITE." to ".BashColor::PURPLE.$nick);
+        $this->nickname = $nick;
+        $this->sendData("NICK ".$nick);
+    }
 
-	/**
-	 * @return int
-	 */
-	public function getPort() : int{
-		return $this->port;
-	}
+    /**
+     * @return String
+     */
+    public function getAddress() : String{
+        return str_replace("ssl://", "", $this->address);
+    }
 
-	public function getNick() : String{
-		return $this->nickname;
-	}
+    /**
+     * @return int
+     */
+    public function getPort() : int{
+        return $this->port;
+    }
 
-	public function getRealname() : String{
-		return $this->realname;
-	}
+    public function getNick() : String{
+        return $this->nickname;
+    }
 
-	public function getUsername() : String{
-		return $this->getUsername();
-	}
+    public function getRealname() : String{
+        return $this->realname;
+    }
 
-	public function getHost() : String{
-		return $this->hostname;
-	}
+    public function getUsername() : String{
+        return $this->getUsername();
+    }
+
+    public function getHost() : String{
+        return $this->hostname;
+    }
 
 }

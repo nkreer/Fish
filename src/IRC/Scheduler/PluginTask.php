@@ -25,17 +25,17 @@ use IRC\Plugin\PluginBase;
 
 abstract class PluginTask implements TaskInterface{
 
-	private $owner;
+    private $owner;
 
-	public function __construct(PluginBase $owner){
-		$this->owner = $owner;
-	}
+    public function __construct(PluginBase $owner){
+        $this->owner = $owner;
+    }
 
-	/**
-	 * @return PluginBase
-	 */
-	public function getOwner() : PluginBase{
-		return $this->owner;
-	}
+    /**
+     * @return PluginBase
+     */
+    public function getOwner() : PluginBase{
+        return $this->owner;
+    }
 
 }

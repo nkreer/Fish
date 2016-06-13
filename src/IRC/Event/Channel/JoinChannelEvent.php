@@ -26,15 +26,15 @@ use IRC\User;
 
 class JoinChannelEvent extends ChannelEvent{
 
-	private $user;
+    private $user;
 
-	public function __construct(Channel $channel, User $user){
-		parent::__construct($channel);
-		$this->user = $user;
-	}
+    public function __construct(Channel $channel, User $user){
+        parent::__construct($channel);
+        $this->user = $user;
+    }
 
-	public function getUser(){
-		return $this->user;
-	}
+    public function getUser(){
+        return $this->user;
+    }
 
 }

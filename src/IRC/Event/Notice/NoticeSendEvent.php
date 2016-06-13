@@ -25,15 +25,15 @@ use IRC\Channel;
 
 class NoticeSendEvent extends NoticeEvent{
 
-	private $channel;
+    private $channel;
 
-	public function __construct($notice, Channel $channel){
-		parent::__construct($notice);
-		$this->channel = $channel;
-	}
+    public function __construct($notice, Channel $channel){
+        parent::__construct($notice);
+        $this->channel = $channel;
+    }
 
-	public function getChannel(){
-		return $this->channel;
-	}
+    public function getChannel(){
+        return $this->channel;
+    }
 
 }

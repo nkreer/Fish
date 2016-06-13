@@ -26,26 +26,26 @@ use IRC\User;
 
 class CTCPEvent extends Event{
 
-	protected $user;
-	protected $message;
-	protected $command;
+    protected $user;
+    protected $message;
+    protected $command;
 
-	public function __construct(User $user, String $command, String $message = ""){
-		$this->user = $user;
-		$this->message = $message;
-		$this->command = $command;
-	}
+    public function __construct(User $user, String $command, String $message = ""){
+        $this->user = $user;
+        $this->message = $message;
+        $this->command = $command;
+    }
 
-	public function getCommand() : String{
-		return $this->command;
-	}
+    public function getCommand() : String{
+        return $this->command;
+    }
 
-	public function getMessage() : String{
-		return $this->message;
-	}
+    public function getMessage() : String{
+        return $this->message;
+    }
 
-	public function getUser() : User{
-		return $this->user;
-	}
+    public function getUser() : User{
+        return $this->user;
+    }
 
 }

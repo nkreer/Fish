@@ -27,16 +27,16 @@ use IRC\Utils\BashColor;
 
 class Console implements CommandSender{
 
-	public function sendMessage(String $message){
-		Logger::info($message);
-	}
+    public function sendMessage(String $message){
+        Logger::info($message);
+    }
 
-	public function sendNotice(String $notice){
-		Logger::info(BashColor::RED.">> ".$notice);
-	}
+    public function sendNotice(String $notice){
+        Logger::info(BashColor::RED.">> ".$notice);
+    }
 
-	public function getName(){
-		return "Console";
-	}
+    public function getName(){
+        return "Console";
+    }
 
 }

@@ -26,14 +26,14 @@ use IRC\Event\Event;
 
 class ChannelEvent extends Event{
 
-	protected $channel;
+    protected $channel;
 
-	public function __construct(Channel $channel){
-		$this->channel = $channel;
-	}
+    public function __construct(Channel $channel){
+        $this->channel = $channel;
+    }
 
-	public function getChannel(){
-		return $this->channel;
-	}
+    public function getChannel(){
+        return $this->channel;
+    }
 
 }

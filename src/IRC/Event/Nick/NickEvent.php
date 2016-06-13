@@ -25,14 +25,14 @@ use IRC\Event\Event;
 
 class NickEvent extends Event{
 
-	protected $nick;
+    protected $nick;
 
-	public function __construct($nick){
-		$this->nick = $nick;
-	}
+    public function __construct($nick){
+        $this->nick = $nick;
+    }
 
-	public function getNick(){
-		return $this->nick;
-	}
+    public function getNick(){
+        return $this->nick;
+    }
 
 }

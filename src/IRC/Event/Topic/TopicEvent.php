@@ -26,20 +26,20 @@ use IRC\Event\Event;
 
 class TopicEvent extends Event{
 
-	protected $topic;
-	protected $channel;
+    protected $topic;
+    protected $channel;
 
-	public function __construct($topic, Channel $channel){
-		$this->topic = $topic;
-		$this->channel = $channel;
-	}
+    public function __construct($topic, Channel $channel){
+        $this->topic = $topic;
+        $this->channel = $channel;
+    }
 
-	public function getTopic(){
-		return $this->topic;
-	}
+    public function getTopic(){
+        return $this->topic;
+    }
 
-	public function getChannel(){
-		return $this->channel;
-	}
+    public function getChannel(){
+        return $this->channel;
+    }
 
 }

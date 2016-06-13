@@ -23,64 +23,64 @@ namespace IRC;
 
 class Command{
 
-	private $command;
-	private $args;
-	private $connection;
-	private $prefix;
-	private $original;
+    private $command;
+    private $args;
+    private $connection;
+    private $prefix;
+    private $original;
 
-	public function __construct(String $command, array $args, String $prefix = "", String $original = ""){
-		$this->command = $command;
-		$this->args = $args;
-		$this->prefix = $prefix;
-		$this->original = $original;
-	}
+    public function __construct(String $command, array $args, String $prefix = "", String $original = ""){
+        $this->command = $command;
+        $this->args = $args;
+        $this->prefix = $prefix;
+        $this->original = $original;
+    }
 
-	public function getOriginal() : String{
-		return $this->original;
-	}
+    public function getOriginal() : String{
+        return $this->original;
+    }
 
-	/**
-	 * @return String
-	 */
-	public function getPrefix() : String{
-		return $this->prefix;
-	}
+    /**
+     * @return String
+     */
+    public function getPrefix() : String{
+        return $this->prefix;
+    }
 
-	/**
-	 * @return String
-	 */
-	public function getCommand() : String{
-		return $this->command;
-	}
+    /**
+     * @return String
+     */
+    public function getCommand() : String{
+        return $this->command;
+    }
 
-	/**
-	 * @return []
-	 */
-	public function getArgs() : array{
-		return $this->args;
-	}
+    /**
+     * @return []
+     */
+    public function getArgs() : array{
+        return $this->args;
+    }
 
-	/**
-	 * @param $arg
-	 * @return mixed
-	 */
-	public function getArg($arg){
-		return $this->args[$arg];
-	}
+    /**
+     * @param $arg
+     * @return mixed
+     */
+    public function getArg($arg){
+        return $this->args[$arg];
+    }
 
-	/**
-	 * @return Connection
-	 */
-	public function getConnection() : Connection{
-		return $this->connection;
-	}
+    /**
+     * @return Connection
+     */
+    public function getConnection() : Connection{
+        return $this->connection;
+    }
 
-	/**
-	 * @param Connection $connection
-	 */
-	public function setConnection(Connection $connection){
-		$this->connection = $connection;
-	}
+    /**
+     * @param Connection $connection
+     */
+    public function setConnection(Connection $connection){
+        $this->connection = $connection;
+    }
 
 }

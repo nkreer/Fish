@@ -35,16 +35,16 @@ use IRC\Utils\JsonConfig;
  */
 class NICK implements ProtocolCommand{
 
-	public static function run(Command $command, Connection $connection, JsonConfig $config){
-		$user = User::getUser($connection, $command->getPrefix());
-		$new = str_replace(":", "", $command->getArg(0));
-		$newUser = User::getUser($connection, $new.$user->getSeparator()."@".$user->getAddress());
-		$ev = new UserChangeNickEvent($newUser, $user->getNick(), $new);
-		$connection->getEventHandler()->callEvent($ev);
-		if(!$ev->isCancelled()){
-			Logger::info($user->getNick()." is now known as ".$new);
-		}
-		User::removeUser($connection, $user->getNick());
-	}
+    public static function run(Command $command, Connection $connection, JsonConfig $config){
+        $user = User::getUser($connection, $command->getPrefix());
+        $new = str_replace(":", "", $command->getArg(0));
+        $newUser = User::getUser($connection, $new.$user->getSeparator()."@".$user->getAddress());
+        $ev = new UserChangeNickEvent($newUser, $user->getNick(), $new);
+        $connection->getEventHandler()->callEvent($ev);
+        if(!$ev->isCancelled()){
+            Logger::info($user->getNick()." is now known as ".$new);
+        }
+        User::removeUser($connection, $user->getNick());
+    }
 
 }

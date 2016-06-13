@@ -37,21 +37,21 @@ use IRC\Utils\JsonConfig;
  */
 class MODE implements ProtocolCommand{
 
-	public static function run(Command $command, Connection $connection, JsonConfig $config){
-		$user = User::getUser($connection, $command->getPrefix());
-		$channel = Channel::getChannel($connection, $command->getArg(0));
-		$mode = $command->getArg(1);
-		if($channel->getName() === $connection->getNick()){
-			$ev = new MyModesChangeEvent($mode, $user, $channel);
-			$connection->getEventHandler()->callEvent($ev);
-		} elseif(empty($command->getArg(2))){
-			$ev = new ChannelModeChangeEvent($mode, $user, $channel);
-			$connection->getEventHandler()->callEvent($ev);
-		} else{
-			$nick = $command->getArg(2);
-			$ev = new UserModeChangeEvent($mode, $user, $channel, $nick);
-			$connection->getEventHandler()->callEvent($ev);
-		}
-	}
+    public static function run(Command $command, Connection $connection, JsonConfig $config){
+        $user = User::getUser($connection, $command->getPrefix());
+        $channel = Channel::getChannel($connection, $command->getArg(0));
+        $mode = $command->getArg(1);
+        if($channel->getName() === $connection->getNick()){
+            $ev = new MyModesChangeEvent($mode, $user, $channel);
+            $connection->getEventHandler()->callEvent($ev);
+        } elseif(empty($command->getArg(2))) {
+            $ev = new ChannelModeChangeEvent($mode, $user, $channel);
+            $connection->getEventHandler()->callEvent($ev);
+        } else {
+            $nick = $command->getArg(2);
+            $ev = new UserModeChangeEvent($mode, $user, $channel, $nick);
+            $connection->getEventHandler()->callEvent($ev);
+        }
+    }
 
 }

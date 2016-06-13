@@ -32,33 +32,33 @@ use IRC\User;
 
 class JoinCommand extends Command implements CommandExecutor{
 
-	private $connection;
+    private $connection;
 
-	public function __construct(Connection $connection){
-		$this->connection = $connection;
-		parent::__construct("join", $this, "Join channels", "join <#channel1,#channel2...>");
-	}
+    public function __construct(Connection $connection){
+        $this->connection = $connection;
+        parent::__construct("join", $this, "Join channels", "join <#channel1,#channel2...>");
+    }
 
-	public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
-		if($sender instanceof User and $sender->isOperator() || $sender instanceof Console){
-			if(strtolower($command->getCommand()) === "help"){
-				$channels = explode(",", $args[1]);
-				if(count($channels) >= 1 and !empty($channels)){
-					foreach($channels as $channel){
-						$channel = Channel::getChannel($this->connection, $channel);
-						$this->connection->joinChannel($channel);
-					}
-					$sender->sendNotice("Joined channel(s): ".implode(", ", $channels));
-					return true;
-				} else{
-					return false;
-				}
-			}
-		} else{
-			$sender->sendNotice("You don't have the permission to execute this command.");
-			return true;
-		}
-		return false;
-	}
+    public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
+        if($sender instanceof User and $sender->isOperator() || $sender instanceof Console){
+            if(strtolower($command->getCommand()) === "help"){
+                $channels = explode(",", $args[1]);
+                if(count($channels) >= 1 and !empty($channels)){
+                    foreach($channels as $channel){
+                        $channel = Channel::getChannel($this->connection, $channel);
+                        $this->connection->joinChannel($channel);
+                    }
+                    $sender->sendNotice("Joined channel(s): ".implode(", ", $channels));
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            $sender->sendNotice("You don't have the permission to execute this command.");
+            return true;
+        }
+        return false;
+    }
 
 }

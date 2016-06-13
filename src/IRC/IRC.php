@@ -27,163 +27,164 @@ use IRC\Utils\JsonConfig;
 
 class IRC{
 
-	const VERSION = 1.0;
-	const API_VERSION = 1.0;
-	const CODENAME = "Tuna";
+    const VERSION = 1.0;
+    const API_VERSION = 1.0;
+    const CODENAME = "Tuna";
 
-	public static $instance;
+    public static $instance;
 
-	/**
-	 * @return IRC
-	 */
-	public static function getInstance() : IRC{
-		return self::$instance;
-	}
+    /**
+     * @return IRC
+     */
+    public static function getInstance() : IRC{
+        return self::$instance;
+    }
 
-	/**
-	 * @var Connection[]
-	 */
-	public $connections = [];
+    /**
+     * @var Connection[]
+     */
+    public $connections = [];
 
-	private $config;
-	public $devmode;
+    private $config;
+    public $devmode;
 
-	public function __construct(bool $dev = false){
-		$this->devmode = $dev;
-		self::$instance = $this;
-		Logger::info(BashColor::GREEN."Starting Fish (".self::CODENAME.") v".self::VERSION.BashColor::YELLOW." (API v".self::API_VERSION.")");
-		@mkdir("plugins/");
-		@mkdir("users/");
+    public function __construct(bool $dev = false){
+        $this->devmode = $dev;
+        self::$instance = $this;
+        Logger::info(BashColor::GREEN."Starting Fish (".self::CODENAME.") v".self::VERSION.BashColor::YELLOW." (API v".self::API_VERSION.")");
+        @mkdir("plugins/");
+        @mkdir("users/");
 
-		if(!file_exists("fish.json")){
-			Logger::info(BashColor::RED."Couldn't find configuration file. Making a new one...");
-			$conf = new JsonConfig();
-			$conf->setData("default_nickname", "FishBot");
-			$conf->setData("default_realname", "Fish - IRC Bot");
-			$conf->setData("default_username", "Fish");
-			$conf->setData("default_hostname", "Fish");
-			$conf->setData("default_quitmsg", "Leaving");
-			$conf->setData("command_prefix", [".", "!", "\\", "@"]);
-			$conf->setData("cpu_idle", 10);
-			$conf->setData("authentication_ttl", 1200);
-			$conf->setData("default_ctcp_replies", ["VERSION" => "Fish ".self::VERSION]);
+        if(!file_exists("fish.json")){
+            Logger::info(BashColor::RED."Couldn't find configuration file. Making a new one...");
+            $conf = new JsonConfig();
+            $conf->setData("default_nickname", "FishBot");
+            $conf->setData("default_realname", "Fish - IRC Bot");
+            $conf->setData("default_username", "Fish");
+            $conf->setData("default_hostname", "Fish");
+            $conf->setData("default_quitmsg", "Leaving");
+            $conf->setData("command_prefix", [".", "!", "\\", "@"]);
+            $conf->setData("cpu_idle", 10);
+            $conf->setData("authentication_ttl", 1200);
+            $conf->setData("default_ctcp_replies", ["VERSION" => "Fish ".self::VERSION]);
 
-			$conf->save("fish.json");
-			$this->config = $conf;
-		} else{
-			$conf = new JsonConfig();
-			$conf->loadFile("fish.json");
-			$this->config = $conf;
-		}
-		stream_set_blocking(STDIN, 0);
-	}
+            $conf->save("fish.json");
+            $this->config = $conf;
+        } else {
+            $conf = new JsonConfig();
+            $conf->loadFile("fish.json");
+            $this->config = $conf;
+        }
+        stream_set_blocking(STDIN, 0);
+    }
 
-	public function getConfig() : JsonConfig{
-		return $this->config;
-	}
+    public function getConfig() : JsonConfig{
+        return $this->config;
+    }
 
-	private function cycle(){
-		$data = fgets(STDIN); //Read from STDIN and check for commands
-		if(!empty($data)){
-			$event = new CommandLineEvent(str_replace("\n", "", $data));
-		}
+    private function cycle(){
+        $data = fgets(STDIN); //Read from STDIN and check for commands
+        if(!empty($data)){
+            $event = new CommandLineEvent(str_replace("\n", "", $data));
+        }
 
-		foreach($this->connections as $connection){
-			$new = $connection->check();
-			if($new != false){
-				$command = $new->getCommand();
-				if(is_numeric($command)){
-					$command = "_".$command;
-				}
-				$function = '\IRC\Protocol\\'.strtoupper($command);
-				if(method_exists($function, "run")){
-					call_user_func($function."::run", $new, $connection, $this->getConfig());
-				}
-			}
+        foreach($this->connections as $connection){
+            $new = $connection->check();
+            if($new != false){
+                $command = $new->getCommand();
+                if(is_numeric($command)){
+                    $command = "_".$command;
+                }
+                $function = '\IRC\Protocol\\'.strtoupper($command);
+                if(method_exists($function, "run")){
+                    call_user_func($function."::run", $new, $connection, $this->getConfig());
+                }
+            }
 
-			//Do catchup calls if we've missed any
-			if(time() - $connection->getScheduler()->getLastCall() >= 2){
-				for($time = time(); $time > $connection->getScheduler()->getLastCall(); $time--){
-					$connection->getScheduler()->call($time);
-				}
-			}
+            //Do catchup calls if we've missed any
+            if(time() - $connection->getScheduler()->getLastCall() >= 2){
+                for($time = time(); $time > $connection->getScheduler()->getLastCall(); $time--){
+                    $connection->getScheduler()->call($time);
+                }
+            }
 
-			//Regularly run scheduler
-			$connection->getScheduler()->call();
-			if(isset($event)){
-				$connection->getEventHandler()->callEvent($event); //The special CommandLineEvent gets called if it has been created earlier
-			}
-		}
+            //Regularly run scheduler
+            $connection->getScheduler()->call();
+            if(isset($event)){
+                $connection->getEventHandler()->callEvent($event); //The special CommandLineEvent gets called if it has been created earlier
+            }
+        }
 
-		if(isset($event)){
-			unset($event); //Destroy the event
-		}
-	}
+        if(isset($event)){
+            unset($event); //Destroy the event
+        }
+    }
 
-	/**
-	 * This keeps everything alive
-	 */
-	public function run(){
-		while(true){
-			if(empty($this->connections)){
-				die("No more connections."); //Kill the process if no connection
-			}
-			$this->cycle();
-			usleep($this->config->getData("cpu_idle") * 1000); //Chill
-		}
-	}
+    /**
+     * This keeps everything alive
+     */
+    public function run(){
+        while(true){
+            if(empty($this->connections)){
+                die("No more connections."); //Kill the process if no connection
+            }
+            $this->cycle();
+            usleep($this->config->getData("cpu_idle") * 1000); //Chill
+        }
+    }
 
-	/**
-	 * Add a connection
-	 * @param Connection $connection
-	 * @param $default
-	 */
-	public function addConnection(Connection $connection, bool $default = true) : bool{
-		if(!$this->isConnected($connection->getAddress())){
-			Logger::info(BashColor::CYAN."Connecting to ".$connection->getAddress().":".$connection->getPort()."...");
-			//Setting up connection details
-			if($default === true){
-				$connection->nickname = $this->getConfig()->getData("default_nickname");
-				$connection->realname = $this->getConfig()->getData("default_realname");
-				$connection->username = $this->getConfig()->getData("default_username");
-				$connection->hostname = $this->getConfig()->getData("default_hostname");
-			}
-			$result = $connection->connect();
-			if($result instanceof Connection){
-				$this->connections[$connection->getAddress()] = $connection;
-				Logger::info(BashColor::GREEN."Connected to ".$connection->getAddress().":".$connection->getPort());
-				return true;
-			} else{
-				Logger::info(BashColor::RED."Can't connect to ".$connection->getAddress().":".$connection->getPort());
-			}
-		} else{
-			Logger::info(BashColor::RED."Can't connect to ".$connection->getAddress().":".$connection->getPort().": Already connected");
-		}
-		return false;
-	}
+    /**
+     * Add a connection
+     * @param Connection $connection
+     * @param $default
+     */
+    public function addConnection(Connection $connection, bool $default = true) : bool{
+        if(!$this->isConnected($connection->getAddress())){
+            Logger::info(BashColor::CYAN."Connecting to ".$connection->getAddress().":".$connection->getPort()."...");
+            //Setting up connection details
+            if($default === true){
+                $connection->nickname = $this->getConfig()->getData("default_nickname");
+                $connection->realname = $this->getConfig()->getData("default_realname");
+                $connection->username = $this->getConfig()->getData("default_username");
+                $connection->hostname = $this->getConfig()->getData("default_hostname");
+            }
+            $result = $connection->connect();
+            if($result instanceof Connection){
+                $this->connections[$connection->getAddress()] = $connection;
+                Logger::info(BashColor::GREEN."Connected to ".$connection->getAddress().":".$connection->getPort());
+                return true;
+            } else {
+                Logger::info(BashColor::RED."Can't connect to ".$connection->getAddress().":".$connection->getPort());
+            }
+        } else {
+            Logger::info(BashColor::RED."Can't connect to ".$connection->getAddress().":".$connection->getPort().": Already connected");
+        }
+        return false;
+    }
 
-	/**
-	 * Close a connection
-	 * @param Connection $connection
-	 * @param String $quitMessage
-	 * @return bool
-	 */
-	public function removeConnection(Connection $connection, String $quitMessage = self::CODENAME." v".self::VERSION) : bool{
-		if($this->isConnected($connection->getAddress())){
-			Logger::info(BashColor::RED."Disconnecting ".$connection->getAddress().":".$connection->getPort());
-			$connection->disconnect($quitMessage);
-			unset($this->connections[$connection->getAddress()]);
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Close a connection
+     * @param Connection $connection
+     * @param String $quitMessage
+     * @return bool
+     */
+    public function removeConnection(Connection $connection,
+                                     String $quitMessage = self::CODENAME." v".self::VERSION) : bool{
+        if($this->isConnected($connection->getAddress())){
+            Logger::info(BashColor::RED."Disconnecting ".$connection->getAddress().":".$connection->getPort());
+            $connection->disconnect($quitMessage);
+            unset($this->connections[$connection->getAddress()]);
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * @param $address
-	 * @return bool
-	 */
-	public function isConnected(String $address) : bool{
-		return isset($this->connections[$address]);
-	}
+    /**
+     * @param $address
+     * @return bool
+     */
+    public function isConnected(String $address) : bool{
+        return isset($this->connections[$address]);
+    }
 
 }

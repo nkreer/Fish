@@ -27,32 +27,32 @@ use IRC\Event\Event;
 
 class CommandSendUsageEvent extends Event{
 
-	private $command;
-	private $sender;
-	private $room;
-	private $args = [];
+    private $command;
+    private $sender;
+    private $room;
+    private $args = [];
 
-	public function __construct(Command $command, CommandSender $sender, CommandSender $room, array $args){
-		$this->command = $command;
-		$this->sender = $sender;
-		$this->room = $room;
-		$this->args = $args;
-	}
+    public function __construct(Command $command, CommandSender $sender, CommandSender $room, array $args){
+        $this->command = $command;
+        $this->sender = $sender;
+        $this->room = $room;
+        $this->args = $args;
+    }
 
-	public function getCommand() : Command{
-		return $this->command;
-	}
+    public function getCommand() : Command{
+        return $this->command;
+    }
 
-	public function getSender() : CommandSender{
-		return $this->sender;
-	}
+    public function getSender() : CommandSender{
+        return $this->sender;
+    }
 
-	public function getRoom() : CommandSender{
-		return $this->room;
-	}
+    public function getRoom() : CommandSender{
+        return $this->room;
+    }
 
-	public function getArgs() : array{
-		return $this->args;
-	}
+    public function getArgs() : array{
+        return $this->args;
+    }
 
 }

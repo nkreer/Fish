@@ -23,8 +23,8 @@ namespace IRC\Event\CTCP;
 
 class CTCPSendEvent extends CTCPEvent{
 
-	public function setMessage(String $message){
-		$this->message = $message;
-	}
+    public function setMessage(String $message){
+        $this->message = $message;
+    }
 
 }

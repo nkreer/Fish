@@ -27,26 +27,26 @@ use IRC\User;
 
 class ModeEvent extends Event{
 
-	protected $mode;
-	protected $by;
-	protected $channel;
+    protected $mode;
+    protected $by;
+    protected $channel;
 
-	public function __construct($mode, User $by, Channel $channel){
-		$this->mode = $mode;
-		$this->by = $by;
-		$this->channel = $channel;
-	}
+    public function __construct($mode, User $by, Channel $channel){
+        $this->mode = $mode;
+        $this->by = $by;
+        $this->channel = $channel;
+    }
 
-	public function getChannel(){
-		return $this->channel;
-	}
+    public function getChannel(){
+        return $this->channel;
+    }
 
-	public function getChanger(){
-		return $this->by;
-	}
+    public function getChanger(){
+        return $this->by;
+    }
 
-	public function getMode(){
-		return $this->mode;
-	}
+    public function getMode(){
+        return $this->mode;
+    }
 
 }

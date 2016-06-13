@@ -23,15 +23,15 @@ namespace IRC\Utils;
 
 class BashColor{
 
-	const RED = "\033[0;31m";
-	const YELLOW = "\033[1;33m";
-	const GREEN = "\033[1;32m";
-	const BLUE = "\033[1;34m";
-	const CYAN = "\033[1;36m";
-	const PURPLE = "\033[0;35m";
-	const WHITE = "\033[1;37m";
-	const BLACK = "\033[0;30m";
-	const REMOVE = "\033[0m";
-	const HIGHLIGHT = "\033[44m";
+    const RED = "\033[0;31m";
+    const YELLOW = "\033[1;33m";
+    const GREEN = "\033[1;32m";
+    const BLUE = "\033[1;34m";
+    const CYAN = "\033[1;36m";
+    const PURPLE = "\033[0;35m";
+    const WHITE = "\033[1;37m";
+    const BLACK = "\033[0;30m";
+    const REMOVE = "\033[0m";
+    const HIGHLIGHT = "\033[44m";
 
 }

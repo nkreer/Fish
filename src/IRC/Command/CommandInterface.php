@@ -23,24 +23,24 @@ namespace IRC\Command;
 
 interface CommandInterface{
 
-	public function getExecutor() : CommandExecutor;
+    public function getExecutor() : CommandExecutor;
 
-	public function setExecutor(CommandExecutor $executor);
+    public function setExecutor(CommandExecutor $executor);
 
-	public function getCommand() : String;
+    public function getCommand() : String;
 
-	public function getDescription() : String;
+    public function getDescription() : String;
 
-	public function setDescription(String $description);
+    public function setDescription(String $description);
 
-	public function getUsage() : String;
+    public function getUsage() : String;
 
-	public function setUsage(String $usage);
+    public function setUsage(String $usage);
 
-	public function getAliases() : array;
+    public function getAliases() : array;
 
-	public function addAlias(String $alias);
+    public function addAlias(String $alias);
 
-	public function removeAlias(String $alias);
+    public function removeAlias(String $alias);
 
 }

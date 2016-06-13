@@ -26,15 +26,15 @@ use IRC\User;
 
 class RemoveAuthenticationStatusTask extends Task{
 
-	private $user;
+    private $user;
 
-	public function __construct(User $user){
-		$this->user = $user;
-	}
+    public function __construct(User $user){
+        $this->user = $user;
+    }
 
-	public function onRun(){
-		$this->user->identified = false;
-		$this->user->updateAuthenticationStatus();
-	}
+    public function onRun(){
+        $this->user->identified = false;
+        $this->user->updateAuthenticationStatus();
+    }
 
 }

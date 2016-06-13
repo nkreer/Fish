@@ -23,10 +23,10 @@ namespace IRC\Command;
 
 interface CommandSender{
 
-	public function sendMessage(String $message);
+    public function sendMessage(String $message);
 
-	public function sendNotice(String $notice);
-	
-	public function getName();
+    public function sendNotice(String $notice);
+
+    public function getName();
 
 }

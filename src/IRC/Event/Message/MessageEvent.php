@@ -25,24 +25,24 @@ use IRC\Event\Event;
 
 class MessageEvent extends Event{
 
-	protected $message = "";
+    protected $message = "";
 
-	public function __construct($message){
-		$this->message = $message;
-	}
+    public function __construct($message){
+        $this->message = $message;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getMessage(){
-		return $this->message;
-	}
+    /**
+     * @return string
+     */
+    public function getMessage(){
+        return $this->message;
+    }
 
-	/**
-	 * @param $message
-	 */
-	public function setMessage($message){
-		$this->message = $message;
-	}
+    /**
+     * @param $message
+     */
+    public function setMessage($message){
+        $this->message = $message;
+    }
 
 }

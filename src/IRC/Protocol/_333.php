@@ -33,10 +33,10 @@ use IRC\Utils\JsonConfig;
  */
 class _333 implements ProtocolCommand{
 
-	public static function run(Command $command, Connection $connection, JsonConfig $config){
-		$channel = Channel::getChannel($connection, $command->getArg(1));
-		$time = $command->getArg(3);
-		$channel->topicTime = $time;
-	}
+    public static function run(Command $command, Connection $connection, JsonConfig $config){
+        $channel = Channel::getChannel($connection, $command->getArg(1));
+        $time = $command->getArg(3);
+        $channel->topicTime = $time;
+    }
 
 }

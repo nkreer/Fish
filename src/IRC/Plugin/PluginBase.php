@@ -29,38 +29,38 @@ use IRC\Scheduler\Scheduler;
 
 class PluginBase implements CommandExecutor{
 
-	/**
-	 * @var Connection
-	 */
-	public $connection;
+    /**
+     * @var Connection
+     */
+    public $connection;
 
-	/**
-	 * @var Plugin
-	 */
-	public $plugin;
+    /**
+     * @var Plugin
+     */
+    public $plugin;
 
-	public function getConnection() : Connection{
-		return $this->connection;
-	}
+    public function getConnection() : Connection{
+        return $this->connection;
+    }
 
-	public function getClient() : IRC{
-		return IRC::getInstance();
-	}
+    public function getClient() : IRC{
+        return IRC::getInstance();
+    }
 
-	public function getPluginManager() : PluginManager{
-		return $this->connection->getPluginManager();
-	}
+    public function getPluginManager() : PluginManager{
+        return $this->connection->getPluginManager();
+    }
 
-	public function getEventHandler() : EventHandler{
-		return $this->connection->getEventHandler();
-	}
+    public function getEventHandler() : EventHandler{
+        return $this->connection->getEventHandler();
+    }
 
-	public function getScheduler() : Scheduler{
-		return $this->connection->getScheduler();
-	}
+    public function getScheduler() : Scheduler{
+        return $this->connection->getScheduler();
+    }
 
-	public function getPlugin() : Plugin{
-		return $this->plugin;
-	}
+    public function getPlugin() : Plugin{
+        return $this->plugin;
+    }
 
 }

@@ -35,14 +35,14 @@ use IRC\Utils\JsonConfig;
  */
 class TOPIC implements ProtocolCommand{
 
-	public static function run(Command $command, Connection $connection, JsonConfig $config){
-		$channel = Channel::getChannel($connection, $command->getArg(0));
-		$user = User::getUser($connection, $command->getPrefix());
-		$args = $command->getArgs();
-		for($a = 0; $a <= 0; $a++) unset($args[$a]);
-		$topic = explode(":", implode(" ", $args), 2)[1];
-		$ev = new TopicChangeEvent($topic, $channel, $user);
-		$connection->getEventHandler()->callEvent($ev);
-	}
+    public static function run(Command $command, Connection $connection, JsonConfig $config){
+        $channel = Channel::getChannel($connection, $command->getArg(0));
+        $user = User::getUser($connection, $command->getPrefix());
+        $args = $command->getArgs();
+        for($a = 0; $a <= 0; $a++) unset($args[$a]);
+        $topic = explode(":", implode(" ", $args), 2)[1];
+        $ev = new TopicChangeEvent($topic, $channel, $user);
+        $connection->getEventHandler()->callEvent($ev);
+    }
 
 }

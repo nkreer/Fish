@@ -23,36 +23,36 @@ namespace IRC\Event;
 
 class Event{
 
-	private $cancelled = false;
-	private $stop = false;
+    private $cancelled = false;
+    private $stop = false;
 
-	/**
-	 * @return bool
-	 */
-	public function isCancelled(){
-		return $this->cancelled;
-	}
+    /**
+     * @return bool
+     */
+    public function isCancelled(){
+        return $this->cancelled;
+    }
 
-	/**
-	 * @param bool|true $set
-	 */
-	public function setCancelled($set = true){
-		$this->cancelled = $set;
-	}
+    /**
+     * @param bool|true $set
+     */
+    public function setCancelled($set = true){
+        $this->cancelled = $set;
+    }
 
-	/**
-	 * Stop the event call
-	 */
-	public function stopCall(){
-		$this->stop = true;
-	}
+    /**
+     * Stop the event call
+     */
+    public function stopCall(){
+        $this->stop = true;
+    }
 
-	/**
-	 * Check if the call has been stopped
-	 * @return bool
-	 */
-	public function hasStopped(){
-		return $this->stop;
-	}
+    /**
+     * Check if the call has been stopped
+     * @return bool
+     */
+    public function hasStopped(){
+        return $this->stop;
+    }
 
 }

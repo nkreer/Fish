@@ -30,14 +30,14 @@ use IRC\Utils\JsonConfig;
 
 class _307 implements ProtocolCommand{
 
-	public static function run(Command $command, Connection $connection, JsonConfig $config){
-		$user = User::getUserByNick($connection, $command->getArg(1));
-		if($user instanceof User){
-			$user->identified = true;
-			$task = new RemoveAuthenticationStatusTask($user);
-			$ttl = IRC::getInstance()->getConfig()->getData("authentication_ttl");
-			$connection->getScheduler()->scheduleDelayedTask($task, $ttl);
-		}
-	}
+    public static function run(Command $command, Connection $connection, JsonConfig $config){
+        $user = User::getUserByNick($connection, $command->getArg(1));
+        if($user instanceof User){
+            $user->identified = true;
+            $task = new RemoveAuthenticationStatusTask($user);
+            $ttl = IRC::getInstance()->getConfig()->getData("authentication_ttl");
+            $connection->getScheduler()->scheduleDelayedTask($task, $ttl);
+        }
+    }
 
 }

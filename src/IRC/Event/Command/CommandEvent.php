@@ -27,32 +27,32 @@ use IRC\User;
 
 class CommandEvent extends Event{
 
-	protected $command;
-	protected $args;
-	protected $channel;
-	protected $user;
+    protected $command;
+    protected $args;
+    protected $channel;
+    protected $user;
 
-	public function __construct($command, $args, Channel $channel, User $user){
-		$this->command = $command;
-		$this->args = $args;
-		$this->channel = $channel;
-		$this->user = $user;
-	}
+    public function __construct($command, $args, Channel $channel, User $user){
+        $this->command = $command;
+        $this->args = $args;
+        $this->channel = $channel;
+        $this->user = $user;
+    }
 
-	public function getCommand(){
-		return $this->command;
-	}
+    public function getCommand(){
+        return $this->command;
+    }
 
-	public function getArgs(){
-		return $this->args;
-	}
+    public function getArgs(){
+        return $this->args;
+    }
 
-	public function getChannel(){
-		return $this->channel;
-	}
+    public function getChannel(){
+        return $this->channel;
+    }
 
-	public function getUser(){
-		return $this->user;
-	}
+    public function getUser(){
+        return $this->user;
+    }
 
 }

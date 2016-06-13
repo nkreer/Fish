@@ -23,11 +23,11 @@ namespace IRC\Event;
 
 class EventPriority{
 
-	const VERY_HIGH = 0;
-	const HIGH = 1;
-	const MEDIUM = 2;
-	const LOW = 3;
-	const VERY_LOW = 4;
-	const LOWEST = 5;
+    const VERY_HIGH = 0;
+    const HIGH = 1;
+    const MEDIUM = 2;
+    const LOW = 3;
+    const VERY_LOW = 4;
+    const LOWEST = 5;
 
 }

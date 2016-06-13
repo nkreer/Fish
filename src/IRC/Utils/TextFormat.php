@@ -23,29 +23,29 @@ namespace IRC\Utils;
 
 class TextFormat{
 
-	const WHITE = "\x030";
-	const BLACK = "\x031";
-	const DARK_BLUE = "\x032";
-	const DARK_GREEN = "\x033";
-	const RED = "\x034";
-	const DARK_RED = "\x035";
-	const PURPLE = "\x036";
-	const ORANGE = "\x037";
-	const YELLOW = "\x038";
-	const GREEN = "\x039";
-	const DARK_CYAN = "\x0310";
-	const CYAN = "\x0311";
-	const BLUE = "\x0312";
-	const PINK = "\x0313";
-	const DARK_GREY = "\x0314";
-	const GREY = "\x0315";
+    const WHITE = "\x030";
+    const BLACK = "\x031";
+    const DARK_BLUE = "\x032";
+    const DARK_GREEN = "\x033";
+    const RED = "\x034";
+    const DARK_RED = "\x035";
+    const PURPLE = "\x036";
+    const ORANGE = "\x037";
+    const YELLOW = "\x038";
+    const GREEN = "\x039";
+    const DARK_CYAN = "\x0310";
+    const CYAN = "\x0311";
+    const BLUE = "\x0312";
+    const PINK = "\x0313";
+    const DARK_GREY = "\x0314";
+    const GREY = "\x0315";
 
-	const BOLD = "\x02";
-	const UNDERLINE = "\x1F";
-	const ITALICS = "\x09";
-	const STRIKETHROUGH = "\x13";
-	const REVERSE = "\x16";
+    const BOLD = "\x02";
+    const UNDERLINE = "\x1F";
+    const ITALICS = "\x09";
+    const STRIKETHROUGH = "\x13";
+    const REVERSE = "\x16";
 
-	const REMOVE = "\x03";
+    const REMOVE = "\x03";
 
 }

@@ -27,150 +27,150 @@ use IRC\Event\Notice\NoticeSendEvent;
 
 class Channel implements CommandSender{
 
-	private static $channels = [];
+    private static $channels = [];
 
-	public static function getChannel(Connection $connection, String $name){
-		if(isset(self::$channels[$connection->getAddress()][$name])){
-			return self::$channels[$connection->getAddress()][$name];
-		} else{
-			$channel = new Channel($connection, $name);
-			self::$channels[$connection->getAddress()][$name] = $channel;
-			return $channel;
-		}
-	}
+    public static function getChannel(Connection $connection, String $name){
+        if(isset(self::$channels[$connection->getAddress()][$name])){
+            return self::$channels[$connection->getAddress()][$name];
+        } else {
+            $channel = new Channel($connection, $name);
+            self::$channels[$connection->getAddress()][$name] = $channel;
+            return $channel;
+        }
+    }
 
-	/**
-	 * @var String
-	 */
-	private $name;
+    /**
+     * @var String
+     */
+    private $name;
 
-	private $connection;
-	private $users = [];
+    private $connection;
+    private $users = [];
 
-	public $topic = "";
-	public $topicTime = 0;
+    public $topic = "";
+    public $topicTime = 0;
 
-	public function __construct(Connection $connection, String $name){
-		$this->name = $name;
-		$this->connection = $connection;
-	}
+    public function __construct(Connection $connection, String $name){
+        $this->name = $name;
+        $this->connection = $connection;
+    }
 
-	/**
-	 * @return String
-	 */
-	public function getName() : String{
-		return $this->name;
-	}
+    /**
+     * @return String
+     */
+    public function getName() : String{
+        return $this->name;
+    }
 
-	/**
-	 * Send a message
-	 * @param $message
-	 */
-	public function sendMessage(String $message){
-		$ev = new MessageSendEvent($message, $this);
-		$this->connection->getEventHandler()->callEvent($ev);
-		if(!$ev->isCancelled()){
-			$this->connection->sendData("PRIVMSG ".$this->getName()." :".$ev->getMessage());
-		}
-	}
+    /**
+     * Send a message
+     * @param $message
+     */
+    public function sendMessage(String $message){
+        $ev = new MessageSendEvent($message, $this);
+        $this->connection->getEventHandler()->callEvent($ev);
+        if(!$ev->isCancelled()){
+            $this->connection->sendData("PRIVMSG ".$this->getName()." :".$ev->getMessage());
+        }
+    }
 
-	/**
-	 * @param $notice
-	 */
-	public function sendNotice(String $notice){
-		$ev = new NoticeSendEvent($notice, $this);
-		$this->connection->getEventHandler()->callEvent($ev);
-		if(!$ev->isCancelled()){
-			$this->connection->sendData("NOTICE ".$this->getName()." :".$ev->getNotice());
-		}
-	}
+    /**
+     * @param $notice
+     */
+    public function sendNotice(String $notice){
+        $ev = new NoticeSendEvent($notice, $this);
+        $this->connection->getEventHandler()->callEvent($ev);
+        if(!$ev->isCancelled()){
+            $this->connection->sendData("NOTICE ".$this->getName()." :".$ev->getNotice());
+        }
+    }
 
-	/**
-	 * Send an action
-	 * @param $message
-	 */
-	public function sendAction(String $message){
-		$this->sendMessage(chr(1)."ACTION ".$message.chr(1));
-	}
+    /**
+     * Send an action
+     * @param $message
+     */
+    public function sendAction(String $message){
+        $this->sendMessage(chr(1)."ACTION ".$message.chr(1));
+    }
 
-	/**
-	 * Send CTCP
-	 * @param $message
-	 */
-	public function sendCTCP(String $message){
-		$this->sendMessage(chr(1)."CTCP ".$message.chr(1));
-	}
+    /**
+     * Send CTCP
+     * @param $message
+     */
+    public function sendCTCP(String $message){
+        $this->sendMessage(chr(1)."CTCP ".$message.chr(1));
+    }
 
-	/**
-	 * Check if this channel is a query
-	 * @return bool
-	 */
-	public function isQuery() : bool{
-		if($this->getName()[0] != "#"){
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Check if this channel is a query
+     * @return bool
+     */
+    public function isQuery() : bool{
+        if($this->getName()[0] != "#"){
+            return true;
+        }
+        return false;
+    }
 
-	public function clearUserList(){
-		$this->users = [];
-	}
+    public function clearUserList(){
+        $this->users = [];
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getUsers() : array{
-		return $this->users;
-	}
+    /**
+     * @return array
+     */
+    public function getUsers() : array{
+        return $this->users;
+    }
 
-	/**
-	 * @param User $user
-	 */
-	public function addUser(User $user){
-		$this->users[$user->getNick()] = $user;
-	}
+    /**
+     * @param User $user
+     */
+    public function addUser(User $user){
+        $this->users[$user->getNick()] = $user;
+    }
 
-	/**
-	 * @param $nick
-	 * @return bool
-	 */
-	public function removeUser(String $nick) : bool{
-		if(isset($this->users[$nick])){
-			unset($this->users[$nick]);
-			return true;
-		}
-		return false;
-	}
+    /**
+     * @param $nick
+     * @return bool
+     */
+    public function removeUser(String $nick) : bool{
+        if(isset($this->users[$nick])){
+            unset($this->users[$nick]);
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * @param $nick
-	 * @return bool
-	 */
-	public function hasUser($nick) : bool{
-		return isset($this->users[$nick]);
-	}
+    /**
+     * @param $nick
+     * @return bool
+     */
+    public function hasUser($nick) : bool{
+        return isset($this->users[$nick]);
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getTopic() : String{
-		return $this->topic;
-	}
+    /**
+     * @return string
+     */
+    public function getTopic() : String{
+        return $this->topic;
+    }
 
-	/**
-	 * @param $text
-	 */
-	public function setTopic(String $text){
-		$this->topic = $text;
-		$this->connection->sendData("TOPIC ".$this->getName()." :".$text);
-		$this->topicTime = time();
-	}
+    /**
+     * @param $text
+     */
+    public function setTopic(String $text){
+        $this->topic = $text;
+        $this->connection->sendData("TOPIC ".$this->getName()." :".$text);
+        $this->topicTime = time();
+    }
 
-	/**
-	 * @return int
-	 */
-	public function getLastTopicTime(){
-		return $this->topicTime;
-	}
+    /**
+     * @return int
+     */
+    public function getLastTopicTime(){
+        return $this->topicTime;
+    }
 
 }

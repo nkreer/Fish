@@ -25,27 +25,27 @@ use IRC\User;
 
 class UserChangeNickEvent extends NickEvent{
 
-	private $user;
-	private $nickOld;
-	private $nickNew;
+    private $user;
+    private $nickOld;
+    private $nickNew;
 
-	public function __construct(User $user, $nickBefore, $nickNew){
-		parent::__construct($nickBefore);
-		$this->nickOld = $nickBefore;
-		$this->nickNew = $nickNew;
-		$this->user = $user;
-	}
+    public function __construct(User $user, $nickBefore, $nickNew){
+        parent::__construct($nickBefore);
+        $this->nickOld = $nickBefore;
+        $this->nickNew = $nickNew;
+        $this->user = $user;
+    }
 
-	public function getOldNick(){
-		return $this->nickOld;
-	}
+    public function getOldNick(){
+        return $this->nickOld;
+    }
 
-	public function getNewNick(){
-		return $this->nickNew;
-	}
+    public function getNewNick(){
+        return $this->nickNew;
+    }
 
-	public function getUser(){
-		return $this->user;
-	}
+    public function getUser(){
+        return $this->user;
+    }
 
 }

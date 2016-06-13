@@ -31,47 +31,47 @@ use IRC\User;
 
 class UserTracker implements Listener{
 
-	private $connection;
+    private $connection;
 
-	public function __construct(Connection $connection){
-		$this->connection = $connection;
-		$this->getConnection()->getEventHandler()->registerEvents($this);
-	}
+    public function __construct(Connection $connection){
+        $this->connection = $connection;
+        $this->getConnection()->getEventHandler()->registerEvents($this);
+    }
 
-	public function getConnection(){
-		return $this->connection;
-	}
+    public function getConnection(){
+        return $this->connection;
+    }
 
-	public function onJoinChannelEvent(JoinChannelEvent $event){
-		if(!$event->getChannel()->hasUser($event->getUser()->getNick())){
-			$event->getChannel()->addUser($event->getUser());
-		}
-	}
+    public function onJoinChannelEvent(JoinChannelEvent $event){
+        if(!$event->getChannel()->hasUser($event->getUser()->getNick())){
+            $event->getChannel()->addUser($event->getUser());
+        }
+    }
 
-	public function onChannelLeaveEvent(ChannelLeaveEvent $event){
-		if($event->getUser() instanceof User){
-			if($event->getChannel()->hasUser($event->getUser()->getNick())){
-				$event->getChannel()->removeUser($event->getUser()->getNick());
-			}
-		}
-	}
+    public function onChannelLeaveEvent(ChannelLeaveEvent $event){
+        if($event->getUser() instanceof User){
+            if($event->getChannel()->hasUser($event->getUser()->getNick())){
+                $event->getChannel()->removeUser($event->getUser()->getNick());
+            }
+        }
+    }
 
-	public function onMessageReceiveEvent(MessageReceiveEvent $event){
-		if(!$event->getChannel()->hasUser($event->getUser()->getNick())){
-			$event->getChannel()->addUser($event->getUser());
-		}
-	}
+    public function onMessageReceiveEvent(MessageReceiveEvent $event){
+        if(!$event->getChannel()->hasUser($event->getUser()->getNick())){
+            $event->getChannel()->addUser($event->getUser());
+        }
+    }
 
-	public function onUserQuitEvent(UserQuitEvent $event){
-		foreach($this->getConnection()->getChannels() as $channel){
-			if($channel->hasUser($event->getUser()->getNick())){
-				$ev = new ChannelLeaveEvent($channel, $event->getUser());
-				$this->getConnection()->getEventHandler()->callEvent($ev);
-				if(!$ev->isCancelled()){
-					$channel->removeUser($event->getUser()->getNick());
-				}
-			}
-		}
-	}
+    public function onUserQuitEvent(UserQuitEvent $event){
+        foreach($this->getConnection()->getChannels() as $channel){
+            if($channel->hasUser($event->getUser()->getNick())){
+                $ev = new ChannelLeaveEvent($channel, $event->getUser());
+                $this->getConnection()->getEventHandler()->callEvent($ev);
+                if(!$ev->isCancelled()){
+                    $channel->removeUser($event->getUser()->getNick());
+                }
+            }
+        }
+    }
 
 }
