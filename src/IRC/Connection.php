@@ -21,6 +21,7 @@
 
 namespace IRC;
 
+use IRC\Command\CommandHandler;
 use IRC\Command\CommandMap;
 use IRC\Event\EventHandler;
 use IRC\Management\ManagementCommands;
@@ -78,6 +79,11 @@ class Connection{
      */
     private $commandMap;
 
+    /**
+     * @var CommandHandler
+     */
+    private $commandHandler;
+
     public function __construct(String $address, int $port){
         $this->address = $address;
         $this->port = $port;
@@ -85,12 +91,17 @@ class Connection{
         @mkdir("users/".$this->getAddress()."/");
 
         $this->commandMap = new CommandMap();
+        $this->commandHandler = new CommandHandler($this);
         new ManagementCommands($this);
         $this->pluginManager = new PluginManager($this);
         $this->eventHandler = new EventHandler();
         $this->scheduler = new Scheduler();
 
         $this->trackers[] = new UserTracker($this);
+    }
+
+    public function getCommandHanler() : CommandHandler{
+        return $this->commandHandler;
     }
 
     public function getCommandMap() : CommandMap{

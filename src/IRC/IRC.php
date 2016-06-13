@@ -21,7 +21,6 @@
 
 namespace IRC;
 
-use IRC\Event\Command\CommandLine\CommandLineEvent;
 use IRC\Utils\BashColor;
 use IRC\Utils\JsonConfig;
 
@@ -67,6 +66,7 @@ class IRC{
             $conf->setData("cpu_idle", 10);
             $conf->setData("authentication_ttl", 1200);
             $conf->setData("default_ctcp_replies", ["VERSION" => "Fish ".self::VERSION]);
+            $conf->setData("spam_protection", ["enabled" => true, "max_commands" => 10, "time" => 60, "disable_ops" => true]);
 
             $conf->save("fish.json");
             $this->config = $conf;
@@ -83,11 +83,6 @@ class IRC{
     }
 
     private function cycle(){
-        $data = fgets(STDIN); //Read from STDIN and check for commands
-        if(!empty($data)){
-            $event = new CommandLineEvent(str_replace("\n", "", $data));
-        }
-
         foreach($this->connections as $connection){
             $new = $connection->check();
             if($new != false){
@@ -110,13 +105,6 @@ class IRC{
 
             //Regularly run scheduler
             $connection->getScheduler()->call();
-            if(isset($event)){
-                $connection->getEventHandler()->callEvent($event); //The special CommandLineEvent gets called if it has been created earlier
-            }
-        }
-
-        if(isset($event)){
-            unset($event); //Destroy the event
         }
     }
 

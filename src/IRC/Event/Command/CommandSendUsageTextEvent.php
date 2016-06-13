@@ -19,24 +19,40 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace IRC\Event\Command\CommandLine;
+namespace IRC\Event\Command;
 
+use IRC\Command\Command;
 use IRC\Command\CommandSender;
-use IRC\Logger;
-use IRC\Utils\BashColor;
+use IRC\Event\Event;
 
-class Console implements CommandSender{
+class CommandSendUsageTextEvent extends Event{
 
-    public function sendMessage(String $message){
-        Logger::info($message);
+    private $command;
+    private $sender;
+    private $room;
+    private $args = [];
+
+    public function __construct(Command $command, CommandSender $sender, CommandSender $room, array $args){
+        $this->command = $command;
+        $this->sender = $sender;
+        $this->room = $room;
+        $this->args = $args;
     }
 
-    public function sendNotice(String $notice){
-        Logger::info(BashColor::RED.">> ".$notice);
+    public function getCommand() : Command{
+        return $this->command;
     }
 
-    public function getName(){
-        return "Console";
+    public function getSender() : CommandSender{
+        return $this->sender;
+    }
+
+    public function getRoom() : CommandSender{
+        return $this->room;
+    }
+
+    public function getArgs() : array{
+        return $this->args;
     }
 
 }

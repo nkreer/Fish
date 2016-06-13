@@ -27,7 +27,6 @@ use IRC\Command\CommandExecutor;
 use IRC\Command\CommandInterface;
 use IRC\Command\CommandSender;
 use IRC\Connection;
-use IRC\Event\Command\CommandLine\Console;
 use IRC\User;
 
 class JoinCommand extends Command implements CommandExecutor{
@@ -40,7 +39,7 @@ class JoinCommand extends Command implements CommandExecutor{
     }
 
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
-        if($sender instanceof User and $sender->isOperator() || $sender instanceof Console){
+        if($sender instanceof User and $sender->isOperator()){
             if(strtolower($command->getCommand()) === "help"){
                 $channels = explode(",", $args[1]);
                 if(count($channels) >= 1 and !empty($channels)){

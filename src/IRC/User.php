@@ -161,7 +161,7 @@ class User implements CommandSender{
      * @return bool
      */
     public function isOperator() : bool{
-        if($this->isIdentified() and $this->admin){
+        if($this->getAuthenticationStatus() === AuthenticationStatus::IDENTIFIED and $this->admin){
             return true;
         }
         return false;
