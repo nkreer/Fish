@@ -78,7 +78,7 @@ class PRIVMSG implements ProtocolCommand{
         } else {
             $args[1] = substr($args[1], 1);
             $args[1] = explode(" ", $args[1]);
-            $cmd = $args[1][0];
+            $cmd = strtolower($args[1][0]); //Command in lower case
             unset($args[1][0]);
             Logger::info(BashColor::CYAN.$user->getNick()." > ".$cmd." ".implode(" ", $args[1]));
             $ev = new CommandEvent($cmd, $args[1], $channel, $user);

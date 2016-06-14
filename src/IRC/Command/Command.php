@@ -53,7 +53,7 @@ class Command implements CommandInterface{
     }
 
     public function getCommand() : String{
-        return $this->command;
+        return strtolower($this->command);
     }
 
     public function getDescription() : String{
