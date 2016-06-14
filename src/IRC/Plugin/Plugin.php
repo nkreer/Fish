@@ -71,7 +71,7 @@ class Plugin{
                 foreach($this->commands as $command => $settings){
                     $description = (!empty($settings["description"]) ? $settings["description"] : "");
                     $usage = (!empty($settings["usage"]) ? $settings["usage"] : $command);
-                    $permission = (!empty($settings["permission"]) ? $settings["permission"] : true); //Default permission is true
+                    $permission = (!empty($settings["permission"]) ? $settings["permission"] : false); //Default permission is false
                     $command = new Command($command, $this->class, $permission, $description, $usage);
                     if(isset($settings["aliases"]) && is_array($settings["aliases"])){
                         foreach($settings["aliases"] as $alias){
