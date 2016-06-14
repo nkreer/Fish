@@ -27,7 +27,6 @@ use IRC\Command\CommandExecutor;
 use IRC\Command\CommandInterface;
 use IRC\Command\CommandSender;
 use IRC\Connection;
-use IRC\User;
 
 class PartCommand extends Command implements CommandExecutor{
 
@@ -39,23 +38,18 @@ class PartCommand extends Command implements CommandExecutor{
     }
 
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
-        if($sender instanceof User and $sender->isOperator()){
-            if(strtolower($command->getCommand() === "part")){
-                $channels = explode(",", $args[1]);
-                if(count($channels) >= 1){
-                    foreach($channels as $channel){
-                        $channel = Channel::getChannel($this->connection, $channel);
-                        $this->connection->partChannel($channel);
-                    }
-                    $sender->sendNotice("Parted channel(s): ".implode(", ", $channels));
-                    return true;
-                } else {
-                    return false;
+        if(strtolower($command->getCommand() === "part")){
+            $channels = explode(",", $args[1]);
+            if(count($channels) >= 1){
+                foreach($channels as $channel){
+                    $channel = Channel::getChannel($this->connection, $channel);
+                    $this->connection->partChannel($channel);
                 }
+                $sender->sendNotice("Parted channel(s): ".implode(", ", $channels));
+                return true;
+            } else {
+                return false;
             }
-        } else {
-            $sender->sendNotice("You don't have the permission to execute this command.");
-            return true;
         }
         return false;
     }
