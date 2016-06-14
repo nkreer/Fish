@@ -24,18 +24,23 @@ namespace IRC\Command;
 class Command implements CommandInterface{
 
     private $command;
+    private $permission;
     private $description;
     private $usage;
     private $aliases = [];
 
     private $executor;
 
-    public function __construct(String $command, CommandExecutor $executor, String $description = "",
-                                String $usage = ""){
+    public function __construct(String $command, CommandExecutor $executor, $minimumPermission = true, String $description = "", String $usage = ""){
         $this->description = $description;
         $this->usage = $usage;
         $this->command = $command;
         $this->executor = $executor;
+        $this->permission = $minimumPermission;
+    }
+
+    public function getMinimumPermission(){
+        return $this->permission;
     }
 
     public function getExecutor() : CommandExecutor{

@@ -25,6 +25,7 @@ use IRC\Channel;
 use IRC\Connection;
 use IRC\Event\Command\CommandSendUsageTextEvent;
 use IRC\IRC;
+use IRC\Logger;
 use IRC\Management\SpamProtectionResetTask;
 use IRC\User;
 
@@ -33,10 +34,12 @@ class CommandHandler{
     private $connection;
     private $timers;
     private $config;
+    private $invalidPermissionsMsg;
 
     public function __construct(Connection $connection){
         $this->connection = $connection;
         $this->config = IRC::getInstance()->getConfig()->getData("spam_protection");
+        $this->invalidPermissionsMsg = IRC::getInstance()->getConfig()->getData("invalid_permissions");
     }
 
     /**
@@ -80,16 +83,20 @@ class CommandHandler{
     public function handleCommand($cmd, User $user, Channel $channel, $args){
         $cmd = $this->connection->getCommandMap()->getCommand($cmd);
         if($cmd instanceof CommandInterface){
-            if($this->isBlocked($user) === false){
-                $result = $this->connection->getPluginManager()->command($cmd, $args[1], $user, $channel);
-                if($result === false and $cmd->getUsage() !== ""){
-                    $ev = new CommandSendUsageTextEvent($cmd, $user, $channel, $args[1]);
-                    if(!$ev->isCancelled()){
-                        $user->sendNotice("Usage: ".$cmd->getUsage());
+            if($user->hasPermission($cmd->getMinimumPermission())){
+                if($this->isBlocked($user) === false){
+                    $result = $this->connection->getPluginManager()->command($cmd, $args[1], $user, $channel);
+                    if($result === false and $cmd->getUsage() !== ""){
+                        $ev = new CommandSendUsageTextEvent($cmd, $user, $channel, $args[1]);
+                        if(!$ev->isCancelled()){
+                            $user->sendNotice("Usage: ".$cmd->getUsage());
+                        }
                     }
+                } else {
+                    $user->sendNotice($this->config["message"]);
                 }
             } else {
-                $user->sendNotice($this->config["message"]);
+                $user->sendNotice($this->invalidPermissionsMsg);
             }
         }
     }

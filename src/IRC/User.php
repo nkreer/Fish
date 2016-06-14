@@ -35,6 +35,7 @@ class User implements CommandSender{
     private $nick = "";
     private $address = "";
     private $separator = "";
+    private $permissions = [];
 
     public function __construct(Connection $connection, String $hostmask){
         $this->host = $hostmask;
@@ -44,8 +45,37 @@ class User implements CommandSender{
         $this->separator = self::parseSeparator($hostmask);
         if(is_file("users".DIRECTORY_SEPARATOR.$connection->getAddress().DIRECTORY_SEPARATOR.$this->getNick().".json")){
             $this->updateAuthenticationStatus();
-            $this->admin = json_decode(file_get_contents("users".DIRECTORY_SEPARATOR.$connection->getAddress().DIRECTORY_SEPARATOR.$this->getNick().".json"), true)["admin"];
+            $data = json_decode(file_get_contents("users".DIRECTORY_SEPARATOR.$connection->getAddress().DIRECTORY_SEPARATOR.$this->getNick().".json"), true);
+            $this->admin = $data["admin"];
+            $this->permissions = $data["permissions"];
             $this->remember();
+        }
+    }
+
+    /**
+     * @param $permission
+     * @return bool
+     */
+    public function hasPermission($permission) : bool{
+        if($permission !== true or $permission !== "op" and $this->isOperator()){
+            return isset($this->permissions[$permission]);
+        }
+        return true;
+    }
+
+    /**
+     * @param String $permission
+     */
+    public function addPermission(String $permission){
+        $this->permissions[$permission] = true;
+    }
+
+    /**
+     * @param String $permission
+     */
+    public function removePermission(String $permission){
+        if($this->hasPermission($permission)){
+            unset($this->permissions[$permission]);
         }
     }
 
@@ -134,12 +164,27 @@ class User implements CommandSender{
         }
     }
 
+    /**
+     * @param Connection $connection
+     * @param $name
+     * @return bool
+     */
     public static function removeUser(Connection $connection, $name){
         if(isset(self::$users[$connection->getAddress()][$name])){
             unset(self::$users[$connection->getAddress()][$name]);
             return true;
         }
         return false;
+    }
+
+    /**
+     * @param Connection $connection
+     * @param $name
+     * @return User|bool
+     */
+    public static function reloadUser(Connection $connection, $name){
+        self::removeUser($connection, $name);
+        return self::getUser($connection, $name);
     }
 
     /**

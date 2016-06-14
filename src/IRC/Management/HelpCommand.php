@@ -33,7 +33,7 @@ class HelpCommand extends Command implements CommandExecutor{
 
     public function __construct(Connection $connection){
         $this->connection = $connection;
-        parent::__construct("help", $this, "Command help", "help <page/command>");
+        parent::__construct("help", $this, true, "Command help", "help <page/command>");
     }
 
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){

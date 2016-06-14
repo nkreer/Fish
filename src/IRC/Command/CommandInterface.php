@@ -43,4 +43,6 @@ interface CommandInterface{
 
     public function removeAlias(String $alias);
 
+    public function getMinimumPermission();
+
 }
