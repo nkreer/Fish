@@ -25,7 +25,6 @@ use IRC\Channel;
 use IRC\Connection;
 use IRC\Event\Command\CommandSendUsageTextEvent;
 use IRC\IRC;
-use IRC\Logger;
 use IRC\Management\SpamProtectionResetTask;
 use IRC\User;
 

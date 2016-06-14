@@ -57,7 +57,7 @@ class User implements CommandSender{
      * @return bool
      */
     public function hasPermission($permission) : bool{
-        if($permission !== true or $permission !== "op" and $this->isOperator()){
+        if($permission !== true or !$this->isOperator()){
             return isset($this->permissions[$permission]);
         }
         return true;

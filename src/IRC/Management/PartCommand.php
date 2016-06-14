@@ -34,7 +34,7 @@ class PartCommand extends Command implements CommandExecutor{
 
     public function __construct(Connection $connection){
         $this->connection = $connection;
-        parent::__construct("part", $this, "op", "Leave channels", "part <#channel1,#channel2...>");
+        parent::__construct("part", $this, "fish.management.part", "Leave channels", "part <#channel1,#channel2...>");
     }
 
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){

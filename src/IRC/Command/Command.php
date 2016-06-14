@@ -31,7 +31,8 @@ class Command implements CommandInterface{
 
     private $executor;
 
-    public function __construct(String $command, CommandExecutor $executor, $minimumPermission = true, String $description = "", String $usage = ""){
+    public function __construct(String $command, CommandExecutor $executor, $minimumPermission = true,
+                                String $description = "", String $usage = ""){
         $this->description = $description;
         $this->usage = $usage;
         $this->command = $command;

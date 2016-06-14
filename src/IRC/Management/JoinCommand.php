@@ -34,7 +34,7 @@ class JoinCommand extends Command implements CommandExecutor{
 
     public function __construct(Connection $connection){
         $this->connection = $connection;
-        parent::__construct("join", $this, "op", "Join channels", "join <#channel1,#channel2...>");
+        parent::__construct("join", $this, "fish.management.join", "Join channels", "join <#channel1,#channel2...>");
     }
 
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
