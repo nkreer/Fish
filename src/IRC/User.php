@@ -24,6 +24,7 @@ namespace IRC;
 use IRC\Authentication\AuthenticationStatus;
 use IRC\Authentication\UpdateAuthenticationStatusTask;
 use IRC\Command\CommandSender;
+use IRC\Scheduler\Task;
 
 class User implements CommandSender{
 
@@ -120,10 +121,16 @@ class User implements CommandSender{
         return $this->nick;
     }
 
-    public function updateAuthenticationStatus(){
+    /**
+     * @param UpdateAuthenticationStatusTask|null $task
+     */
+    public function updateAuthenticationStatus(UpdateAuthenticationStatusTask $task = null){
         $this->identified = AuthenticationStatus::UNIDENTIFIED;
         $this->connection->sendData("WHOIS ".$this->getNick());
-        $this->connection->getScheduler()->scheduleDelayedTask(new UpdateAuthenticationStatusTask($this), IRC::getInstance()->getConfig()->getData("authentication_ttl"));
+        if($task === null){
+            $task = new UpdateAuthenticationStatusTask($this, $this->connection);
+        }
+        $this->connection->getScheduler()->scheduleDelayedTask($task, IRC::getInstance()->getConfig()->getData("authentication_ttl"));
     }
 
     /**
@@ -162,6 +169,15 @@ class User implements CommandSender{
             self::$users[$connection->getAddress()][$name] = $user;
             return $user;
         }
+    }
+
+    /**
+     * @param Connection $connection
+     * @param $name
+     * @return bool
+     */
+    public static function exists(Connection $connection, $name){
+        return isset(self::$users[$connection->getAddress()], $name);
     }
 
     /**

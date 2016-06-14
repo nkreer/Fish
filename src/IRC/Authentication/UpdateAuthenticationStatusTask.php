@@ -21,19 +21,24 @@
 
 namespace IRC\Authentication;
 
+use IRC\Connection;
 use IRC\Scheduler\Task;
 use IRC\User;
 
 class UpdateAuthenticationStatusTask extends Task{
 
     private $user;
-
-    public function __construct(User $user){
+    private $connection;
+    
+    public function __construct(User $user, Connection $connection){
         $this->user = $user;
+        $this->connection = $connection;
     }
 
     public function onRun(){
-        $this->user->updateAuthenticationStatus();
+        if(User::exists($this->connection, $this->user->getHostmask())){
+            $this->user->updateAuthenticationStatus($this);
+        }
     }
 
 }
