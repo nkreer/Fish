@@ -38,17 +38,15 @@ class JoinCommand extends Command implements CommandExecutor{
     }
 
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
-        if(strtolower($command->getCommand()) === "help"){
+        if(strtolower($command->getCommand()) === "join"){
             $channels = explode(",", $args[1]);
-            if(count($channels) >= 1 and !empty($channels)){
+            if(!empty($channels)){
                 foreach($channels as $channel){
                     $channel = Channel::getChannel($this->connection, $channel);
                     $this->connection->joinChannel($channel);
                 }
                 $sender->sendNotice("Joined channel(s): ".implode(", ", $channels));
                 return true;
-            } else {
-                return false;
             }
         }
         return false;

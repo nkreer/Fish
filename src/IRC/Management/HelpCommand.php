@@ -37,30 +37,7 @@ class HelpCommand extends Command implements CommandExecutor{
     }
 
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
-        if(strtolower($command->getCommand()) === "help"){
-            if(is_numeric($args[1]) or empty($args[1])){
-                if(empty($args[1])){
-                    $page = 1;
-                } else {
-                    $page = $args[1];
-                }
-                $commands = $this->connection->getCommandMap()->getCommands();
-                $commands = array_values($commands);
-                $sender->sendNotice("Help page ".$page);
-                for($p = ($page - 1); $p <= ($page + 4); $p++){
-                    if(isset($commands[$p]) and $commands[$p] instanceof CommandInterface){
-                        $sender->sendNotice($commands[$p]->getCommand().": ".$commands[$p]->getDescription());
-                    }
-                }
-            } elseif(is_string($args[1])) {
-                $cmd = $this->connection->getCommandMap()->getCommand($args[1]);
-                if($cmd instanceof CommandInterface){
-                    $sender->sendNotice($cmd->getCommand().": ".$cmd->getDescription()." (Usage: ".$cmd->getUsage().")");
-                } else {
-                    $sender->sendNotice("Command not found.");
-                }
-            }
-        }
+        //TODO - Make this better
     }
 
 }

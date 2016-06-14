@@ -31,7 +31,7 @@ class User implements CommandSender{
     public $identified = AuthenticationStatus::UNCHECKED;
     private $host;
     private $connection;
-    private $admin = false;
+    public $admin = false;
     private $nick = "";
     private $address = "";
     private $separator = "";
@@ -57,10 +57,12 @@ class User implements CommandSender{
      * @return bool
      */
     public function hasPermission($permission) : bool{
-        if($permission !== true or !$this->isOperator()){
-            return isset($this->permissions[$permission]);
+        if($this->isOperator() === true){
+            return true;
+        } elseif($permission === true){
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -130,7 +132,7 @@ class User implements CommandSender{
      * @return int
      */
     public function remember() : int{
-        $options = ["name" => $this->getNick(), "admin" => $this->admin, "lastSeen" => time()];
+        $options = ["name" => $this->getNick(), "admin" => $this->admin, "lastSeen" => time(), "permissions" => $this->permissions];
         return file_put_contents("users".DIRECTORY_SEPARATOR.$this->connection->getAddress().DIRECTORY_SEPARATOR.$this->getNick().".json", json_encode($options, JSON_PRETTY_PRINT));
     }
 
@@ -206,16 +208,16 @@ class User implements CommandSender{
      * @return bool
      */
     public function isOperator() : bool{
-        if($this->getAuthenticationStatus() === AuthenticationStatus::IDENTIFIED and $this->admin){
+        if($this->getAuthenticationStatus() === AuthenticationStatus::IDENTIFIED and $this->admin === true){
             return true;
         }
         return false;
     }
 
     /**
-     * @return String
+     * @return int
      */
-    public function getAuthenticationStatus() : String{
+    public function getAuthenticationStatus() : int{
         return $this->identified;
     }
 
