@@ -54,11 +54,18 @@ class User implements CommandSender{
     }
 
     /**
+     * @return array
+     */
+    public function hasPermissions() : array{
+        return $this->permissions;
+    }
+
+    /**
      * @param $permission
      * @return bool
      */
     public function hasPermission($permission) : bool{
-        if($permission === false || $this->isOperator()){
+        if($permission === false || $this->isOperator()  || isset($this->permissions[$permission])){
             return true;
         }
         return false;
