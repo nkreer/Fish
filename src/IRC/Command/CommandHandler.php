@@ -58,7 +58,7 @@ class CommandHandler{
      */
     public function isBlocked(User $user) : bool{
         if($this->config["enabled"]){
-            if($this->config["disable_ops"] !== true and $user->isOperator() || !$user->isOperator()){
+            if(!$user->hasPermission("fish.spamprotect.bypass")){
                 if(isset($this->timers[$user->getAddress()])){
                     $this->timers[$user->getAddress()] += 1;
                     if($this->timers[$user->getAddress()] >= $this->config["max_commands"]){

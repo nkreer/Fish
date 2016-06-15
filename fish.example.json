@@ -19,7 +19,6 @@
         "enabled": true,
         "max_commands": 10,
         "time": 60,
-        "disable_ops": true,
         "message": "You're currently blocked from using commands because you were using too many."
     },
     "invalid_permissions": "Sorry, you do not have the required permissions to use this command."
