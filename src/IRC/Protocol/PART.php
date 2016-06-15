@@ -45,6 +45,7 @@ class PART implements ProtocolCommand{
             $connection->getEventHandler()->callEvent($ev);
             if(!$ev->isCancelled()){
                 Logger::info($user->getNick()." left ".$channel->getName());
+                User::removeUser($connection, $user->getHostmask()); //Remove the user, don't care if they are in other channels the bot is in
             }
         }
     }

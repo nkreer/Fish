@@ -42,6 +42,7 @@ class QUIT implements ProtocolCommand{
         $connection->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
             Logger::info($user->getNick()." quit");
+            User::removeUser($connection, $user->getHostmask()); // Remove user
         }
     }
 
