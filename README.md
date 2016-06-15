@@ -19,7 +19,12 @@ Fish has been tested on
 and is working with PHP 7.0.x. It does not work with PHP5.
 
 To install Fish, make sure you have [composer](https://getcomposer.org) installed. Simply clone the repository and run
-> composer install
+
+```$ composer install```
+
+```$ mv fish.example.json fish.json```
+
+and then edit the config. Fish will generate a new config on startup if it can't find one.
 
 ## Features
 
@@ -29,6 +34,7 @@ Fish offers many features for interaction with an IRC Server out of the box:
 * Support for multiple networks at a time
 * Built-in and adapting management-commands (join, part, help, etc.)
 * Built-in user authentication features
+* Built-in permission management
 * Many more
 
 ## Extend
@@ -47,4 +53,4 @@ If you have any questions regarding the API, feel free to send me an E-Mail.
 
 ## Contribute
 
-All contributions and Pull Requests are welcome. Just stick to the original coding style, please.
+All contributions and Pull Requests are welcome. Just stick to the original coding style wherever possible.

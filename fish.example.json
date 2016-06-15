@@ -1,0 +1,26 @@
+{
+    "default_nickname": "FishBot",
+    "default_realname": "Fish - IRC Bot",
+    "default_username": "Fish",
+    "default_hostname": "Fish",
+    "default_quitmsg": "Leaving",
+    "command_prefix": [
+        ".",
+        "!",
+        "\\",
+        "@"
+    ],
+    "cpu_idle": 10,
+    "authentication_ttl": 1200,
+    "default_ctcp_replies": {
+        "VERSION": "Fish 1"
+    },
+    "spam_protection": {
+        "enabled": true,
+        "max_commands": 10,
+        "time": 60,
+        "disable_ops": true,
+        "message": "You're currently blocked from using commands because you were using too many."
+    },
+    "invalid_permissions": "Sorry, you do not have the required permissions to use this command."
+}
