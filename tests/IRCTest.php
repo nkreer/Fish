@@ -9,10 +9,12 @@ class IRCTest extends TestCase{
         $this->assertInstanceOf("IRC\IRC", $irc);
     }
 
-    public function testNotEncryptedConnectionIsMadeSuccessfully(){
+    public function testNotEncryptedConnectionIsMadeAndClosedSuccessfully(){
         $connection = new \IRC\Connection("irc.freenode.net", 6667); // I hope that freenode is reliable enough
         $irc = new \IRC\IRC(false, true);
         $result = $irc->addConnection($connection);
+        $this->assertEquals(true, $result);
+        $result = $irc->removeConnection($connection);
         $this->assertEquals(true, $result);
     }
     
@@ -20,6 +22,8 @@ class IRCTest extends TestCase{
         $connection = new \IRC\Connection("ssl://irc.freenode.net", 6697);
         $irc = new \IRC\IRC(false, true);
         $result = $irc->addConnection($connection);
+        $this->assertEquals(true, $result);
+        $result = $irc->removeConnection($connection);
         $this->assertEquals(true, $result);
     }
 
