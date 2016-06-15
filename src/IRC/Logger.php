@@ -26,7 +26,9 @@ use IRC\Utils\BashColor;
 class Logger{
 
     public static function info(String $info){
-        echo date("H:i:s")."  ".$info."\n".BashColor::REMOVE;
+        if(!IRC::getInstance()->nonverbose){
+            echo date("H:i:s")."  ".$info."\n".BashColor::REMOVE; //Actual logging will be implemented later on
+        }
     }
 
 }

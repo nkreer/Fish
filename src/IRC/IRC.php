@@ -45,9 +45,11 @@ class IRC{
     public $connections = [];
 
     private $config;
-    public $devmode;
+    public $devmode = false;
+    public $nonverbose = false;
 
-    public function __construct(bool $dev = false){
+    public function __construct(bool $dev = false, bool $nonverbose = false){
+        $this->nonverbose = $nonverbose;
         $this->devmode = $dev;
         self::$instance = $this;
         Logger::info(BashColor::GREEN."Starting Fish (".self::CODENAME.") v".self::VERSION.BashColor::YELLOW." (API v".self::API_VERSION.")");

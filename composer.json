@@ -3,5 +3,8 @@
     "psr-4": {
       "IRC\\": "src/IRC/"
     }
+  },
+  "require": {
+    "phpunit/phpunit": "^5.4"
   }
 }

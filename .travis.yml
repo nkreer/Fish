@@ -1,0 +1,10 @@
+language: php
+
+php:
+ - 7.0
+
+branches:
+ - master
+
+install:
+ - composer install
