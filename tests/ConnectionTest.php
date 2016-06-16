@@ -3,13 +3,18 @@
 use PHPUnit\Framework\TestCase;
 
 class ConnectionTest extends TestCase{
+    
+    private $connection;
+    
+    public function setUp(){
+        new \IRC\IRC(false, true);
+        $this->connection = new IRC\Connection("", 6697);
+    }
 
     public function testHasManagementCommands(){
-        new \IRC\IRC(false, true);
-        $connection = new \IRC\Connection("", 6697);
-        $this->assertInstanceOf("IRC\Management\HelpCommand", $connection->getCommandMap()->getCommand("help"));
-        $this->assertInstanceOf("IRC\Management\JoinCommand", $connection->getCommandMap()->getCommand("join"));
-        $this->assertInstanceOf("IRC\Management\PartCommand", $connection->getCommandMap()->getCommand("part"));
+        $this->assertInstanceOf("IRC\Management\HelpCommand", $this->connection->getCommandMap()->getCommand("help"));
+        $this->assertInstanceOf("IRC\Management\JoinCommand", $this->connection->getCommandMap()->getCommand("join"));
+        $this->assertInstanceOf("IRC\Management\PartCommand", $this->connection->getCommandMap()->getCommand("part"));
     }
 
 }

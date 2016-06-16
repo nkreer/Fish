@@ -84,7 +84,7 @@ class PRIVMSG implements ProtocolCommand{
             $ev = new CommandEvent($cmd, $args[1], $channel, $user);
             $connection->getEventHandler()->callEvent($ev);
             if(!$ev->isCancelled()){
-                $connection->getCommandHanler()->handleCommand($cmd, $user, $channel, $args);
+                $connection->getCommandHandler()->handleCommand($cmd, $user, $channel, $args);
             }
         }
     }

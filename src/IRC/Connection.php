@@ -100,7 +100,7 @@ class Connection{
         $this->trackers[] = new UserTracker($this);
     }
 
-    public function getCommandHanler() : CommandHandler{
+    public function getCommandHandler() : CommandHandler{
         return $this->commandHandler;
     }
 
@@ -131,8 +131,8 @@ class Connection{
      * @param $message
      * @return bool|Command
      */
-    public function check(bool $message = true){
-        if($message === true){
+    public function check(bool $message = false){
+        if($message === false){
             $message = $this->read();
         }
 
