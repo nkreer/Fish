@@ -21,30 +21,36 @@
 
 namespace IRC\Management;
 
-use IRC\Channel;
 use IRC\Command\Command;
 use IRC\Command\CommandExecutor;
 use IRC\Command\CommandInterface;
 use IRC\Command\CommandSender;
 use IRC\Connection;
+use IRC\Plugin\Plugin;
 
-class JoinCommand extends Command implements CommandExecutor{
+class PluginUnloadCommand extends Command implements CommandExecutor{
 
     private $connection;
 
     public function __construct(Connection $connection){
         $this->connection = $connection;
-        parent::__construct("join", $this, "fish.management.join", "Join channels", "join <#channel1,#channel2...>");
+        parent::__construct("unloadPlugin", $this, "fish.commands.unloadplugin", "Unload plugin", "unloadplugin <plugin>");
+        $this->addAlias("up");
+        $this->addAlias("unloadMod");
+        $this->addAlias("unloadModule");
     }
 
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
-        $channels = explode(",", $args[1]);
-        if(!empty($channels)){
-            foreach($channels as $channel){
-                $channel = Channel::getChannel($this->connection, $channel);
-                $this->connection->joinChannel($channel);
+        if(!empty($args[1])){
+            if($plugin = $this->connection->getPluginManager()->getPlugin($args[1]) and $plugin instanceof Plugin){
+                if($this->connection->getPluginManager()->unloadPlugin($plugin)){
+                    $sender->sendNotice("Plugin ".$args[1]." was unloaded successfully.");
+                } else {
+                    $sender->sendNotice("Plugin ".$args[1]." could not be unloaded.");
+                }
+            } else {
+                $sender->sendNotice("That plugin isn't loaded.");
             }
-            $sender->sendNotice("Joined channel(s): ".implode(", ", $channels));
             return true;
         }
         return false;

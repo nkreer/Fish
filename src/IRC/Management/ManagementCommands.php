@@ -29,6 +29,9 @@ class ManagementCommands{
         $connection->getCommandMap()->registerCommand(new JoinCommand($connection));
         $connection->getCommandMap()->registerCommand(new PartCommand($connection));
         $connection->getCommandMap()->registerCommand(new HelpCommand($connection));
+        $connection->getCommandMap()->registerCommand(new PluginLoadCommand($connection));
+        $connection->getCommandMap()->registerCommand(new PluginUnloadCommand($connection));
+        $connection->getCommandMap()->registerCommand(new PluginsListCommand($connection));
     }
 
 }

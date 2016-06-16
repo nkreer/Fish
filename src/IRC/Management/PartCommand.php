@@ -38,16 +38,14 @@ class PartCommand extends Command implements CommandExecutor{
     }
 
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
-        if(strtolower($command->getCommand() === "part")){
-            $channels = explode(",", $args[1]);
-            if(!empty($channels)){
-                foreach($channels as $channel){
-                    $channel = Channel::getChannel($this->connection, $channel);
-                    $this->connection->partChannel($channel);
-                }
-                $sender->sendNotice("Parted channel(s): ".implode(", ", $channels));
-                return true;
+        $channels = explode(",", $args[1]);
+        if(!empty($channels)){
+            foreach($channels as $channel){
+                $channel = Channel::getChannel($this->connection, $channel);
+                $this->connection->partChannel($channel);
             }
+            $sender->sendNotice("Parted channel(s): ".implode(", ", $channels));
+            return true;
         }
         return false;
     }
