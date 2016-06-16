@@ -34,7 +34,7 @@ class PluginUnloadCommand extends Command implements CommandExecutor{
 
     public function __construct(Connection $connection){
         $this->connection = $connection;
-        parent::__construct("unloadPlugin", $this, "fish.commands.unloadplugin", "Unload plugin", "unloadplugin <plugin>");
+        parent::__construct("unloadPlugin", $this, "fish.management.unloadplugin", "Unload plugin", "unloadplugin <plugin>");
         $this->addAlias("up");
         $this->addAlias("unloadMod");
         $this->addAlias("unloadModule");

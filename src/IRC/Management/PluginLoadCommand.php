@@ -33,7 +33,7 @@ class PluginLoadCommand extends Command implements CommandExecutor{
 
     public function __construct(Connection $connection){
         $this->connection = $connection;
-        parent::__construct("loadPlugin", $this, "fish.commands.loadplugin", "Load plugin", "loadplugin <plugin>");
+        parent::__construct("loadPlugin", $this, "fish.management.loadplugin", "Load plugin", "loadplugin <plugin>");
         $this->addAlias("lp");
         $this->addAlias("loadMod");
         $this->addAlias("loadModule");

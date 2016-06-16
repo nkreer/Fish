@@ -26,24 +26,20 @@ use IRC\Command\CommandExecutor;
 use IRC\Command\CommandInterface;
 use IRC\Command\CommandSender;
 use IRC\Connection;
+use IRC\IRC;
 
-class PluginsListCommand extends Command implements CommandExecutor{
+class QuitCommand extends Command implements CommandExecutor{
 
     private $connection;
 
     public function __construct(Connection $connection){
         $this->connection = $connection;
-        parent::__construct("listplugins", $this, "fish.management.listplugins", "List plugins", "listplugins");
-        $this->addAlias("plist");
+        parent::__construct("quit", $this, "fish.management.quit", "Quit the connection", "quit");
     }
 
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
-        $plugins = $this->connection->getPluginManager()->getPlugins();
-        $names = [];
-        foreach($plugins as $plugin){
-            $names[] = $plugin->name;
-        }
-        $sender->sendNotice("Loaded plugins (".count($names)."): ".implode(", ", $names));
+        IRC::getInstance()->removeConnection($this->connection);
+        return true;
     }
 
 }
