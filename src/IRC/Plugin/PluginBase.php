@@ -39,6 +39,12 @@ class PluginBase implements CommandExecutor{
      */
     public $plugin;
 
+    public function getDataPath() : String{
+        $path = "plugins".DIRECTORY_SEPARATOR.$this->plugin->name.DIRECTORY_SEPARATOR;
+        @mkdir($path);
+        return $path;
+    }
+
     public function getConnection() : Connection{
         return $this->connection;
     }
