@@ -42,6 +42,7 @@ Fish offers many features for interaction with an IRC Server out of the box:
 
 Several plugins have already been written for Fish: 
 
+- [PluginTools](https://github.com/nkreer/PluginTools) helps you with packaging of your plugins
 - [Scripts](https://github.com/nkreer/Fish-Scripts) enables you to add simple custom commands to the bot
 - Many more, closed source plugins
 

@@ -88,7 +88,7 @@ class PluginManager{
 
     public function loadAll(){
         foreach(scandir("plugins/") as $element){
-            if(is_dir("plugins/".$element)){
+            if(is_file("plugins/".$element)){
                 $this->loadPlugin($element);
             }
         }
@@ -99,9 +99,9 @@ class PluginManager{
      * @return bool|int
      */
     public function loadPlugin(String $name, bool $force = false){
-        if(file_exists("plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR."plugin.json") && !$this->hasPlugin($name)){
+        if(file_exists("phar://plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR."plugin.json") && !$this->hasPlugin($name)){
             $json = new JsonConfig();
-            $json->loadFile("plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR."plugin.json");
+            $json->loadFile("phar://plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR."plugin.json");
             $json = $json->getConfig();
 
             if(isset($json["load"]) and $json["load"] !== false or $force == true){
@@ -122,9 +122,9 @@ class PluginManager{
                 }
 
                 if($success !== false){
-                    $this->getClassLoader()->addPsr4($name."\\", "plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR);
+                    $this->getClassLoader()->addPsr4(basename($name, ".phar")."\\", "phar://plugins".DIRECTORY_SEPARATOR.$name);
 
-                    $plugin = new Plugin($name, $json, $this->getConnection());
+                    $plugin = new Plugin(basename($name, ".phar"), $json, $this->getConnection());
 
                     $ev = new PluginLoadEvent($plugin);
                     $this->getConnection()->getEventHandler()->callEvent($ev);
