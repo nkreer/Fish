@@ -160,10 +160,10 @@ class IRC{
      * @return bool
      */
     public function removeConnection(Connection $connection,
-                                     String $quitMessage = false) : bool{
+                                     String $quitMessage = null) : bool{
         if($this->isConnected($connection->getAddress())){
             Logger::info(BashColor::RED."Disconnecting ".$connection->getAddress().":".$connection->getPort());
-            if($quitMessage === false){
+            if($quitMessage === null){
                 $quitMessage = $this->config->getData("default_quitmsg");
             }
             $connection->disconnect($quitMessage);
