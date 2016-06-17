@@ -24,6 +24,8 @@ namespace IRC\Protocol;
 use IRC\Channel;
 use IRC\Command;
 use IRC\Connection;
+use IRC\Event\Ban\BanSetEvent;
+use IRC\Event\Ban\UnbanEvent;
 use IRC\Event\Mode\ChannelModeChangeEvent;
 use IRC\Event\Mode\MyModesChangeEvent;
 use IRC\Event\Mode\UserModeChangeEvent;
@@ -44,8 +46,14 @@ class MODE implements ProtocolCommand{
         if($channel->getName() === $connection->getNick()){
             $ev = new MyModesChangeEvent($mode, $user, $channel);
             $connection->getEventHandler()->callEvent($ev);
-        } elseif(empty($command->getArg(2))) {
-            $ev = new ChannelModeChangeEvent($mode, $user, $channel);
+        } elseif(empty($command->getArg(2))){
+            if($mode === "+b"){
+                $ev = new BanSetEvent($command->getArg(1), $user, $channel);
+            } elseif($mode === "-b") {
+                $ev = new UnbanEvent($command->getArg(1), $user, $channel);
+            } else {
+                $ev = new ChannelModeChangeEvent($mode, $user, $channel);
+            }
             $connection->getEventHandler()->callEvent($ev);
         } else {
             $nick = $command->getArg(2);

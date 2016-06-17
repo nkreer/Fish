@@ -12,7 +12,7 @@ class KickEvent extends Event{
     private $user;
     private $kicker;
 
-    public function __construct(User $user, Channel $channel, User $kicker){
+    public function __construct($user, Channel $channel, User $kicker){
         $this->user = $user;
         $this->channel = $channel;
         $this->kicker = $kicker;

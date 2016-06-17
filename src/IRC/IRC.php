@@ -85,30 +85,36 @@ class IRC{
         return $this->config;
     }
 
-    private function cycle(){
+    public function cycle(){
         foreach($this->connections as $connection){
             $new = $connection->check();
-            if($new != false){
-                $command = $new->getCommand();
-                if(is_numeric($command)){
-                    $command = "_".$command;
-                }
-                $function = '\IRC\Protocol\\'.strtoupper($command);
-                if(method_exists($function, "run")){
-                    call_user_func($function."::run", $new, $connection, $this->getConfig());
-                }
+            if($new !== false){
+                $this->handle($new, $connection);
             }
-
-            //Do catchup calls if we've missed any
-            if(time() - $connection->getScheduler()->getLastCall() >= 2){
-                for($time = time(); $time > $connection->getScheduler()->getLastCall(); $time--){
-                    $connection->getScheduler()->call($time);
-                }
-            }
-
-            //Regularly run scheduler
-            $connection->getScheduler()->call();
         }
+    }
+    
+    public function handle(Command $run, Connection $connection){
+        if($run !== null){
+            $command = $run->getCommand();
+            if(is_numeric($command)){
+                $command = "_".$command;
+            }
+            $function = '\IRC\Protocol\\'.strtoupper($command);
+            if(method_exists($function, "run")){
+                call_user_func($function."::run", $run, $connection, $this->getConfig());
+            }
+        }
+
+        //Do catchup calls if we've missed any
+        if(time() - $connection->getScheduler()->getLastCall() >= 2){
+            for($time = time(); $time > $connection->getScheduler()->getLastCall(); $time--){
+                $connection->getScheduler()->call($time);
+            }
+        }
+
+        //Regularly run scheduler
+        $connection->getScheduler()->call();    
     }
 
     /**

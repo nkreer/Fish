@@ -4,28 +4,17 @@ use PHPUnit\Framework\TestCase;
 
 class KICKTest extends TestCase{
 
-    private $connection;
-    private $eventHandler;
+    public $irc;
+    public $connection;
 
     public function setUp(){
-        $this->connection = new \IRC\Connection("", 6667);
-        $this->eventHandler = new \IRC\Event\EventHandler();
+        $this->irc = new IRC\IRC(false, true);
+        $this->connection = new \IRC\Connection("", 6697);
     }
 
     public function testIncomingMessageIsParsedCorrectly(){
-        $this->eventHandler->registerEvents(new TestKick());
-        $this->connection->check("fish~!someone@example.com KICK #fish-irc fish");
-    }
-
-}
-
-class TestKick extends TestCase implements \IRC\Event\Listener{
-
-    public function onKickEvent(\IRC\Event\Kick\KickEvent $event){
-        $this->assertEquals("fish", $event->getKicker()->getNick());
-        $this->assertEquals("fish", $event->getUser()->getNick());
-        $this->assertEquals("example.com", $event->getUser()->getAddress());
-        $this->assertEquals("#fish-irc", $event->getChannel()->getName());
+        $result = $this->connection->check("fish~!someone@example.com KICK #fish-irc fish");
+        $this->assertInstanceOf("\IRC\Command", $result);
     }
 
 }

@@ -40,13 +40,11 @@ class KICK implements ProtocolCommand{
         //Tell the plugins that a user was kicked
         $channel = Channel::getChannel($connection, str_replace(":", "", $command->getArg(0)));
         $kicker = User::getUser($connection, $command->getPrefix());
-        $user = User::getUserByNick($connection, $command->getArg(1));
-        if($user instanceof User){
-            $ev = new KickEvent($user, $channel, $kicker);
-            $connection->getEventHandler()->callEvent($ev);
-            if(!$ev->isCancelled()){
-                Logger::info($user->getNick()." joined ".$channel->getName());
-            }
+        $user = $command->getArg(1);
+        $ev = new KickEvent($user, $channel, $kicker);
+        $connection->getEventHandler()->callEvent($ev);
+        if(!$ev->isCancelled()){
+            Logger::info($user." joined ".$channel->getName());
         }
     }
 
