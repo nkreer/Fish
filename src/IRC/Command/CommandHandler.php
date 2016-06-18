@@ -78,8 +78,9 @@ class CommandHandler{
      * @param User $user
      * @param Channel $channel
      * @param $args
+     * @return bool
      */
-    public function handleCommand($cmd, User $user, Channel $channel, $args){
+    public function handleCommand($cmd, User $user, Channel $channel, $args) : bool{
         $cmd = $this->connection->getCommandMap()->getCommand($cmd);
         if($cmd instanceof CommandInterface){
             if($user->hasPermission($cmd->getMinimumPermission())){
@@ -97,7 +98,9 @@ class CommandHandler{
             } else {
                 $user->sendNotice($this->invalidPermissionsMsg);
             }
+            return true;
         }
+        return false;
     }
 
 }
