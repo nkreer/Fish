@@ -45,12 +45,12 @@ class IRC{
     public $connections = [];
 
     private $config;
-    public $devmode = false;
-    public $nonverbose = false;
+    public $verbose = false;
+    public $silent = false;
 
-    public function __construct(bool $dev = false, bool $nonverbose = false){
-        $this->nonverbose = $nonverbose;
-        $this->devmode = $dev;
+    public function __construct(bool $verbose = false, bool $silent = false){
+        $this->silent = $silent;
+        $this->verbose = $verbose;
         self::$instance = $this;
         Logger::info(BashColor::GREEN."Starting Fish (".self::CODENAME.") v".self::VERSION.BashColor::YELLOW." (API v".self::API_VERSION.")");
         @mkdir("plugins/");
@@ -72,7 +72,7 @@ class IRC{
             $conf->setData("spam_protection", ["enabled" => true, "max_commands" => 10, "time" => 60, "message" => "You're currently blocked from using commands because you were using too many."]);
             $conf->setData("invalid_permissions", "Sorry, you do not have the required permissions to use this command.");
             $conf->setData("disable_management", false);
-            
+
             $conf->save("fish.json");
             $this->config = $conf;
         } else {

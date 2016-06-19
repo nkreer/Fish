@@ -6,11 +6,18 @@ if(!isset($argv[1])){
     die("Please supply an address to connect to.\n");
 }
 
-$address = (empty($argv[3]) ? "ssl://".$argv[1] : $argv[1]);
-$port = (isset($argv[2]) ? $argv[2] : 6697); //Standard IRC port, encrypted
-
 include_once("vendor/autoload.php");
 
-$irc = new \IRC\IRC(false);
-$irc->addConnection(new \IRC\Connection($address, $port));
+$address = $argv[1];
+$port = (isset($argv[2]) ? $argv[2] : 6697); //Standard IRC port, encrypted
+
+for($i=0;$i<2;$i++) unset($argv[$i]);
+$message = implode(" ", $argv);
+$args = \IRC\ArgumentParser::parse($message, ["password", "insecure"]);
+
+$address = (empty($args["insecure"]) ? "ssl://".$address : $address);
+$password = (!empty($args["password"]) ? $args["password"] : false);
+
+$irc = new \IRC\IRC(true);
+$irc->addConnection(new \IRC\Connection($address, $port, $password));
 $irc->run();

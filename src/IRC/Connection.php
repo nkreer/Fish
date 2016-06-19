@@ -42,6 +42,11 @@ class Connection{
      */
     private $port;
 
+    /**
+     * @var bool|String
+     */
+    private $password;
+
     private $socket;
 
     public $nickname = "FishBot";
@@ -84,9 +89,10 @@ class Connection{
      */
     private $commandHandler;
 
-    public function __construct(String $address, int $port){
+    public function __construct(String $address, int $port, $password = false){
         $this->address = $address;
         $this->port = $port;
+        $this->password = $password;
 
         @mkdir("users/".$this->getAddress()."/");
 
@@ -142,7 +148,7 @@ class Connection{
             $data = str_replace("\n", "", $message);
             $parsed = Parser::parse($data);
             $parsed->setConnection($this);
-            if(IRC::getInstance()->devmode){
+            if(IRC::getInstance()->verbose){
                 Logger::info($this->getAddress()."  ".$data);
             }
             return $parsed;
@@ -168,6 +174,9 @@ class Connection{
     public function handshake(){
         $this->sendData("USER ".$this->nickname." ".$this->hostname." ".$this->username." :".$this->realname);
         $this->sendData("NICK ".$this->nickname);
+        if($this->password !== false){
+            $this->sendData("PASS ".$this->password);
+        }
     }
 
     public function disconnect(String $message = "Quit"){
@@ -181,7 +190,7 @@ class Connection{
      */
     public function sendData(String $data){
         fwrite($this->socket, $data."\n");
-        if(IRC::getInstance()->devmode){
+        if(IRC::getInstance()->verbose){
             Logger::info($this->getAddress()." > ".$data);
         }
     }
