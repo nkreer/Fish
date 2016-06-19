@@ -88,9 +88,7 @@ class IRC{
     public function cycle(){
         foreach($this->connections as $connection){
             $new = $connection->check();
-            if($new !== false){
-                $this->handle($new, $connection);
-            }
+            $this->handle($new, $connection);
         }
     }
     
@@ -131,9 +129,9 @@ class IRC{
     }
 
     /**
-     * Add a connection
      * @param Connection $connection
-     * @param $default
+     * @param bool $default
+     * @return bool
      */
     public function addConnection(Connection $connection, bool $default = true) : bool{
         if(!$this->isConnected($connection->getAddress())){

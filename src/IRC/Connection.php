@@ -145,7 +145,7 @@ class Connection{
             }
             return $parsed;
         }
-        return false;
+        return null;
     }
 
     /**
