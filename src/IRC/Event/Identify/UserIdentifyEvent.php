@@ -19,26 +19,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace IRC\Authentication;
+namespace IRC\Event\Identify;
 
-use IRC\Connection;
-use IRC\Scheduler\Task;
+use IRC\Event\Event;
 use IRC\User;
 
-class UpdateAuthenticationStatusTask extends Task{
+class UserIdentifyEvent extends Event{
 
     private $user;
-    private $connection;
-    
-    public function __construct(User $user, Connection $connection){
+
+    public function __construct(User $user){
         $this->user = $user;
-        $this->connection = $connection;
     }
 
-    public function onRun(){
-        if(User::exists($this->connection, $this->user->getHostmask()) and $this->user->identified === AuthenticationStatus::IDENTIFIED){
-            $this->user->updateAuthenticationStatus();
-        }
+    public function getUser(){
+        return $this->user;
     }
 
 }

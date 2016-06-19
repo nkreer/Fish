@@ -128,16 +128,9 @@ class User implements CommandSender{
         return $this->nick;
     }
 
-    /**
-     * @param UpdateAuthenticationStatusTask|null $task
-     */
-    public function updateAuthenticationStatus(UpdateAuthenticationStatusTask $task = null){
+    public function updateAuthenticationStatus(){
         $this->identified = AuthenticationStatus::UNIDENTIFIED;
         $this->connection->sendData("WHOIS ".$this->getNick());
-        if($task === null){
-            $task = new UpdateAuthenticationStatusTask($this, $this->connection);
-        }
-        $this->connection->getScheduler()->scheduleDelayedTask($task, IRC::getInstance()->getConfig()->getData("authentication_ttl"));
     }
 
     /**

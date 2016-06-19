@@ -44,7 +44,11 @@ class KICK implements ProtocolCommand{
         $ev = new KickEvent($user, $channel, $kicker);
         $connection->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
-            Logger::info($user." joined ".$channel->getName());
+            Logger::info($user." was kicked from ".$channel->getName());
+        }
+        $user = User::getUserByNick($connection, $user);
+        if($user instanceof User){
+            User::removeUser($connection, $user->getHostmask()); //Don't care about other channels
         }
     }
 

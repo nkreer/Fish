@@ -22,17 +22,30 @@
 namespace IRC\Protocol;
 
 use IRC\Authentication\AuthenticationStatus;
+use IRC\Authentication\UpdateAuthenticationStatusTask;
 use IRC\Command;
 use IRC\Connection;
+use IRC\Event\Identify\UserIdentifyEvent;
+use IRC\IRC;
 use IRC\User;
 use IRC\Utils\JsonConfig;
 
+/**
+ * User Identification
+ * Class _307
+ * @package IRC\Protocol
+ */
 class _307 implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){
         $user = User::getUserByNick($connection, $command->getArg(1));
         if($user instanceof User){
-            $user->identified = AuthenticationStatus::IDENTIFIED;
+            $ev = new UserIdentifyEvent($user);
+            $connection->getEventHandler()->callEvent($ev);
+            if(!$ev->isCancelled()){
+                $user->identified = AuthenticationStatus::IDENTIFIED;
+                $connection->getScheduler()->scheduleDelayedTask(new UpdateAuthenticationStatusTask($user, $connection), IRC::getInstance()->getConfig()->getData("authentication_ttl"));
+            }
         }
     }
 

@@ -44,7 +44,7 @@ class NICK implements ProtocolCommand{
         if(!$ev->isCancelled()){
             Logger::info($user->getNick()." is now known as ".$new);
         }
-        User::removeUser($connection, $user->getNick());
+        User::removeUser($connection, $user->getNick()); //Remove old authentication status, mainly
     }
 
 }
