@@ -88,22 +88,14 @@ class IRC{
     public function cycle(){
         foreach($this->connections as $connection){
             $new = $connection->check();
-            $this->handle($new, $connection);
+            if($new instanceof Command){
+                $this->handle($new, $connection);
+            }
+            $this->runScheduler($connection);
         }
     }
-    
-    public function handle(Command $run, Connection $connection){
-        if($run !== null){
-            $command = $run->getCommand();
-            if(is_numeric($command)){
-                $command = "_".$command;
-            }
-            $function = '\IRC\Protocol\\'.strtoupper($command);
-            if(method_exists($function, "run")){
-                call_user_func($function."::run", $run, $connection, $this->getConfig());
-            }
-        }
 
+    public function runScheduler(Connection $connection){
         //Do catchup calls if we've missed any
         if(time() - $connection->getScheduler()->getLastCall() >= 2){
             for($time = time(); $time > $connection->getScheduler()->getLastCall(); $time--){
@@ -112,7 +104,18 @@ class IRC{
         }
 
         //Regularly run scheduler
-        $connection->getScheduler()->call();    
+        $connection->getScheduler()->call();
+    }
+    
+    public function handle(Command $run, Connection $connection){
+        $command = $run->getCommand();
+        if(is_numeric($command)){
+            $command = "_".$command;
+        }
+        $function = '\IRC\Protocol\\'.strtoupper($command);
+        if(method_exists($function, "run")){
+            call_user_func($function."::run", $run, $connection, $this->getConfig());
+        }
     }
 
     /**
