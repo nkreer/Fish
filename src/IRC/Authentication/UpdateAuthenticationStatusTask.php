@@ -36,7 +36,8 @@ class UpdateAuthenticationStatusTask extends Task{
     }
 
     public function onRun(){
-        if(User::exists($this->connection, $this->user->getHostmask()) and $this->user->identified === AuthenticationStatus::IDENTIFIED){
+        $this->user->identified = AuthenticationStatus::UNIDENTIFIED;
+        if(User::exists($this->connection, $this->user->getHostmask())){
             $this->user->updateAuthenticationStatus();
         }
     }

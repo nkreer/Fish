@@ -12,6 +12,10 @@
     ],
     "cpu_idle": 10,
     "authentication_ttl": 1200,
+    "authentication_message":{
+        "enabled":true,
+        "message":"You have been identified."
+    },
     "default_ctcp_replies": {
         "VERSION": "Fish 1"
     },
