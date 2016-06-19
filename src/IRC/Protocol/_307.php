@@ -44,12 +44,12 @@ class _307 implements ProtocolCommand{
             $connection->getEventHandler()->callEvent($ev);
             if(!$ev->isCancelled()){
                 if($user->identified === AuthenticationStatus::UNCHECKED){
+                    $config = IRC::getInstance()->getConfig();
                     if($config->getData("authentication_message")["enabled"] === true){
                         $user->sendNotice($config->getData("authentication_message")["message"]);
                     }
                 }
                 $user->identified = AuthenticationStatus::IDENTIFIED;
-                $config = IRC::getInstance()->getConfig();
                 $connection->getScheduler()->scheduleDelayedTask(new UpdateAuthenticationStatusTask($user, $connection), $config->getData("authentication_ttl"));
             }
         }
