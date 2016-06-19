@@ -32,6 +32,7 @@ class ManagementCommands{
         $connection->getCommandMap()->registerCommand(new PluginLoadCommand($connection));
         $connection->getCommandMap()->registerCommand(new PluginUnloadCommand($connection));
         $connection->getCommandMap()->registerCommand(new PluginsListCommand($connection));
+        $connection->getCommandMap()->registerCommand(new WhoamiCommand($connection));
     }
 
 }
