@@ -45,6 +45,7 @@ class User implements CommandSender{
         $this->address = self::parseAddress($hostmask);
         $this->separator = self::parseSeparator($hostmask);
         if(is_file("users".DIRECTORY_SEPARATOR.$connection->getAddress().DIRECTORY_SEPARATOR.$this->getNick().".json")){
+            $this->identified = AuthenticationStatus::UNIDENTIFIED;
             $this->updateAuthenticationStatus();
             $data = json_decode(file_get_contents("users".DIRECTORY_SEPARATOR.$connection->getAddress().DIRECTORY_SEPARATOR.$this->getNick().".json"), true);
             $this->admin = $data["admin"];

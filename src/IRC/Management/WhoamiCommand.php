@@ -18,6 +18,7 @@ class WhoamiCommand extends Command implements CommandExecutor{
         if($sender instanceof User){
             $sender->sendNotice("Authentication status: ".$sender->identified." | Operator: ".($sender->isOperator() ? "yes" : "no"));
         }
+        return true;
     }
 
 }

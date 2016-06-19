@@ -21,19 +21,28 @@
 
 namespace IRC\Management;
 
+use IRC\Command\Command;
+use IRC\Command\CommandExecutor;
+use IRC\Command\CommandInterface;
+use IRC\Command\CommandSender;
 use IRC\Connection;
 
-class ManagementCommands{
+class RawCommand extends Command implements CommandExecutor{
 
+    private $connection;
+    
     public function __construct(Connection $connection){
-        $connection->getCommandMap()->registerCommand(new JoinCommand($connection));
-        $connection->getCommandMap()->registerCommand(new PartCommand($connection));
-        $connection->getCommandMap()->registerCommand(new HelpCommand($connection));
-        $connection->getCommandMap()->registerCommand(new PluginLoadCommand($connection));
-        $connection->getCommandMap()->registerCommand(new PluginUnloadCommand($connection));
-        $connection->getCommandMap()->registerCommand(new PluginsListCommand($connection));
-        $connection->getCommandMap()->registerCommand(new WhoamiCommand($connection));
-        $connection->getCommandMap()->registerCommand(new RawCommand($connection));
+        $this->connection = $connection;
+        parent::__construct("raw", $this, "fish.management.raw", "Send raw IRC commands", "raw <command>");
+    }
+    
+    public function onCommand(CommandInterface $command, CommandSender $user, CommandSender $room, array $args){
+        $string = implode(" ", $args);
+        if(!empty($string)){
+            $this->connection->sendData($string);
+            return true;
+        }
+        return false;
     }
 
 }
