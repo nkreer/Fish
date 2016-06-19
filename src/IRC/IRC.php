@@ -71,6 +71,7 @@ class IRC{
             $conf->setData("default_ctcp_replies", ["VERSION" => "Fish ".self::VERSION]);
             $conf->setData("spam_protection", ["enabled" => true, "max_commands" => 10, "time" => 60, "message" => "You're currently blocked from using commands because you were using too many."]);
             $conf->setData("invalid_permissions", "Sorry, you do not have the required permissions to use this command.");
+            $conf->setData("disable_management", false);
             
             $conf->save("fish.json");
             $this->config = $conf;

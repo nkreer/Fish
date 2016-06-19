@@ -92,7 +92,9 @@ class Connection{
 
         $this->commandMap = new CommandMap();
         $this->commandHandler = new CommandHandler($this);
-        new ManagementCommands($this);
+        if(IRC::getInstance()->getConfig()->getData("disable_management") === false){
+            new ManagementCommands($this);
+        }
         $this->pluginManager = new PluginManager($this);
         $this->eventHandler = new EventHandler();
         $this->scheduler = new Scheduler();

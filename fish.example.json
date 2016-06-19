@@ -25,5 +25,6 @@
         "time": 60,
         "message": "You're currently blocked from using commands because you were using too many."
     },
-    "invalid_permissions": "Sorry, you do not have the required permissions to use this command."
+    "invalid_permissions": "Sorry, you do not have the required permissions to use this command.",
+    "disable_management":false
 }
