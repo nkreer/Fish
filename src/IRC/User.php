@@ -57,7 +57,7 @@ class User implements CommandSender{
     /**
      * @return array
      */
-    public function hasPermissions() : array{
+    public function getPermissions() : array{
         return $this->permissions;
     }
 
