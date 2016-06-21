@@ -66,7 +66,6 @@ class IRC{
             $conf->setData("default_quitmsg", "Leaving");
             $conf->setData("command_prefix", [".", "!", "\\", "@"]);
             $conf->setData("cpu_idle", 10);
-            $conf->setData("authentication_ttl", 1200);
             $conf->setData("authentication_message", ["enabled" => true, "message" => "You have been identified."]);
             $conf->setData("default_ctcp_replies", ["VERSION" => "Fish ".self::VERSION]);
             $conf->setData("spam_protection", ["enabled" => true, "max_commands" => 10, "time" => 60, "message" => "You're currently blocked from using commands because you were using too many."]);

@@ -50,7 +50,6 @@ class _307 implements ProtocolCommand{
                     }
                 }
                 $user->identified = AuthenticationStatus::IDENTIFIED;
-                $connection->getScheduler()->scheduleDelayedTask(new UpdateAuthenticationStatusTask($user, $connection), $config->getData("authentication_ttl"));
             }
         }
     }

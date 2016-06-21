@@ -130,6 +130,7 @@ class User implements CommandSender{
     }
 
     public function updateAuthenticationStatus(){
+        $this->identified = AuthenticationStatus::UNIDENTIFIED;
         $this->connection->sendData("WHOIS ".$this->getNick());
     }
 
