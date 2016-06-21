@@ -42,9 +42,12 @@ Fish offers many features for interaction with an IRC Server out of the box:
 
 Several plugins have already been written for Fish: 
 
-- [PluginTools](https://github.com/nkreer/PluginTools) helps you with packaging of your plugins
-- [Scripts](https://github.com/nkreer/Fish-Scripts) enables you to add simple custom commands to the bot
-- Many more, closed source plugins
+| Plugin | Description |
+| ------ | ----------- |
+|[PluginTools](https://github.com/nkreer/PluginTools)| Helps you with packaging of your plugins |
+|[Permissions](https://github.com/nkreer/Permissions)| Changes users' permissions on |
+|[Scripts](https://github.com/nkreer/Fish-Scripts)| Enables you to add simple custom commands to the bot |
+| Many more, closed source plugins | Weather, Reminders, YouTube, etc. (I might open source them later) |
 
 If you want me to add your plugin to the list, open a pull request or message me
 

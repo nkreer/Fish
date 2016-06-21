@@ -58,7 +58,11 @@ class User implements CommandSender{
      * @return array
      */
     public function getPermissions() : array{
-        return $this->permissions;
+        $permissions = [];
+        foreach($this->permissions as $permission => $yes){
+            $permissions[] = $permission;
+        }
+        return $permissions;
     }
 
     /**
@@ -138,7 +142,7 @@ class User implements CommandSender{
      * @return int
      */
     public function remember() : int{
-        $options = ["name" => $this->getNick(), "admin" => $this->admin, "lastSeen" => time(), "permissions" => $this->permissions];
+        $options = ["name" => $this->getNick(), "admin" => $this->admin, "lastSeen" => time(), "permissions" => $this->getPermissions()];
         return file_put_contents("users".DIRECTORY_SEPARATOR.$this->connection->getAddress().DIRECTORY_SEPARATOR.$this->getNick().".json", json_encode($options, JSON_PRETTY_PRINT));
     }
 
