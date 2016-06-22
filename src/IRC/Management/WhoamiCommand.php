@@ -16,7 +16,7 @@ class WhoamiCommand extends Command implements CommandExecutor{
 
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
         if($sender instanceof User){
-            $sender->sendNotice("Authentication status: ".$sender->identified." | Operator: ".($sender->isOperator() ? "yes" : "no"));
+            $sender->sendNotice("You are ".$sender->getNick()." @ ".$sender->getAddress()." | Authentication status: ".$sender->identified." | Operator: ".($sender->isOperator() ? "yes" : "no"));
         }
         return true;
     }

@@ -61,7 +61,7 @@ class CommandHandler{
             if(!$user->hasPermission("fish.spamprotect.bypass")){
                 if(isset($this->timers[$user->getAddress()])){
                     $this->timers[$user->getAddress()] += 1;
-                    if($this->timers[$user->getAddress()] >= $this->config["max_commands"]){
+                    if($this->timers[$user->getAddress()] > $this->config["max_commands"]){
                         return true;
                     }
                 } else {
