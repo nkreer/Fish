@@ -94,14 +94,6 @@ class Channel implements CommandSender{
     }
 
     /**
-     * Send CTCP
-     * @param $message
-     */
-    public function sendCTCP(String $message){
-        $this->sendMessage(chr(1)."CTCP ".$message.chr(1));
-    }
-
-    /**
      * Check if this channel is a query
      * @return bool
      */
