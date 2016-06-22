@@ -21,32 +21,33 @@
 
 namespace IRC\Protocol;
 
-use IRC\Authentication\AuthenticationStatus;
+use IRC\Channel;
 use IRC\Command;
 use IRC\Connection;
-use IRC\Event\Identify\UserIdentifyEvent;
+use IRC\Event\Connection\ConnectionFinishedEvent;
 use IRC\IRC;
-use IRC\User;
 use IRC\Utils\JsonConfig;
 
 /**
- * User Identification
- * Class _307
+ * End of MOTD
+ * Class _376
  * @package IRC\Protocol
  */
-class _307 implements ProtocolCommand{
+class _376 implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){
-        $user = User::getUserByNick($connection, $command->getArg(1));
-        if($user instanceof User){
-            $ev = new UserIdentifyEvent($user);
-            $connection->getEventHandler()->callEvent($ev);
-            if(!$ev->isCancelled()){
-                $config = IRC::getInstance()->getConfig();
-                if($config->getData("authentication_message")["enabled"] === true){
-                    $user->sendNotice($config->getData("authentication_message")["message"]);
+        $ev = new ConnectionFinishedEvent($connection);
+        $connection->getEventHandler()->callEvent($ev);
+        if(!$ev->isCancelled()){
+            $config = IRC::getInstance()->getConfig()->getData("connections");
+            if(!empty($config[$connection->getAddress()]["nickserv"])){
+                $connection->getNickServ()->identify($config[$connection->getAddress()]["nickserv"]); //Identify with NickServ
+            }
+            if(!empty($config[$connection->getAddress()]["channels"])){
+                $channels = $config[$connection->getAddress()]["channels"];
+                foreach($channels as $channel){
+                    $connection->joinChannel(Channel::getChannel($connection, $channel)); //Join these channels
                 }
-                $user->identified = AuthenticationStatus::IDENTIFIED;
             }
         }
     }

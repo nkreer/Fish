@@ -21,6 +21,7 @@
 
 namespace IRC;
 
+use IRC\Authentication\NickServ;
 use IRC\Command\CommandHandler;
 use IRC\Command\CommandMap;
 use IRC\Event\EventHandler;
@@ -89,6 +90,11 @@ class Connection{
      */
     private $commandHandler;
 
+    /**
+     * @var NickServ
+     */
+    private $nickServ;
+
     public function __construct(String $address, int $port, $password = false){
         $this->address = $address;
         $this->port = $port;
@@ -106,6 +112,11 @@ class Connection{
         $this->scheduler = new Scheduler();
 
         $this->trackers[] = new UserTracker($this);
+        $this->nickServ = new NickServ($this);
+    }
+
+    public function getNickServ() : NickServ{
+        return $this->nickServ;
     }
 
     public function getCommandHandler() : CommandHandler{
