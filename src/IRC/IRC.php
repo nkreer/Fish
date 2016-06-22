@@ -83,6 +83,10 @@ class IRC{
         stream_set_blocking(STDIN, 0);
     }
 
+    public function getCommandPrefix() : String{
+        return $this->getConfig()->getData("command_prefix")[0];
+    }
+
     public function getConfig() : JsonConfig{
         return $this->config;
     }

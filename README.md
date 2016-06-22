@@ -1,7 +1,5 @@
 # Fish 
 
-![Image of a fish](http://orig07.deviantart.net/1524/f/2013/023/0/9/fish_png_by_heidyy12-d5sg0z8.png)
-
 ![TravisCI build](https://travis-ci.org/nkreer/Fish.svg)
 [![Chat](https://img.shields.io/badge/Chat%20on%20irc.rizon.net-%23fish--irc-brightgreen.svg)](http://qchat.rizon.net/?randomnick=1&channels=fish-irc&prompt=1&uio=d4)
 ![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)
@@ -59,3 +57,5 @@ If you have any questions regarding the API, feel free to send me an E-Mail.
 ## Contribute
 
 All contributions and Pull Requests are welcome. Just stick to the original coding style wherever possible.
+
+![Image of a fish](http://orig07.deviantart.net/1524/f/2013/023/0/9/fish_png_by_heidyy12-d5sg0z8.png)

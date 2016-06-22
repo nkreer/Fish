@@ -26,10 +26,14 @@ use IRC\Command\CommandExecutor;
 use IRC\Command\CommandInterface;
 use IRC\Command\CommandSender;
 use IRC\Connection;
+use IRC\IRC;
+use IRC\User;
 
 class HelpCommand extends Command implements CommandExecutor{
 
     private $connection;
+
+    const COMMANDS_PER_PAGE = 3;
 
     public function __construct(Connection $connection){
         $this->connection = $connection;
@@ -37,7 +41,53 @@ class HelpCommand extends Command implements CommandExecutor{
     }
 
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
-        //TODO - Make this better
+        if($sender instanceof User){
+            if(isset($args[1])){
+                if(is_numeric($args[1]) and $args[1] > 0){
+                    $page = --$args[1];
+                } elseif(is_string($args[1])) {
+                    $page = strtolower($args[1]);
+                } else {
+                    $page = $args[1];
+                }
+            } else {
+                $page = 0;
+            }
+
+            if(!is_numeric($page)){
+                $help = $this->connection->getCommandMap()->getCommand($page);
+                if($help instanceof Command){
+                    $sender->sendNotice(IRC::getInstance()->getCommandPrefix().$help->getCommand()." - ".$help->getDescription()." (".$help->getUsage().")");
+                } else {
+                    $sender->sendNotice("Command not found.");
+                }
+            } else {
+                $commands = $this->connection->getCommandMap()->getCommands();
+                foreach($commands as $key => $help){
+                    if(!$sender->hasPermission($help->getMinimumPermission()) or $help->getCommand() !== $key){
+                        unset($commands[$key]);
+                    }
+                }
+                ksort($commands);
+                $list = ["Help page ".($page + 1)];
+                $min = $page * self::COMMANDS_PER_PAGE;
+                $max = $page * self::COMMANDS_PER_PAGE + self::COMMANDS_PER_PAGE;
+                $count = 1;
+                foreach($commands as $help){
+                    if($count >= $min and $count < $max){
+                        $list[] = IRC::getInstance()->getCommandPrefix().$help->getCommand()." - ".$help->getDescription()." (".$help->getUsage().")";
+                    }
+                    $count++;
+                }
+                if(count($list) > 1){
+                    foreach($list as $entry){
+                        $sender->sendNotice($entry);
+                    }
+                } else {
+                    $sender->sendNotice("This help page is empty");
+                }
+            }
+        }
     }
 
 }
