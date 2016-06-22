@@ -4,11 +4,13 @@ use PHPUnit\Framework\TestCase;
 
 class KICKTest extends TestCase{
 
-    public $irc;
+    /**
+     * @var \IRC\Connection
+     */
     public $connection;
 
     public function setUp(){
-        $this->irc = new IRC\IRC(false, true);
+        new IRC\IRC(false, true);
         $this->connection = new \IRC\Connection("", 6697);
     }
 

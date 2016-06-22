@@ -3,7 +3,10 @@
 use PHPUnit\Framework\TestCase;
 
 class ConnectionTest extends TestCase{
-    
+
+    /**
+     * @var IRC\Connection
+     */
     private $connection;
     
     public function setUp(){
@@ -11,10 +14,9 @@ class ConnectionTest extends TestCase{
         $this->connection = new IRC\Connection("", 6697);
     }
 
-    public function testHasManagementCommands(){
-        $this->assertInstanceOf("IRC\Management\HelpCommand", $this->connection->getCommandMap()->getCommand("help"));
-        $this->assertInstanceOf("IRC\Management\JoinCommand", $this->connection->getCommandMap()->getCommand("join"));
-        $this->assertInstanceOf("IRC\Management\PartCommand", $this->connection->getCommandMap()->getCommand("part"));
+    public function testParsing(){
+        $command = $this->connection->check("hello!~test@example.net PRIVMSG #fish-irc :test");
+        $this->assertInstanceOf("IRC\Command", $command);
     }
-
+    
 }

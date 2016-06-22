@@ -44,7 +44,7 @@ Several plugins have already been written for Fish:
 
 | Plugin | Description |
 | ------ | ----------- |
-|[PluginTools](https://github.com/nkreer/PluginTools)| Helps you with thh packaging of your plugins |
+|[PluginTools](https://github.com/nkreer/PluginTools)| Helps you with the packaging of your plugins |
 |[Permissions](https://github.com/nkreer/Permissions)| Changes users' permissions on IRC |
 |[Scripts](https://github.com/nkreer/Fish-Scripts)| Enables you to add simple custom commands to the bot |
 | Many more, closed source plugins | Weather, Reminders, YouTube, etc. (I might open source them later) |

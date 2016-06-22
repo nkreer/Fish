@@ -23,12 +23,10 @@ class UserTest extends TestCase{
     }
 
     public function testUserDoesNotHavePermission(){
-        $this->user = new \IRC\User(new \IRC\Connection("", 6697), "!hello@example.net");
         $this->assertFalse($this->user->hasPermission("eating.cookies"));
     }
 
     public function testUserDoesHavePermission(){
-        $this->user = new \IRC\User(new \IRC\Connection("", 6697), "!hello@example.net");
         $this->user->addPermission("eating.cookies");
         $this->assertTrue($this->user->hasPermission("eating.cookies"));
     }
