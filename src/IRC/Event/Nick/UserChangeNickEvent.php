@@ -21,19 +21,15 @@
 
 namespace IRC\Event\Nick;
 
-use IRC\User;
-
 class UserChangeNickEvent extends NickEvent{
-
-    private $user;
+    
     private $nickOld;
     private $nickNew;
 
-    public function __construct(User $user, $nickBefore, $nickNew){
+    public function __construct($nickBefore, $nickNew){
         parent::__construct($nickBefore);
         $this->nickOld = $nickBefore;
         $this->nickNew = $nickNew;
-        $this->user = $user;
     }
 
     public function getOldNick(){
@@ -42,10 +38,6 @@ class UserChangeNickEvent extends NickEvent{
 
     public function getNewNick(){
         return $this->nickNew;
-    }
-
-    public function getUser(){
-        return $this->user;
     }
 
 }

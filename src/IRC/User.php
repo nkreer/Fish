@@ -35,7 +35,6 @@ class User implements CommandSender{
     public $admin = false;
     private $nick = "";
     private $address = "";
-    private $separator = "";
     private $permissions = [];
 
     public function __construct(Connection $connection, String $hostmask){
@@ -43,9 +42,7 @@ class User implements CommandSender{
         $this->connection = $connection;
         $this->nick = self::parseNick($hostmask);
         $this->address = self::parseAddress($hostmask);
-        $this->separator = self::parseSeparator($hostmask);
         if(is_file("users".DIRECTORY_SEPARATOR.$connection->getAddress().DIRECTORY_SEPARATOR.$this->getNick().".json")){
-            $this->identified = AuthenticationStatus::UNIDENTIFIED;
             $this->updateAuthenticationStatus();
             $data = json_decode(file_get_contents("users".DIRECTORY_SEPARATOR.$connection->getAddress().DIRECTORY_SEPARATOR.$this->getNick().".json"), true);
             $this->admin = $data["admin"];
@@ -111,19 +108,6 @@ class User implements CommandSender{
             return $address[1];
         }
         return "";
-    }
-
-    /**
-     * @return string
-     */
-    private static function parseSeparator(String $host) : String{
-        $mark = strpos($host, "!");
-        if($mark !== false){
-            if($host[$mark + 1] === "~"){
-                return "!~";
-            }
-        }
-        return "!";
     }
 
     /**
@@ -238,13 +222,6 @@ class User implements CommandSender{
      */
     public function getAuthenticationStatus() : int{
         return $this->identified;
-    }
-
-    /**
-     * @return String
-     */
-    public function getSeparator() : String{
-        return $this->separator;
     }
 
     /**
