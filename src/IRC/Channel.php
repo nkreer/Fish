@@ -165,4 +165,45 @@ class Channel implements CommandSender{
         return $this->topicTime;
     }
 
+    /**
+     * @param User $user
+     */
+    public function ban(User $user, $kick = false){
+        $this->setMode("b *!*@".$user->getAddress());
+        if($kick == true){
+            $this->kick($user);
+        }
+    }
+
+    /**
+     * @param String $mask
+     */
+    public function unban(String $mask){
+        $this->takeMode("b ".$mask);
+    }
+
+    /**
+     * @param User $user
+     * @param String $reason
+     */
+    public function kick(User $user, String $reason = "Kicked."){
+        $this->connection->sendData("KICK ".$this->getName()." ".$user->getNick()." :".$reason);
+        User::removeUser($this->connection, $user->getHostmask()); //Remove from connection
+        $this->removeUser($user->getNick()); // Remove from channel
+    }
+
+    /**
+     * @param $mode
+     */
+    public function setMode($mode){
+        $this->connection->sendData("MODE ".$this->getName()." +".$mode);
+    }
+
+    /**
+     * @param String $mode
+     */
+    public function takeMode(String $mode){
+        $this->connection->sendData("MODE ".$this->getName()." -".$mode);
+    }
+
 }

@@ -248,4 +248,20 @@ class User implements CommandSender{
         $channel->sendNotice($notice);
     }
 
+    /**
+     * @param Channel $channel
+     * @param String $mode
+     */
+    public function setMode(Channel $channel, String $mode){
+        $this->connection->sendData("MODE ".$channel->getName()." +".$mode." ".$this->getNick());
+    }
+
+    /**
+     * @param Channel $channel
+     * @param String $mode
+     */
+    public function takeMode(Channel $channel, String $mode){
+        $this->connection->sendData("MODE ".$channel->getName()." -".$mode." ".$this->getNick());
+    }
+
 }
