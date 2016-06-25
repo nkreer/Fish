@@ -106,7 +106,7 @@ class CommandMap{
     public function unregisterPlugin(Plugin $plugin) : bool{
         if($this->hasPlugin($plugin)){
             foreach($this->plugins[$plugin->name] as $label => $command){
-                unset($this->plugins[$label]);
+                $this->unregisterCommand($command, $plugin);
             }
             unset($this->plugins[$plugin->name]);
             return true;
