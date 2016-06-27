@@ -1,13 +1,13 @@
 <?php
 
-namespace IRC;
+namespace IRC\Utils;
 
 /**
  * @class ArgumentParser
  * @author Niklas Kreer
  * @license Public Domain
  *
- * Parse Command Line Arguments
+ * Simple argument parser
  */
 class ArgumentParser{
 

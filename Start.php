@@ -13,7 +13,7 @@ $port = (isset($argv[2]) ? $argv[2] : 6697); //Standard IRC port, encrypted
 
 for($i = 0; $i < 2; $i++) unset($argv[$i]);
 $message = implode(" ", $argv);
-$args = \IRC\ArgumentParser::parse($message, ["password", "insecure"]);
+$args = \IRC\Utils\ArgumentParser::parse($message, ["password", "insecure"]);
 
 $address = (empty($args["insecure"]) ? "ssl://".$address : $address);
 $password = (!empty($args["password"]) ? $args["password"] : false);

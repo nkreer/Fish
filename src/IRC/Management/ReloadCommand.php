@@ -34,9 +34,9 @@ class ReloadCommand extends Command implements CommandExecutor{
     }
 
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
-        $sender->sendMessage("Reloading...");
+        $sender->sendNotice("Reloading...");
         IRC::getInstance()->reload();
-        $sender->sendMessage("Reload complete.");
+        $sender->sendNotice("Reload complete.");
     }
 
 }
