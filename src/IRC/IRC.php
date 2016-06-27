@@ -44,7 +44,11 @@ class IRC{
      */
     public $connections = [];
 
+    /**
+     * @var JsonConfig
+     */
     private $config;
+    
     public $verbose = false;
     public $silent = false;
 
@@ -60,13 +64,22 @@ class IRC{
     }
 
     public function reload(){
+        $this->loadConfig();
         foreach($this->connections as $connection){
-            $this->loadConfig();
             $connection->getEventHandler()->unregisterAll();
             $connection->getScheduler()->cancelAll();
             $connection->load();
             $connection->getPluginManager()->reloadAll();
         }
+    }
+
+    public function stop(){
+        Logger::info("Stopping...");
+        foreach($this->connections as $connection){
+            $this->removeConnection($connection);
+            $connection->getPluginManager()->unloadAll();
+        }
+        exit(0);
     }
 
     public function loadConfig(){
@@ -126,7 +139,7 @@ class IRC{
     public function run(){
         while(true){
             if(empty($this->connections)){
-                die("No more connections."); //Kill the process if no connection
+                $this->stop(); // Stop
             }
             $this->cycle();
             usleep($this->config->getData("cpu_idle") * 1000); //Chill

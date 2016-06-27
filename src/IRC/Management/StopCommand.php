@@ -28,18 +28,14 @@ use IRC\Command\CommandSender;
 use IRC\Connection;
 use IRC\IRC;
 
-class QuitCommand extends Command implements CommandExecutor{
+class StopCommand extends Command implements CommandExecutor{
 
-    private $connection;
-
-    public function __construct(Connection $connection){
-        $this->connection = $connection;
-        parent::__construct("quit", $this, "fish.management.quit", "Quit the connection", "quit");
+    public function __construct(){
+        parent::__construct("stop", $this, "fish.management.stop", "Stop the bot", "stop");
     }
 
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
-        IRC::getInstance()->removeConnection($this->connection);
-        return true;
+        IRC::getInstance()->stop();
     }
 
 }
