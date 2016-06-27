@@ -25,5 +25,5 @@ class IRCTest extends TestCase{
         $this->assertTrue($this->irc->addConnection($connection));
         $this->assertTrue($this->irc->removeConnection($connection));
     }
-    
+
 }

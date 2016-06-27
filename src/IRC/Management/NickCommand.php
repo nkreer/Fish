@@ -21,7 +21,6 @@
 
 namespace IRC\Management;
 
-use IRC\Channel;
 use IRC\Command\Command;
 use IRC\Command\CommandExecutor;
 use IRC\Command\CommandInterface;

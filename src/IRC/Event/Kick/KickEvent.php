@@ -21,7 +21,7 @@ class KickEvent extends Event{
     public function getKicker(){
         return $this->kicker;
     }
-    
+
     public function getUser(){
         return $this->user;
     }

@@ -25,30 +25,18 @@ use IRC\Command\Command;
 use IRC\Command\CommandExecutor;
 use IRC\Command\CommandInterface;
 use IRC\Command\CommandSender;
-use IRC\Connection;
+use IRC\IRC;
 
-class PluginLoadCommand extends Command implements CommandExecutor{
+class ReloadCommand extends Command implements CommandExecutor{
 
-    private $connection;
-
-    public function __construct(Connection $connection){
-        $this->connection = $connection;
-        parent::__construct("loadPlugin", $this, "fish.management.loadplugin", "Load plugin", "loadplugin <plugin>");
-        $this->addAlias("lp");
-        $this->addAlias("loadMod");
-        $this->addAlias("loadModule");
+    public function __construct(){
+        parent::__construct("reload", $this, "fish.management.reload", "Reload everything", "reload");
     }
 
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
-        if(!empty($args[1])){
-            if($this->connection->getPluginManager()->loadPlugin($args[1].".phar", true) !== false){
-                $sender->sendNotice("Plugin ".$args[1]." was loaded successfully.");
-            } else {
-                $sender->sendNotice("Plugin ".$args[1]." could not be loaded.");
-            }
-            return true;
-        }
-        return false;
+        $sender->sendMessage("Reloading...");
+        IRC::getInstance()->reload();
+        $sender->sendMessage("Reload complete.");
     }
 
 }

@@ -100,7 +100,7 @@ class Connection{
         $this->port = $port;
         $this->password = $password;
 
-        @mkdir("users/".$this->getAddress()."/");
+        @mkdir("users".DIRECTORY_SEPARATOR.$this->getAddress().DIRECTORY_SEPARATOR);
 
         $this->commandMap = new CommandMap();
         $this->commandHandler = new CommandHandler($this);
@@ -110,9 +110,12 @@ class Connection{
         $this->pluginManager = new PluginManager($this);
         $this->eventHandler = new EventHandler();
         $this->scheduler = new Scheduler();
-
-        $this->trackers[] = new UserTracker($this);
         $this->nickServ = new NickServ($this);
+        $this->load();
+    }
+
+    public function load(){
+        $this->trackers[] = new UserTracker($this);
     }
 
     public function getNickServ() : NickServ{

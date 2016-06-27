@@ -42,12 +42,19 @@ class Scheduler{
         return $this->lastCall;
     }
 
+    public function cancelAll(){
+        foreach($this->plugins as $name => $tasks){
+            $this->cancelPluginTasks($name);
+        }
+        $this->tasks = [];
+    }
+
     /**
-     * @param PluginBase $plugin
+     * @param $plugin
      */
-    public function cancelPluginTasks(Plugin $plugin){
-        if(!empty($this->plugins[$plugin->name])){
-            foreach($this->plugins[$plugin->name] as $id){
+    public function cancelPluginTasks($plugin){
+        if(!empty($this->plugins[$plugin])){
+            foreach($this->plugins[$plugin] as $id){
                 $this->cancelTask($id);
             }
         }

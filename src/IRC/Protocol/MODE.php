@@ -46,7 +46,7 @@ class MODE implements ProtocolCommand{
         if($channel->getName() === $connection->getNick()){
             $ev = new MyModesChangeEvent($mode, $user, $channel);
             $connection->getEventHandler()->callEvent($ev);
-        } elseif(empty($command->getArg(2))){
+        } elseif(empty($command->getArg(2))) {
             if($mode === "+b"){
                 $ev = new BanSetEvent($command->getArg(1), $user, $channel);
             } elseif($mode === "-b") {

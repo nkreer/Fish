@@ -26,5 +26,5 @@ class UserMode{
     const OPERATOR = "o";
     const HALFOP = "h";
     const VOICE = "v";
-    
+
 }

@@ -36,6 +36,7 @@ class ManagementCommands{
         $connection->getCommandMap()->registerCommand(new RawCommand($connection));
         $connection->getCommandMap()->registerCommand(new SayCommand($connection));
         $connection->getCommandMap()->registerCommand(new NickCommand($connection));
+        $connection->getCommandMap()->registerCommand(new ReloadCommand($connection));
     }
 
 }

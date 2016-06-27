@@ -18,7 +18,7 @@ class EventHandlerTest extends TestCase{
 }
 
 class TestListener extends TestCase implements \IRC\Event\Listener{
-    
+
     public function onPingEvent(\IRC\Event\Ping\PingEvent $event){
         $this->assertInstanceOf("\IRC\Event\Ping\PingEvent", $event);
     }

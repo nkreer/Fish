@@ -22,7 +22,7 @@
 namespace IRC\Event\Nick;
 
 class UserChangeNickEvent extends NickEvent{
-    
+
     private $nickOld;
     private $nickNew;
 

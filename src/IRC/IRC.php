@@ -53,34 +53,30 @@ class IRC{
         $this->verbose = $verbose;
         self::$instance = $this;
         Logger::info(BashColor::GREEN."Starting Fish (".self::CODENAME.") v".self::VERSION.BashColor::YELLOW." (API v".self::API_VERSION.")");
-        @mkdir("plugins/");
-        @mkdir("users/");
+        @mkdir("plugins");
+        @mkdir("users");
+        $this->loadConfig();
+        stream_set_blocking(STDIN, 0);
+    }
 
+    public function reload(){
+        foreach($this->connections as $connection){
+            $this->loadConfig();
+            $connection->getEventHandler()->unregisterAll();
+            $connection->getScheduler()->cancelAll();
+            $connection->load();
+            $connection->getPluginManager()->reloadAll();
+        }
+    }
+
+    public function loadConfig(){
         if(!file_exists("fish.json")){
             Logger::info(BashColor::RED."Couldn't find configuration file. Making a new one...");
-            $conf = new JsonConfig();
-            $conf->setData("default_nickname", "FishBot");
-            $conf->setData("default_realname", "Fish - IRC Bot");
-            $conf->setData("default_username", "Fish");
-            $conf->setData("default_hostname", "Fish");
-            $conf->setData("default_quitmsg", "Leaving");
-            $conf->setData("command_prefix", [".", "!", "\\", "@"]);
-            $conf->setData("cpu_idle", 10);
-            $conf->setData("authentication_message", ["enabled" => true, "message" => "You have been identified."]);
-            $conf->setData("default_ctcp_replies", ["VERSION" => "Fish ".self::VERSION]);
-            $conf->setData("spam_protection", ["enabled" => true, "max_commands" => 10, "time" => 60, "message" => "You're currently blocked from using commands because you were using too many."]);
-            $conf->setData("invalid_permissions", "Sorry, you do not have the required permissions to use this command.");
-            $conf->setData("disable_management", false);
-            $conf->setData("connections", ["irc.network.com" => ["nickserv" => false, "channels" => ["#fish-irc"]]]);
-
-            $conf->save("fish.json");
-            $this->config = $conf;
-        } else {
-            $conf = new JsonConfig();
-            $conf->loadFile("fish.json");
-            $this->config = $conf;
+            @copy(__DIR__.DIRECTORY_SEPARATOR."Resources".DIRECTORY_SEPARATOR."fish.json", "fish.json");
         }
-        stream_set_blocking(STDIN, 0);
+        $conf = new JsonConfig();
+        $conf->loadFile("fish.json");
+        $this->config = $conf;
     }
 
     public function getCommandPrefix() : String{
@@ -112,7 +108,7 @@ class IRC{
         //Regularly run scheduler
         $connection->getScheduler()->call();
     }
-    
+
     public function handle(Command $run, Connection $connection){
         $command = $run->getCommand();
         if(is_numeric($command)){

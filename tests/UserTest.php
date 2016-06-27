@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 class UserTest extends TestCase{
 
     private $user;
-    
+
     public function setUp(){
         $this->user = new IRC\User(new IRC\Connection("", 6697), "test~!hello@example.net");
     }

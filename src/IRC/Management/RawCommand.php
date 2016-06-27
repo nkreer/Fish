@@ -30,12 +30,12 @@ use IRC\Connection;
 class RawCommand extends Command implements CommandExecutor{
 
     private $connection;
-    
+
     public function __construct(Connection $connection){
         $this->connection = $connection;
         parent::__construct("raw", $this, "fish.management.raw", "Send raw IRC commands", "raw <command>");
     }
-    
+
     public function onCommand(CommandInterface $command, CommandSender $user, CommandSender $room, array $args){
         $string = implode(" ", $args);
         if(!empty($string)){

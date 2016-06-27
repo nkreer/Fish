@@ -24,7 +24,6 @@ namespace IRC;
 use IRC\Authentication\AuthenticationStatus;
 use IRC\Authentication\UpdateAuthenticationStatusTask;
 use IRC\Command\CommandSender;
-use IRC\Scheduler\Task;
 
 class User implements CommandSender{
 
@@ -67,7 +66,7 @@ class User implements CommandSender{
      * @return bool
      */
     public function hasPermission($permission) : bool{
-        if($permission === false || $this->isOperator()  || isset($this->permissions[$permission])){
+        if($permission === false || $this->isOperator() || isset($this->permissions[$permission])){
             return true;
         }
         return false;

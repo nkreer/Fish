@@ -143,6 +143,15 @@ class PluginManager{
     }
 
     /**
+     * Unload all plugins
+     */
+    public function unloadAll(){
+        foreach($this->plugins as $plugin){
+            $this->unloadPlugin($plugin);
+        }
+    }
+
+    /**
      * @param Plugin $plugin
      * @return bool
      */
@@ -156,7 +165,7 @@ class PluginManager{
                 unset($this->plugins[$plugin->name]);
                 $this->getConnection()->getCommandMap()->unregisterPlugin($plugin);
                 $this->getConnection()->getEventHandler()->unregisterPlugin($plugin);
-                $this->getConnection()->getScheduler()->cancelPluginTasks($plugin);
+                $this->getConnection()->getScheduler()->cancelPluginTasks($plugin->name);
                 unset($plugin);
                 return true;
             }
@@ -170,6 +179,22 @@ class PluginManager{
      */
     public function hasPlugin($name) : bool{
         return isset($this->plugins[$name]);
+    }
+
+    /**
+     * @param Plugin $plugin
+     */
+    public function reloadPlugin(Plugin $plugin){
+        $this->unloadPlugin($plugin);
+        $this->loadPlugin($plugin->name, true);
+    }
+
+    /**
+     * Reload all plugins
+     */
+    public function reloadAll(){
+        $this->unloadAll();
+        $this->loadAll();
     }
 
 }
