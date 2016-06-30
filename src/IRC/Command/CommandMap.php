@@ -21,12 +21,20 @@
 
 namespace IRC\Command;
 
+use IRC\Connection;
+use IRC\Event\Command\CommandRegisterEvent;
+use IRC\Event\Command\CommandUnregisterEvent;
 use IRC\Plugin\Plugin;
 
 class CommandMap{
 
     private $commands = [];
-    private $plugins;
+    private $plugins = [];
+    private $connection;
+
+    public function __construct(Connection $connection){
+        $this->connection = $connection;
+    }
 
     /**
      * @return Command[]
@@ -64,16 +72,20 @@ class CommandMap{
      */
     public function unregisterCommand(CommandInterface $command, Plugin $plugin = null) : bool{
         if($this->hasCommand($command->getCommand())){
-            unset($this->commands[$command->getCommand()]);
-            foreach($command->getAliases() as $alias){
-                if($this->hasCommand($alias)){
-                    unset($this->commands[$alias]);
+            $ev = new CommandUnregisterEvent($command);
+            $this->connection->getEventHandler()->callEvent($ev);
+            if(!$ev->isCancelled()){
+                unset($this->commands[$command->getCommand()]);
+                foreach($command->getAliases() as $alias){
+                    if($this->hasCommand($alias)){
+                        unset($this->commands[$alias]);
+                    }
                 }
+                if($plugin instanceof Plugin){
+                    unset($this->plugins[$plugin->name][$command->getCommand()]);
+                }
+                return true;
             }
-            if($plugin instanceof Plugin){
-                unset($this->plugins[$plugin->name][$command->getCommand()]);
-            }
-            return true;
         }
         return false;
     }
@@ -85,16 +97,20 @@ class CommandMap{
      */
     public function registerCommand(CommandInterface $command, Plugin $plugin = null) : bool{
         if(!$this->hasCommand($command->getCommand())){
-            $this->commands[$command->getCommand()] = $command;
-            foreach($command->getAliases() as $alias){
-                if(!$this->hasCommand($alias)){
-                    $this->commands[$alias] = $command;
+            $ev = new CommandRegisterEvent($command);
+            $this->connection->getEventHandler()->callEvent($ev);
+            if(!$ev->isCancelled()){
+                $this->commands[$command->getCommand()] = $command;
+                foreach($command->getAliases() as $alias){
+                    if(!$this->hasCommand($alias)){
+                        $this->commands[$alias] = $command;
+                    }
                 }
+                if($plugin instanceof Plugin){
+                    $this->plugins[$plugin->name][$command->getCommand()] = $command;
+                }
+                return true;
             }
-            if($plugin instanceof Plugin){
-                $this->plugins[$plugin->name][$command->getCommand()] = $command;
-            }
-            return true;
         }
         return false;
     }

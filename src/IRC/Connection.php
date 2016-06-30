@@ -102,7 +102,7 @@ class Connection{
 
         @mkdir("users".DIRECTORY_SEPARATOR.$this->getAddress().DIRECTORY_SEPARATOR);
 
-        $this->commandMap = new CommandMap();
+        $this->commandMap = new CommandMap($this);
         $this->commandHandler = new CommandHandler($this);
         if(IRC::getInstance()->getConfig()->getData("disable_management") === false){
             new ManagementCommands($this);
