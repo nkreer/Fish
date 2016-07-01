@@ -55,6 +55,10 @@ class Channel implements CommandSender{
         $this->connection = $connection;
     }
 
+    public function __toString(){
+        return $this->name;
+    }
+
     /**
      * @return String
      */

@@ -102,13 +102,13 @@ class Connection{
 
         @mkdir("users".DIRECTORY_SEPARATOR.$this->getAddress().DIRECTORY_SEPARATOR);
 
+        $this->eventHandler = new EventHandler();
         $this->commandMap = new CommandMap($this);
         $this->commandHandler = new CommandHandler($this);
         if(IRC::getInstance()->getConfig()->getData("disable_management") === false){
             new ManagementCommands($this);
         }
         $this->pluginManager = new PluginManager($this);
-        $this->eventHandler = new EventHandler();
         $this->scheduler = new Scheduler();
         $this->nickServ = new NickServ($this);
         $this->load();
