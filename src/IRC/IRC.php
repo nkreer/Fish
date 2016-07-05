@@ -21,6 +21,7 @@
 
 namespace IRC;
 
+use IRC\Event\Connection\ConnectionActivityEvent;
 use IRC\Utils\BashColor;
 use IRC\Utils\JsonConfig;
 
@@ -123,13 +124,17 @@ class IRC{
     }
 
     public function handle(Command $run, Connection $connection){
-        $command = $run->getCommand();
-        if(is_numeric($command)){
-            $command = "_".$command;
-        }
-        $function = '\IRC\Protocol\\'.strtoupper($command);
-        if(method_exists($function, "run")){
-            call_user_func($function."::run", $run, $connection, $this->getConfig());
+        $ev = new ConnectionActivityEvent($connection, $run);
+        $connection->getEventHandler()->callEvent($ev);
+        if(!$ev->isCancelled()){
+            $command = $run->getCommand();
+            if(is_numeric($command)){
+                $command = "_".$command;
+            }
+            $function = '\IRC\Protocol\\'.strtoupper($command);
+            if(method_exists($function, "run")){
+                call_user_func($function."::run", $run, $connection, $this->getConfig());
+            }
         }
     }
 
