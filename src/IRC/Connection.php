@@ -24,6 +24,7 @@ namespace IRC;
 use IRC\Authentication\NickServ;
 use IRC\Command\CommandHandler;
 use IRC\Command\CommandMap;
+use IRC\Event\Connection\ConnectionUseEvent;
 use IRC\Event\EventHandler;
 use IRC\Management\ManagementCommands;
 use IRC\Management\OperatorCommands;
@@ -203,9 +204,13 @@ class Connection{
      * @param String $data
      */
     public function sendData(String $data){
-        fwrite($this->socket, $data."\n");
-        if(IRC::getInstance()->verbose){
-            Logger::info($this->getAddress()." > ".$data);
+        $ev = new ConnectionUseEvent($this, $data);
+        $this->getEventHandler()->callEvent($ev);
+        if(!$ev->isCancelled()){
+            fwrite($this->socket, $data."\n");
+            if(IRC::getInstance()->verbose){
+                Logger::info($this->getAddress()." > ".$data);
+            }
         }
     }
 

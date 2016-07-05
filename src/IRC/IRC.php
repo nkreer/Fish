@@ -133,6 +133,7 @@ class IRC{
             }
             $function = '\IRC\Protocol\\'.strtoupper($command);
             if(method_exists($function, "run")){
+                // Most stupid hack ever, but it gets the job done
                 call_user_func($function."::run", $run, $connection, $this->getConfig());
             }
         }
