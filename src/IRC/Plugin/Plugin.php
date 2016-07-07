@@ -78,7 +78,7 @@ class Plugin{
                             $command->addAlias($alias);
                         }
                     }
-                    $connection->getCommandMap()->registerCommand($command);
+                    $connection->getCommandMap()->registerCommand($command, $this);
                 }
             }
         }

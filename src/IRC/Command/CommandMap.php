@@ -120,7 +120,7 @@ class CommandMap{
      * @return bool
      */
     public function unregisterPlugin(Plugin $plugin) : bool{
-        if($this->hasPlugin($plugin)){
+        if($this->hasPlugin($plugin->name)){
             foreach($this->plugins[$plugin->name] as $label => $command){
                 $this->unregisterCommand($command, $plugin);
             }
@@ -131,11 +131,11 @@ class CommandMap{
     }
 
     /**
-     * @param Plugin $plugin
+     * @param string $plugin
      * @return bool
      */
-    public function hasPlugin(Plugin $plugin) : bool{
-        return isset($this->plugins[$plugin->name]);
+    public function hasPlugin(String $plugin) : bool{
+        return !empty($this->plugins[$plugin]);
     }
 
     /**
