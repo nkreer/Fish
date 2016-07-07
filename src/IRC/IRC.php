@@ -27,9 +27,9 @@ use IRC\Utils\JsonConfig;
 
 class IRC{
 
-    const VERSION = 1.0;
-    const API_VERSION = 1.0;
-    const CODENAME = "Tuna";
+    const VERSION = 2.0;
+    const API_VERSION = 2.0;
+    const CODENAME = "Catfish";
 
     public static $instance;
 
