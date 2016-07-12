@@ -6,6 +6,10 @@ if(!isset($argv[1])){
     die("Please supply an address to connect to.\n");
 }
 
+if(!extension_loaded("pthreads")){
+    die("Please install the pthreads extension.\n");
+}
+
 include_once("vendor/autoload.php");
 
 $address = $argv[1];

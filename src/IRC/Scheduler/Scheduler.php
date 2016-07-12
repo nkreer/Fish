@@ -21,9 +21,6 @@
 
 namespace IRC\Scheduler;
 
-use IRC\Plugin\Plugin;
-use IRC\Plugin\PluginBase;
-
 class Scheduler{
 
     private $tasks = [];
@@ -61,19 +58,20 @@ class Scheduler{
     }
 
     /**
-     * Schedule a task
-     * @param TaskInterface $task
-     * @param $when
-     * @return String
+     * @param $id
+     * @return bool
      */
-    public function scheduleDelayedTask(TaskInterface $task, int $when) : String{
-        $when = time() + $when;
-        $this->tasks[$when][] = $task;
-        $id = $when." ".(count($this->tasks[$when]) - 1);
-        if($task instanceof PluginTask){
-            $this->plugins[$task->getOwner()->getPlugin()->name][] = $id;
+    public function cancelTask(String $id) : bool{
+        $id = explode(" ", $id);
+        if(isset($this->tasks[$id[0]][$id[1]])){
+            unset($this->tasks[$id[0]][$id[1]]);
+            return true;
         }
-        return $id;
+        return false;
+    }
+
+    public function scheduleAsyncTask(AsyncTask $task){
+        $task->start();
     }
 
     /**
@@ -114,16 +112,19 @@ class Scheduler{
     }
 
     /**
-     * @param $id
-     * @return bool
+     * Schedule a task
+     * @param TaskInterface $task
+     * @param $when
+     * @return String
      */
-    public function cancelTask(String $id) : bool{
-        $id = explode(" ", $id);
-        if(isset($this->tasks[$id[0]][$id[1]])){
-            unset($this->tasks[$id[0]][$id[1]]);
-            return true;
+    public function scheduleDelayedTask(TaskInterface $task, int $when) : String{
+        $when = time() + $when;
+        $this->tasks[$when][] = $task;
+        $id = $when." ".(count($this->tasks[$when]) - 1);
+        if($task instanceof PluginTask){
+            $this->plugins[$task->getOwner()->getPlugin()->name][] = $id;
         }
-        return false;
+        return $id;
     }
 
     public function call(int $time = -1){

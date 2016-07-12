@@ -49,7 +49,7 @@ class IRC{
      * @var JsonConfig
      */
     private $config;
-    
+
     public $verbose = false;
     public $silent = false;
 
@@ -61,7 +61,6 @@ class IRC{
         @mkdir("plugins");
         @mkdir("users");
         $this->loadConfig();
-        stream_set_blocking(STDIN, 0);
     }
 
     public function reload(){

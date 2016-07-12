@@ -19,22 +19,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace IRC\Management;
+namespace IRC\Scheduler;
 
-use IRC\Command\Command;
-use IRC\Command\CommandExecutor;
-use IRC\Command\CommandInterface;
-use IRC\Command\CommandSender;
-use IRC\IRC;
+abstract class AsyncTask extends \Thread implements TaskInterface{
 
-class StopCommand extends Command implements CommandExecutor{
-
-    public function __construct(){
-        parent::__construct("stop", $this, "fish.management.stop", "Stop the bot", "stop");
-    }
-
-    public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
-        IRC::getInstance()->stop();
+    public function run(){
+        $this->onRun();
     }
 
 }

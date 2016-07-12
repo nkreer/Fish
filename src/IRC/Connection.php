@@ -27,7 +27,6 @@ use IRC\Command\CommandMap;
 use IRC\Event\Connection\ConnectionUseEvent;
 use IRC\Event\EventHandler;
 use IRC\Management\ManagementCommands;
-use IRC\Management\OperatorCommands;
 use IRC\Plugin\PluginManager;
 use IRC\Scheduler\Scheduler;
 use IRC\Tracking\UserTracker;
@@ -38,7 +37,8 @@ class Connection{
     /**
      * @var String
      */
-    private $address;
+    public $address;
+
     /**
      * @var int
      */
@@ -113,6 +113,7 @@ class Connection{
         $this->scheduler = new Scheduler();
         $this->nickServ = new NickServ($this);
         $this->load();
+        $this->getPluginManager()->loadAll();
     }
 
     public function load(){
@@ -180,7 +181,6 @@ class Connection{
         if(is_resource($this->socket)){
             stream_set_blocking($this->socket, 0);
             $this->handshake();
-            $this->getPluginManager()->loadAll();
             return $this;
         }
         return false;
@@ -284,6 +284,10 @@ class Connection{
 
     public function getHost() : String{
         return $this->hostname;
+    }
+
+    public function isConnected() : bool{
+        return is_resource($this->socket);
     }
 
 }
