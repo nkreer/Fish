@@ -21,10 +21,22 @@
 
 namespace IRC\Scheduler;
 
+use IRC\Connection;
+
 abstract class AsyncTask extends \Thread implements TaskInterface{
 
+    /*
+     * Starts the thread
+     */
     public function run(){
         $this->onRun();
+    }
+
+    /*
+     * Implement this yourself if you want to run code after the task has finished
+     */
+    public function onComplete(Connection $connection){
+
     }
 
 }

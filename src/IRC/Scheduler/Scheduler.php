@@ -21,15 +21,19 @@
 
 namespace IRC\Scheduler;
 
+use IRC\Connection;
+
 class Scheduler{
 
     private $tasks = [];
     private $plugins = [];
+    private $connection;
 
     private $lastCall = 0;
 
-    public function __construct(){
+    public function __construct(Connection $connection){
         $this->lastCall = time();
+        $this->connection = $connection;
     }
 
     /**
@@ -71,6 +75,7 @@ class Scheduler{
     }
 
     public function scheduleAsyncTask(AsyncTask $task){
+        $this->connection->getAsyncManager()->addTask($task);
         $task->start();
     }
 
@@ -144,6 +149,7 @@ class Scheduler{
         if($time == time()){
             $this->lastCall = $time; //Overwrite the value if this is up to date
         }
+        $this->connection->getAsyncManager()->run(); //Check AsyncTasks
     }
 
 }

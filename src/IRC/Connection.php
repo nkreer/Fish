@@ -28,6 +28,7 @@ use IRC\Event\Connection\ConnectionUseEvent;
 use IRC\Event\EventHandler;
 use IRC\Management\ManagementCommands;
 use IRC\Plugin\PluginManager;
+use IRC\Scheduler\AsyncManager;
 use IRC\Scheduler\Scheduler;
 use IRC\Tracking\UserTracker;
 use IRC\Utils\BashColor;
@@ -72,6 +73,11 @@ class Connection{
     private $scheduler;
 
     /**
+     * @var AsyncManager
+     */
+    private $asyncManager;
+
+    /**
      * @var array
      */
     private $trackers = [];
@@ -110,7 +116,8 @@ class Connection{
             new ManagementCommands($this);
         }
         $this->pluginManager = new PluginManager($this);
-        $this->scheduler = new Scheduler();
+        $this->asyncManager = new AsyncManager($this);
+        $this->scheduler = new Scheduler($this);
         $this->nickServ = new NickServ($this);
         $this->load();
         $this->getPluginManager()->loadAll();
@@ -144,6 +151,10 @@ class Connection{
         return $this->scheduler;
     }
 
+    public function getAsyncManager() : AsyncManager{
+        return $this->asyncManager;
+    }
+
     /**
      * @return string
      */
@@ -174,14 +185,14 @@ class Connection{
 
     /**
      * Connect with the server
-     * @return $this|bool
+     * @return bool
      */
-    public function connect(){
+    public function connect() : bool{
         $this->socket = stream_socket_client($this->address.":".$this->getPort());
         if(is_resource($this->socket)){
             stream_set_blocking($this->socket, 0);
             $this->handshake();
-            return $this;
+            return true;
         }
         return false;
     }
@@ -207,9 +218,11 @@ class Connection{
         $ev = new ConnectionUseEvent($this, $data);
         $this->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
-            fwrite($this->socket, $data."\n");
-            if(IRC::getInstance()->verbose){
-                Logger::info($this->getAddress()." > ".$data);
+            if(is_resource($this->socket)){
+                fwrite($this->socket, $data."\n");
+                if(IRC::getInstance()->verbose){
+                    Logger::info($this->getAddress()." > ".$data);
+                }
             }
         }
     }

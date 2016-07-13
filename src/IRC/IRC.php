@@ -167,7 +167,7 @@ class IRC{
                 $connection->hostname = $this->getConfig()->getData("default_hostname");
             }
             $result = $connection->connect();
-            if($result instanceof Connection){
+            if($result){
                 $this->connections[$connection->getAddress()] = $connection;
                 Logger::info(BashColor::GREEN."Connected to ".$connection->getAddress().":".$connection->getPort());
                 return true;
@@ -186,8 +186,7 @@ class IRC{
      * @param String $quitMessage
      * @return bool
      */
-    public function removeConnection(Connection $connection,
-                                     String $quitMessage = null) : bool{
+    public function removeConnection(Connection $connection, String $quitMessage = null) : bool{
         if($this->isConnected($connection->getAddress())){
             Logger::info(BashColor::RED."Disconnecting ".$connection->getAddress().":".$connection->getPort());
             if($quitMessage === null){
