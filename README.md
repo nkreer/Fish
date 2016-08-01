@@ -12,9 +12,10 @@ It is distributed under the terms and conditions of the [GPL Version 3 License](
 ### Installation
 
 Fish has been tested to work well on unix systems and PHP 7.
-It does not work with PHP5 or Windows. The software and some plugins require the [pthreads extension for PHP written by krakjoe](https://github.com/krakjoe/pthreads) and a PHP installation with thread safety enabled.
+It does not work with PHP5, Windows or the HHVM. 
+The software and some plugins require the [pthreads extension for PHP written by krakjoe](https://github.com/krakjoe/pthreads) and a PHP installation with thread safety enabled.
 
-To install Fish, make sure you have [composer](https://getcomposer.org) installed. 
+To install and use Fish, make sure you have [composer](https://getcomposer.org) installed. 
 For the best compatibility with plugins, you should always use [the latest release](https://github.com/nkreer/Fish/releases). 
 Just download the source code, extract it, navigate there and run:
 
@@ -23,17 +24,20 @@ $ composer install
 $ pecl install pthreads
 ```
 
-Unfortunately, if you can't install pthreads in your environment, you may not use the bot for now.
+If you can't install pthreads for some reason, you may install the [pthreads-polyfill](https://github.com/krakjoe/pthreads-polyfill) using composer:
+
+`$ composer require krakjoe/pthreads-polyfill`
 
 ### Start
 
-Open a new terminal (preferably in a screen), navigate to the bot's source files and run
+Open a new terminal (preferably a screen), navigate to the bot's source files and run
 
-```$ php Start.php <address> [port] [options]```
+`$ php Start.php <address> [port] [options]`
 
 The options you can use are:
 
-`--insecure true` for connecting without SSL
+`--insecure true` for connecting without TLS (Don't use this unless really needed)
+
 `--password <password>` for connecting to a passworded server
 
 ## Features
@@ -68,7 +72,3 @@ If you have any questions regarding the API, feel free to send me an E-Mail.
 ## Contribute
 
 All contributions and Pull Requests are welcome. Just stick to the original coding style wherever possible.
-
-## Test Fish
-
-I don't have the resources to provide a testing instance of the bot or a help-channel on a public IRC-network at the moment. Sorry.

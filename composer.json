@@ -4,7 +4,7 @@
       "IRC\\": "src/IRC/"
     }
   },
-  "require": {
+  "require-dev": {
     "phpunit/phpunit": "^5.4"
   }
 }
