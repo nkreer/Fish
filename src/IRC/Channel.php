@@ -21,6 +21,7 @@
 
 namespace IRC;
 
+use IRC\Command\Command;
 use IRC\Command\CommandSender;
 use IRC\Event\Message\MessageSendEvent;
 use IRC\Event\Notice\NoticeSendEvent;
@@ -208,6 +209,16 @@ class Channel implements CommandSender{
      */
     public function takeMode(String $mode){
         $this->connection->sendData("MODE ".$this->getName()." -".$mode);
+    }
+
+    /**
+     * Make a user execute a command
+     * @param User $user
+     * @param Command $command
+     * @param array $args
+     */
+    public function executeCommand(User $user, Command $command, array $args = []){
+        $this->connection->getCommandHandler()->handleCommand($command, $user, $this, $args);
     }
 
 }
