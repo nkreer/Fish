@@ -73,11 +73,6 @@ class Connection{
     private $scheduler;
 
     /**
-     * @var AsyncManager
-     */
-    private $asyncManager;
-
-    /**
      * @var array
      */
     private $trackers = [];
@@ -116,7 +111,6 @@ class Connection{
             new ManagementCommands($this);
         }
         $this->pluginManager = new PluginManager($this);
-        $this->asyncManager = new AsyncManager($this);
         $this->scheduler = new Scheduler($this);
         $this->nickServ = new NickServ($this);
         $this->load();
@@ -149,10 +143,6 @@ class Connection{
 
     public function getScheduler() : Scheduler{
         return $this->scheduler;
-    }
-
-    public function getAsyncManager() : AsyncManager{
-        return $this->asyncManager;
     }
 
     /**

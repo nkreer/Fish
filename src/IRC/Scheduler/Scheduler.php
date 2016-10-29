@@ -74,11 +74,6 @@ class Scheduler{
         return false;
     }
 
-    public function scheduleAsyncTask(AsyncTask $task){
-        $this->connection->getAsyncManager()->addTask($task);
-        $task->start();
-    }
-
     /**
      * @param TaskInterface $task
      * @param $when
@@ -149,7 +144,6 @@ class Scheduler{
         if($time == time()){
             $this->lastCall = $time; //Overwrite the value if this is up to date
         }
-        $this->connection->getAsyncManager()->run(); //Check AsyncTasks
     }
 
 }

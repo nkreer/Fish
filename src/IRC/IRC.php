@@ -31,6 +31,9 @@ class IRC{
     const API_VERSION = 2.0;
     const CODENAME = "Catfish";
 
+    const IRC_PORT = 6667;
+    const IRC_PORT_ENCRYPTED = 6697;
+
     public static $instance;
 
     /**
