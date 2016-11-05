@@ -25,10 +25,10 @@ use IRC\Event\Connection\ConnectionActivityEvent;
 use IRC\Utils\BashColor;
 use IRC\Utils\JsonConfig;
 
-class IRC{
+class IRC {
 
-    const VERSION = 2.0;
-    const API_VERSION = 2.0;
+    const VERSION = 1.1;
+    const API_VERSION = 1;
     const CODENAME = "Catfish";
 
     const IRC_PORT = 6667;

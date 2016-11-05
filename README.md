@@ -26,6 +26,10 @@ Just clone this repository, extract it, navigate there and run:
 
 `$ composer install`
 
+### Configuration
+
+Configuration is done in the fish.json file. You can find help with setting Fish up in [CONFIGURATION.md](CONFIGURATION.md).
+
 ### Start
 
 Open a terminal, navigate to the bot's source files and run
