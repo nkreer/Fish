@@ -40,6 +40,7 @@ class PING implements ProtocolCommand{
         $ev = new PongEvent();
         $connection->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
+            $connection->lastPing = time();
             $connection->sendData("PONG ".$command->getArgs()[0]); //Reply to Pings
         }
     }

@@ -198,8 +198,10 @@ class IRC{
             $connection->disconnect($quitMessage);
             unset($this->connections[$connection->getAddress()]);
             return true;
+        } else {
+            unset($this->connections[$connection->getAddress()]);
+            return true; //These statements are kept for reasons of backwards-compatibility
         }
-        return false;
     }
 
     /**

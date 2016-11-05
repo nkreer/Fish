@@ -30,6 +30,7 @@ use IRC\Management\ManagementCommands;
 use IRC\Plugin\PluginManager;
 use IRC\Scheduler\AsyncManager;
 use IRC\Scheduler\Scheduler;
+use IRC\Tracking\ConnectionAliveTask;
 use IRC\Tracking\UserTracker;
 use IRC\Utils\BashColor;
 
@@ -96,6 +97,17 @@ class Connection{
      * @var NickServ
      */
     private $nickServ;
+
+    /**
+     * Last PING from the server
+     * @var int
+     */
+    public $lastPing = 0;
+
+    /**
+     * @var bool
+     */
+    private $isConnected = false;
 
     public function __construct(String $address, int $port, $password = false){
         $this->address = $address;
@@ -181,7 +193,13 @@ class Connection{
         $this->socket = stream_socket_client($this->address.":".$this->getPort());
         if(is_resource($this->socket)){
             stream_set_blocking($this->socket, 0);
+            $this->isConnected = true;
+            $this->lastPing = time();
             $this->handshake();
+            // Automatically reconnect after a timeout
+            if($timeoutReconnect = IRC::getInstance()->getConfig()->getData("auto_reconnect_after_timeout")){
+                $this->getScheduler()->scheduleDelayedTask(new ConnectionAliveTask($this), $timeoutReconnect + 5);
+            }
             return true;
         }
         return false;
@@ -198,6 +216,7 @@ class Connection{
     public function disconnect(String $message = "Quit"){
         $this->sendData("QUIT :".$message);
         fclose($this->socket);
+        $this->isConnected = false;
     }
 
     /**
@@ -289,8 +308,12 @@ class Connection{
         return $this->hostname;
     }
 
+    public function getLastPing(): Int{
+        return $this->lastPing;
+    }
+
     public function isConnected() : bool{
-        return is_resource($this->socket);
+        return $this->isConnected;
     }
 
 }

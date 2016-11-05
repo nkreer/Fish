@@ -25,5 +25,6 @@
     "message": "You're currently blocked from using commands because you were using too many."
   },
   "invalid_permissions": "Sorry, you do not have the required permissions to use this command.",
-  "disable_management": false
+  "disable_management": false,
+  "auto_reconnect_after_timeout": 500
 }
