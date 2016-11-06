@@ -30,6 +30,7 @@ use IRC\Utils\BashColor;
 class ConnectionAliveTask extends Task{
 
     private $connection;
+    private $attempts = 0;
 
     public function __construct(Connection $connection){
         $this->connection = $connection;
@@ -37,18 +38,28 @@ class ConnectionAliveTask extends Task{
 
     public function onRun(){
         $time = IRC::getInstance()->getConfig()->getData("auto_reconnect_after_timeout");
+        $max_attempts = IRC::getInstance()->getConfig()->getData("max_reconnect_attempts");
         if($time){
             if($this->connection->getLastPing() <= ($time + time()) and $this->connection->isConnected()){
                 // Possibly time-outed. Attempt a reconnect
+                Logger::info(BashColor::RED."Lost connection to ".$this->connection->getAddress()." - Reconnecting...");
                 $this->connection->disconnect();
-                Logger::info(BashColor::CYAN."Reconnecting to ".$this->connection->getAddress());
                 if($this->connection->connect()){
                     Logger::info(BashColor::GREEN."Successfully reconnected.");
                     // Re-schedule this task
                     $this->reschedule($time);
+                    $this->attempts = 0; // Successfully reconnected, reset
                 } else {
-                    Logger::info(BashColor::RED."Error while reconnecting. Terminating connection.");
-                    IRC::getInstance()->removeConnection($this->connection);
+                    Logger::info(BashColor::RED."Error while reconnecting.");
+                    $this->attempts++;
+                    if($this->attempts > $max_attempts){
+                        // Remove the connection
+                        Logger::info(BashColor::RED."Terminating connection.");
+                        IRC::getInstance()->removeConnection($this->connection);
+                    } else {
+                        Logger::info(BashColor::CYAN."Next attempt in ".$time."s");
+                        $this->reschedule($time);
+                    }
                 }
             } else {
                 $this->reschedule($time);

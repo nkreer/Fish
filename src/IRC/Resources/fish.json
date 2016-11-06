@@ -26,5 +26,6 @@
   },
   "invalid_permissions": "Sorry, you do not have the required permissions to use this command.",
   "disable_management": false,
-  "auto_reconnect_after_timeout": 500
+  "auto_reconnect_after_timeout": 500,
+  "max_reconnect_attempts": 5
 }

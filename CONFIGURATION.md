@@ -1,8 +1,12 @@
-# Configuration
+# Configuration Help
 
 ## Bot installation
 
 For general help with the installation, see [README.md](README.md)
+
+## Plugin installation
+
+Plugins are distributed as PHAR-archives. To install them, drop the archives into the plugins directory, restart the bot or run the `reload` command.
 
 ## Bot configuration
 
@@ -15,21 +19,22 @@ This table explains each option in detail:
 | default_nickname | String | The nickname Fish uses to connect |
 | default_realname | String | The realname Fish uses to connect |
 | default_quitmsg | String | The default quit message to send when Fish quits |
-| command_prefix | Array<String> | The characters Fish uses as command-symbols |
+| command_prefix | Array | The characters Fish uses as command-symbols |
 | cpu_idle | Int | How long Fish should Idle after a processed message - used for stopping Fish from using all your system capacity |
-| authentication_message | Array<Bool/String> | Enable/Disable the specified notice sent to users when the bot authenticates them |
-| default_ctcp_replies | Array<String> | Specify custom CTCP replies |
-| spam_protection | Array<Bool/Int/String> | Configuration for the command spam-protection |
+| authentication_message | Array | Enable/Disable the specified notice sent to users when the bot authenticates them |
+| default_ctcp_replies | Array | Specify custom CTCP replies |
+| spam_protection | Array | Configuration for the command spam-protection |
 | invalid_permissions | String | The message sent to a user when they try to execute a command for which they don't have the permission |
 | disable_management | Bool | Allows you to disable the built-in management features |
-| auto_reconnect_after_timeout | Int/False | How long to wait and if Fish should reconnect after a timeout occured |
+| auto_reconnect_after_timeout | I nt/False| How long to wait and if Fish should reconnect after a timeout occured |
+| max_reconnect_attempts | Int | How often Fish should attempt to reconnect |
 
 There's also an unspecified field for defining your `connection` information. 
 
 | Option | Value | Explanation |
 |--------|-------|-------------|
 | nickserv | String | Your NickServ password - Optional setting |
-| channels | Array<String> | Array of channels to join on connection |
+| channels | Array | Array of channels to join on connection |
 
 Example: 
 
@@ -43,7 +48,7 @@ Example:
 }
 ```
 
-## Set up users
+## User authentication and configuration
 
 To add users Fish should authenticate, create a folder called the name of the network you want to authenticate the users on in the `users` directory.
 Create a json-File named `<nickname>.json` that contains the following:
@@ -51,7 +56,7 @@ Create a json-File named `<nickname>.json` that contains the following:
 | Option | Value | Explanation |
 |--------|-------|-------------|
 | admin | Bool | Make user an admin to give them full permissions |
-| permissions | Array<String> | An array of permissions a user has |
+| permissions | Array | An array of permissions a user has |
 
 Example: 
 
