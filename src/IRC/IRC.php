@@ -28,7 +28,6 @@ use IRC\Utils\JsonConfig;
 class IRC {
 
     const VERSION = 1.1;
-    const API_VERSION = 1;
     const CODENAME = "Catfish";
 
     const IRC_PORT = 6667;
@@ -60,7 +59,7 @@ class IRC {
         $this->silent = $silent;
         $this->verbose = $verbose;
         self::$instance = $this;
-        Logger::info(BashColor::GREEN."Starting Fish (".self::CODENAME.") v".self::VERSION.BashColor::YELLOW." (API v".self::API_VERSION.")");
+        Logger::info(BashColor::GREEN."Starting Fish (".self::CODENAME.") v".self::VERSION);
         @mkdir("plugins");
         @mkdir("users");
         $this->loadConfig();

@@ -69,10 +69,14 @@ class Plugin{
             if(isset($json["commands"])){
                 $this->commands = $json["commands"];
                 foreach($this->commands as $command => $settings){
+                    // Set description
                     $description = (!empty($settings["description"]) ? $settings["description"] : "");
+                    // Set usage help
                     $usage = (!empty($settings["usage"]) ? $settings["usage"] : $command);
+                    // Set required permission
                     $permission = (!empty($settings["permission"]) ? $settings["permission"] : false); //Default permission is false
                     $command = new Command($command, $this->class, $permission, $description, $usage);
+                    // Add aliases
                     if(isset($settings["aliases"]) && is_array($settings["aliases"])){
                         foreach($settings["aliases"] as $alias){
                             $command->addAlias($alias);
