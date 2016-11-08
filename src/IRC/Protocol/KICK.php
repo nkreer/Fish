@@ -46,10 +46,6 @@ class KICK implements ProtocolCommand{
         if(!$ev->isCancelled()){
             Logger::info($user." was kicked from ".$channel->getName());
         }
-        $user = User::getUserByNick($connection, $user);
-        if($user instanceof User){
-            User::removeUser($connection, $user->getHostmask()); //Don't care about other channels
-        }
     }
 
 }

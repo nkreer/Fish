@@ -241,9 +241,16 @@ class Connection{
      * @param Channel $channel
      */
     public function joinChannel(Channel $channel){
-        $this->channels[$channel->getName()] = $channel;
+        $this->addChannel($channel);
         $this->sendData("JOIN :".$channel->getName());
         Logger::info("Joining channel ".BashColor::PURPLE.$channel->getName());
+    }
+
+    /**
+     * @param Channel $channel
+     */
+    public function addChannel(Channel $channel){
+        $this->channels[$channel->getName()] = $channel;
     }
 
     /**
@@ -253,8 +260,15 @@ class Connection{
         if($this->isInChannel($channel)){
             Logger::info("Leaving channel ".BashColor::PURPLE.$channel->getName());
             $this->sendData("PART :".$channel->getName());
-            unset($this->channels[$channel->getName()]);
+            $this->removeChannel($channel);
         }
+    }
+
+    /**
+     * @param Channel $channel
+     */
+    public function removeChannel(Channel $channel){
+        unset($this->channels[$channel->getName()]);
     }
 
     /**

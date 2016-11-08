@@ -25,6 +25,7 @@ use IRC\Connection;
 use IRC\Event\Channel\ChannelLeaveEvent;
 use IRC\Event\Channel\JoinChannelEvent;
 use IRC\Event\Channel\UserQuitEvent;
+use IRC\Event\Kick\KickEvent;
 use IRC\Event\Listener;
 use IRC\Event\Message\MessageReceiveEvent;
 use IRC\User;
@@ -43,7 +44,9 @@ class UserTracker implements Listener{
     }
 
     public function onJoinChannelEvent(JoinChannelEvent $event){
-        if(!$event->getChannel()->hasUser($event->getUser()->getNick())){
+        if($event->getUser()->getNick() === $this->connection->getNick() and !$this->connection->isInChannel($event->getChannel())){
+            $this->connection->addChannel($event->getChannel()); // In case the server makes us join somewhere
+        } elseif(!$event->getChannel()->hasUser($event->getUser()->getNick())){
             $event->getChannel()->addUser($event->getUser());
         }
     }
@@ -59,6 +62,16 @@ class UserTracker implements Listener{
     public function onMessageReceiveEvent(MessageReceiveEvent $event){
         if(!$event->getChannel()->hasUser($event->getUser()->getNick())){
             $event->getChannel()->addUser($event->getUser());
+        }
+    }
+
+    public function onKickEvent(KickEvent $event){
+        if($event->getUser() === $this->connection->getNick()){
+            // The bot was kicked.
+            $this->connection->removeChannel($event->getChannel());
+        } else {
+            // Someone else was kicked.
+            $event->getChannel()->removeUser($event->getKicker());
         }
     }
 
