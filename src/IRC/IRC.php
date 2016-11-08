@@ -51,22 +51,23 @@ class IRC {
      * @var JsonConfig
      */
     private $config;
+    private $configPath;
 
     public $verbose = false;
     public $silent = false;
 
-    public function __construct(bool $verbose = false, bool $silent = false){
+    public function __construct(bool $verbose = false, bool $silent = false, String $configPath = "fish.json"){
         $this->silent = $silent;
         $this->verbose = $verbose;
         self::$instance = $this;
         Logger::info(BashColor::GREEN."Starting Fish (".self::CODENAME.") v".self::VERSION);
         @mkdir("plugins");
         @mkdir("users");
-        $this->loadConfig();
+        $this->loadConfig($configPath);
     }
 
     public function reload(){
-        $this->loadConfig();
+        $this->loadConfig($this->configPath);
         foreach($this->connections as $connection){
             $connection->getEventHandler()->unregisterAll();
             $connection->getScheduler()->cancelAll();
@@ -84,13 +85,19 @@ class IRC {
         exit(0);
     }
 
-    public function loadConfig(){
-        if(!file_exists("fish.json")){
-            Logger::info(BashColor::RED."Couldn't find configuration file. Making a new one...");
-            @copy(__DIR__.DIRECTORY_SEPARATOR."Resources".DIRECTORY_SEPARATOR."fish.json", "fish.json");
+    public function loadConfig($path){
+        if(!file_exists($path)){
+            if($path === "fish.json"){
+                Logger::info(BashColor::RED."Couldn't find configuration file. Making a new one...");
+                @copy(__DIR__.DIRECTORY_SEPARATOR."Resources".DIRECTORY_SEPARATOR."fish.json", "fish.json");
+            } else {
+                Logger::info(BashColor::RED."No config found in ".$path.": Falling back to default...");
+                $path = __DIR__.DIRECTORY_SEPARATOR."Resources".DIRECTORY_SEPARATOR."fish.json";
+            }
         }
+        $this->configPath = $path;
         $conf = new JsonConfig();
-        $conf->loadFile("fish.json");
+        $conf->loadFile($path);
         $this->config = $conf;
     }
 

@@ -2,10 +2,11 @@
 
 ![TravisCI build](https://travis-ci.org/nkreer/Fish.svg)
 ![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)
-![Version](https://img.shields.io/badge/Latest%20Version-1.0-lightgrey.svg)
 
-Fish is an IRC-Bot with a powerful plugin API written in PHP. 
-It is distributed under the terms and conditions of the [GPL Version 3 License](LICENSE).
+Fish is a **libre** and open source IRC-Bot with a powerful plugin API written in PHP. 
+It is distributed under the terms and conditions of the [GPL Version 3](LICENSE).
+
+**THIS SOFTWARE CAN ONLY RUN IN A SHELL**
 
 ## Getting started
 
@@ -21,8 +22,12 @@ To install and use Fish, make sure you also have [composer](https://getcomposer.
 
 ### Installation
 
-For the best compatibility with plugins, you should always use [the latest release](https://github.com/nkreer/Fish/releases). 
-Just clone this repository, extract it, navigate there and run:
+For the best compatibility with plugins, you should always use [the latest stable release](https://github.com/nkreer/Fish/releases).
+It's not recommended to use the source-code from this repository as-is in production, as it may contain bugs or be unstable.
+ 
+#### Manual installation
+ 
+Download the source of the latest release, extract it, navigate there and let composer install the software:
 
 `$ composer install`
 
@@ -39,9 +44,13 @@ Open a terminal, navigate to the bot's source files and run
 The arguments you can use are:
 
 ```
+--port <port>           for using a port other than 6697
+
 --no-ssl true           for connecting without TLS (Don't use this unless really needed)
 
 --password <password>   for connecting to a passworded server
+
+--config <path>         for using a different config file
 ```
 
 ## Features
