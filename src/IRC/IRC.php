@@ -57,6 +57,8 @@ class IRC {
     public $verbose = false;
     public $silent = false;
 
+    public $idleTime = false;
+
     public function __construct(bool $verbose = false, bool $silent = false, String $configPath = "fish.json"){
         $this->silent = $silent;
         $this->verbose = $verbose;
@@ -100,6 +102,7 @@ class IRC {
         $conf = new JsonConfig();
         $conf->loadFile($path);
         $this->config = $conf;
+        $this->idleTime = $conf->getData("cpu_idle") * 1000;
     }
 
     public function getCommandPrefix() : String{
@@ -161,7 +164,9 @@ class IRC {
                 $this->stop(); // Stop
             }
             $this->cycle();
-            usleep($this->config->getData("cpu_idle") * 1000); //Chill
+            if($this->idleTime){
+                usleep($this->idleTime); //Chill the CPU
+            }
         }
     }
 

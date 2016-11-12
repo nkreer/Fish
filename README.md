@@ -6,8 +6,6 @@
 Fish is a **libre** and open source IRC-Bot with a powerful plugin API written in PHP. 
 It is distributed under the terms and conditions of the [GPL Version 3](LICENSE).
 
-**THIS SOFTWARE CAN ONLY RUN IN A SHELL**
-
 ## Getting started
 
 ### Requirements
@@ -24,6 +22,12 @@ To install and use Fish, make sure you also have [composer](https://getcomposer.
 
 For the best compatibility with plugins, you should always use [the latest stable release](https://github.com/nkreer/Fish/releases).
 It's not recommended to use the source-code from this repository as-is in production, as it may contain bugs or be unstable.
+ 
+#### Automatic installation
+
+Composer will install the software for you.
+
+`$ composer require nkreer/fish`
  
 #### Manual installation
  

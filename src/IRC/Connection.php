@@ -236,6 +236,12 @@ class Connection{
         }
     }
 
+    public function listChannels(){
+        // We need full power for this.
+        IRC::getInstance()->idleTime = false;
+        $this->sendData("LIST");
+    }
+
     /**
      * Join a channel
      * @param Channel $channel
