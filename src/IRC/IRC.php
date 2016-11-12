@@ -22,6 +22,7 @@
 namespace IRC;
 
 use IRC\Event\Connection\ConnectionActivityEvent;
+use IRC\Event\Connection\ConnectionUnknownCommandEvent;
 use IRC\Utils\BashColor;
 use IRC\Utils\JsonConfig;
 
@@ -143,6 +144,10 @@ class IRC {
             if(method_exists($function, "run")){
                 // Most stupid hack ever, but it gets the job done
                 call_user_func($function."::run", $run, $connection, $this->getConfig());
+            } else {
+                // Handle unknown commands
+                $unknownEvent = new ConnectionUnknownCommandEvent($connection, $run);
+                $connection->getEventHandler()->callEvent($unknownEvent);
             }
         }
     }

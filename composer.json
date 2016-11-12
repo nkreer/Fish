@@ -1,4 +1,10 @@
 {
+  "name": "nkreer/fish",
+  "type": "framework",
+  "description": "Advanced IRC Bot",
+  "keywords": ["IRC", "API", "Bot", "Interface", "Plugin"],
+  "homepage": "https://github.com/nkreer/Fish",
+  "license": "GPL",
   "autoload": {
     "psr-4": {
       "IRC\\": "src/IRC/"
