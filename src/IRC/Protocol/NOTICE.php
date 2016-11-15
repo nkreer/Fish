@@ -46,10 +46,10 @@ class NOTICE implements ProtocolCommand{
             $channel = Channel::getChannel($connection, $arg[0]);
         }
         unset($arg[0]);
-        $ev = new NoticeReceiveEvent(implode(" ", $arg), $user, $channel);
+        $ev = new NoticeReceiveEvent(explode(":", implode(" ", $arg), 2)[1], $user, $channel);
         $connection->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
-            Logger::info(BashColor::HIGHLIGHT.$ev->getUser()->getNick().": ".$ev->getNotice().BashColor::REMOVE); //Display the notice to the console
+            Logger::info(BashColor::HIGHLIGHT.(!empty($ev->getUser()->getNick()) ? $ev->getUser()->getNick().": " : " ").$ev->getNotice().BashColor::REMOVE); //Display the notice to the console
         }
     }
 
