@@ -206,8 +206,8 @@ class Connection{
     }
 
     public function handshake(){
-        $this->sendData("USER ".$this->nickname." ".$this->hostname." ".$this->username." :".$this->realname);
         $this->sendData("NICK ".$this->nickname);
+        $this->sendData("USER ".$this->nickname." ".$this->hostname." ".$this->username." :".$this->realname);
         if($this->password !== false){
             $this->sendData("PASS ".$this->password);
         }
@@ -227,8 +227,8 @@ class Connection{
         $ev = new ConnectionUseEvent($this, $data);
         $this->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
-            if(is_resource($this->socket)){
-                fwrite($this->socket, $data."\n");
+            if($this->isConnected()){
+                fwrite($this->socket, $data."\r\n");
                 if(IRC::getInstance()->verbose){
                     Logger::info($this->getAddress()." > ".$data);
                 }
@@ -292,9 +292,10 @@ class Connection{
         return $this->channels;
     }
 
+    /**
+     * @param String $nick
+     */
     public function changeNick(String $nick){
-        Logger::info("Changing nick from ".BashColor::PURPLE.$this->nickname.BashColor::WHITE." to ".BashColor::PURPLE.$nick);
-        $this->nickname = $nick;
         $this->sendData("NICK ".$nick);
     }
 

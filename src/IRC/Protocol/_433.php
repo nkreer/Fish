@@ -23,31 +23,20 @@ namespace IRC\Protocol;
 
 use IRC\Command;
 use IRC\Connection;
-use IRC\Event\Nick\UserChangeNickEvent;
+use IRC\IRC;
 use IRC\Logger;
-use IRC\User;
+use IRC\Utils\BashColor;
 use IRC\Utils\JsonConfig;
 
 /**
- * Someone changes nick
- * Class NICK
+ * Nickname already in use
+ * Class _433
  * @package IRC\Protocol
  */
-class NICK implements ProtocolCommand{
+class _433 implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){
-        $user = User::getUser($connection, $command->getPrefix());
-        $new = str_replace(":", "", $command->getArg(0));
-        $ev = new UserChangeNickEvent($user->getNick(), $new);
-        $connection->getEventHandler()->callEvent($ev);
-        if(!$ev->isCancelled()){
-            Logger::info($user->getNick()." is now known as ".$new);
-            if($user->getNick() === $connection->getNick()){
-                // Bot changed name
-                $connection->nickname = $new;
-            }
-            User::removeUser($connection, $user->getHostmask()); //Remove old authentication status, mainly
-        }
+        Logger::info(BashColor::HIGHLIGHT."Nickname already in use.");
     }
 
 }
