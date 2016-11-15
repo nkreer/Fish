@@ -23,17 +23,23 @@ To install and use Fish, make sure you also have [composer](https://getcomposer.
 For the best compatibility with plugins, you should always use [the latest stable release](https://github.com/nkreer/Fish/releases).
 It's not recommended to use the source-code from this repository in production, as it may contain bugs or be unstable.
  
-#### Automatic installation
+#### Normal installation
+
+Either use the provided [installation script](install.sh) using:
+
+`$ wget -O - https://raw.githubusercontent.com/nkreer/Fish/master/install.sh | sh`
+ 
+or download the source of the latest release and let composer install the software:
+
+`$ composer install`
+ 
+#### Installation for use as a library
 
 Fish is available on Packagist. Composer can install it for you automatically.
 
 `$ composer require nkreer/fish`
- 
-#### Manual installation
- 
-Download the source of the latest release, extract it, navigate there and let composer install the software:
 
-`$ composer install`
+Please keep in mind that the software isn't designed to be used as a library. Some features may not work in your environment. 
 
 ### Configuration
 

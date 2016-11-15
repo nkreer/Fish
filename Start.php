@@ -1,4 +1,7 @@
 <?php
+// THIS IS AN EXPERIMENTAL START FILE
+// YOU'RE EXPECTED TO WRITE YOUR OWN FOR PRODUCTION USE
+
 //Setup
 ini_set('memory_limit', '4G');
 
