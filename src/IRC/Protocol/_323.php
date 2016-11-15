@@ -33,7 +33,7 @@ use IRC\Utils\JsonConfig;
 class _307 implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){
-        IRC::getInstance()->idleTime = $config->getData("cpu_idle") * 1000; // Go back to regular performance
+        IRC::getInstance()->idleTime = $config->getData("cpu_idle", 10) * 1000; // Go back to regular performance
     }
 
 }

@@ -43,7 +43,7 @@ class _307 implements ProtocolCommand{
             $connection->getEventHandler()->callEvent($ev);
             if(!$ev->isCancelled()){
                 $config = IRC::getInstance()->getConfig();
-                if($config->getData("authentication_message")["enabled"] === true){
+                if($config->getData("authentication_message", ["enabled" => true, "message" => "You have been identified."])["enabled"] === true){
                     $user->sendNotice($config->getData("authentication_message")["message"]);
                 }
                 $user->identified = AuthenticationStatus::IDENTIFIED;

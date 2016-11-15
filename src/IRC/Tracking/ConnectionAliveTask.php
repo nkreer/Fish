@@ -37,8 +37,8 @@ class ConnectionAliveTask extends Task{
     }
 
     public function onRun(){
-        $time = IRC::getInstance()->getConfig()->getData("auto_reconnect_after_timeout");
-        $max_attempts = IRC::getInstance()->getConfig()->getData("max_reconnect_attempts");
+        $time = (int)IRC::getInstance()->getConfig()->getData("auto_reconnect_after_timeout", 500);
+        $max_attempts = (int)IRC::getInstance()->getConfig()->getData("max_reconnect_attempts", 5);
         if($time){
             if($this->connection->getLastPing() <= ($time + time()) and $this->connection->isConnected()){
                 // Possibly time-outed. Attempt a reconnect

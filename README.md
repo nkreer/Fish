@@ -21,11 +21,11 @@ To install and use Fish, make sure you also have [composer](https://getcomposer.
 ### Installation
 
 For the best compatibility with plugins, you should always use [the latest stable release](https://github.com/nkreer/Fish/releases).
-It's not recommended to use the source-code from this repository as-is in production, as it may contain bugs or be unstable.
+It's not recommended to use the source-code from this repository in production, as it may contain bugs or be unstable.
  
 #### Automatic installation
 
-Composer will install the software for you.
+Fish is available on Packagist. Composer can install it for you automatically.
 
 `$ composer require nkreer/fish`
  
@@ -43,9 +43,9 @@ Configuration is done in the fish.json file. You can find help with setting Fish
 
 Open a terminal, navigate to the bot's source files and run
 
-`$ php Start.php <address> [port] [arguments]`
+`$ php Start.php <address> [arguments]`
 
-The arguments you can use are:
+The available arguments are:
 
 ```
 --port <port>           for using a port other than 6697
@@ -70,17 +70,17 @@ Fish offers many features for interaction with an IRC Server out of the box:
 
 ## Extend
 
-Several plugins have already been written for Fish: 
+Fish can be extended by plugins. Several have already been written: 
 
 | Plugin | Description |
 | ------ | ----------- |
-|[PluginTools](https://github.com/nkreer/PluginTools)| Helps you with the packaging of your plugins |
+|[PluginTools](https://github.com/nkreer/PluginTools)| Helps you with  packaging of your plugins |
 |[Permissions](https://github.com/nkreer/Permissions)| Changes users' permissions on IRC |
 |[Scripts](https://github.com/nkreer/Fish-Scripts)| Enables you to add simple custom commands to the bot |
 
-If you want me to add your plugin to the list, open a pull request or message me.
+More is in the works.
 
 ## API Documentation
 
-You can find a really simple tutorial on how to write your own plugins in this repository's [wiki](https://github.com/nkreer/Fish/wiki).
+You can find a simple tutorial on how to write your own plugins in this repository's [wiki](https://github.com/nkreer/Fish/wiki).
 If you have any questions regarding the API, feel free to send me an E-Mail.

@@ -59,7 +59,7 @@ class PRIVMSG implements ProtocolCommand{
             $ev = new CTCPReceiveEvent($user, $ctcp_command);
             $connection->getEventHandler()->callEvent($ev);
             if(empty($args[1][1])){
-                if($reply = IRC::getInstance()->getConfig()->getData("default_ctcp_replies")[$ctcp_command]){
+                if($reply = IRC::getInstance()->getConfig()->getData("default_ctcp_replies", [])[$ctcp_command]){
                     if($reply !== null){
                         $ev = new CTCPSendEvent($user, $ctcp_command, $reply);
                         $connection->getEventHandler()->callEvent($ev);
@@ -69,7 +69,7 @@ class PRIVMSG implements ProtocolCommand{
                     }
                 }
             }
-        } elseif(!in_array($args[1][0], $config->getData("command_prefix"))) {
+        } elseif(!in_array($args[1][0], $config->getData("command_prefix", [".", "!", "\\", "@"]))) {
             $ev = new MessageReceiveEvent($args[1], $user, $channel);
             $connection->getEventHandler()->callEvent($ev);
             if(!$ev->isCancelled()){

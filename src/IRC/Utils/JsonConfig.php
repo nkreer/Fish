@@ -24,17 +24,28 @@ namespace IRC\Utils;
 class JsonConfig{
 
     private $config = [];
+    private $filename = false;
 
     public function loadFile(String $filename){
         $this->config = json_decode(file_get_contents($filename), true);
+        $this->filename = $filename;
     }
 
     public function setData(String $key, $value){
         $this->config[$key] = $value;
     }
 
-    public function getData(String $key){
-        return $this->config[$key];
+    public function getData(String $key, $default = null){
+        if($this->hasData($key)){
+            return $this->config[$key];
+        } else {
+            $this->setData($key, $default);
+            if($this->filename){
+                // Save it, so we can use it later.
+                $this->save($this->filename);
+            }
+            return $default;
+        }
     }
 
     public function hasData(String $key) : bool{

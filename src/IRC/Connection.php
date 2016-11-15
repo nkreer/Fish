@@ -119,7 +119,7 @@ class Connection{
         $this->eventHandler = new EventHandler();
         $this->commandMap = new CommandMap($this);
         $this->commandHandler = new CommandHandler($this);
-        if(IRC::getInstance()->getConfig()->getData("disable_management") === false){
+        if(IRC::getInstance()->getConfig()->getData("disable_management", false) === false){
             new ManagementCommands($this);
         }
         $this->pluginManager = new PluginManager($this);
@@ -197,7 +197,7 @@ class Connection{
             $this->lastPing = time();
             $this->handshake();
             // Automatically reconnect after a timeout
-            if($timeoutReconnect = IRC::getInstance()->getConfig()->getData("auto_reconnect_after_timeout")){
+            if($timeoutReconnect = IRC::getInstance()->getConfig()->getData("auto_reconnect_after_timeout", 500)){
                 $this->getScheduler()->scheduleDelayedTask(new ConnectionAliveTask($this), $timeoutReconnect + 5);
             }
             return true;

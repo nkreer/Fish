@@ -180,10 +180,10 @@ class IRC {
             Logger::info(BashColor::CYAN."Connecting to ".$connection->getAddress().":".$connection->getPort()."...");
             //Setting up connection details
             if($default === true){
-                $connection->nickname = $this->getConfig()->getData("default_nickname");
-                $connection->realname = $this->getConfig()->getData("default_realname");
-                $connection->username = $this->getConfig()->getData("default_username");
-                $connection->hostname = $this->getConfig()->getData("default_hostname");
+                $connection->nickname = $this->getConfig()->getData("default_nickname", "FishBot");
+                $connection->realname = $this->getConfig()->getData("default_realname", "Fish - IRC Bot");
+                $connection->username = $this->getConfig()->getData("default_username", "Fish");
+                $connection->hostname = $this->getConfig()->getData("default_hostname", "Fish");
             }
             $result = $connection->connect();
             if($result){
@@ -209,7 +209,7 @@ class IRC {
         if($this->isConnected($connection->getAddress())){
             Logger::info(BashColor::RED."Disconnecting ".$connection->getAddress().":".$connection->getPort());
             if($quitMessage === null){
-                $quitMessage = $this->config->getData("default_quitmsg");
+                $quitMessage = $this->config->getData("default_quitmsg", "Leaving");
             }
             $connection->disconnect($quitMessage);
             unset($this->connections[$connection->getAddress()]);

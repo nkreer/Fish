@@ -32,6 +32,6 @@ class BashColor{
     const WHITE = "\033[1;37m";
     const BLACK = "\033[0;30m";
     const REMOVE = "\033[0m";
-    const HIGHLIGHT = "\033[44m";
+    const HIGHLIGHT = "\033[41m";
 
 }

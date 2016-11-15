@@ -37,8 +37,8 @@ class CommandHandler{
 
     public function __construct(Connection $connection){
         $this->connection = $connection;
-        $this->config = IRC::getInstance()->getConfig()->getData("spam_protection");
-        $this->invalidPermissionsMsg = IRC::getInstance()->getConfig()->getData("invalid_permissions");
+        $this->config = IRC::getInstance()->getConfig()->getData("spam_protection", ["enabled" => true, "max_commands" => 10, "time" => 60, "message" => "You're currently blocked from using commands because you were using too many."]);
+        $this->invalidPermissionsMsg = IRC::getInstance()->getConfig()->getData("invalid_permissions", "Sorry, you do not have the required permissions to use this command.");
     }
 
     /**
