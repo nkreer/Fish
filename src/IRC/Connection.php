@@ -300,6 +300,17 @@ class Connection{
     }
 
     /**
+     * @param String $message
+     */
+    public function away(String $message = ""){
+        $this->sendData("AWAY ".$message);
+    }
+
+    public function back(){
+        $this->sendData("AWAY");
+    }
+
+    /**
      * @return String
      */
     public function getAddress() : String{
