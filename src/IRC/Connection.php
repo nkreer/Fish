@@ -24,6 +24,8 @@ namespace IRC;
 use IRC\Authentication\NickServ;
 use IRC\Command\CommandHandler;
 use IRC\Command\CommandMap;
+use IRC\Event\Away\AwayEvent;
+use IRC\Event\Away\BackEvent;
 use IRC\Event\Connection\ConnectionUseEvent;
 use IRC\Event\EventHandler;
 use IRC\Management\ManagementCommands;
@@ -57,6 +59,8 @@ class Connection{
     public $realname = "FISH (".IRC::CODENAME.") v".IRC::VERSION;
     public $username = "Fish";
     public $hostname = "Fish";
+
+    private $away = false;
 
     /**
      * @var PluginManager
@@ -302,12 +306,22 @@ class Connection{
     /**
      * @param String $message
      */
-    public function away(String $message = ""){
-        $this->sendData("AWAY ".$message);
+    public function away(String $message = "Away"){
+        $ev = new AwayEvent($message);
+        $this->getEventHandler()->callEvent($ev);
+        if(!$ev->isCancelled()){
+            $this->sendData("AWAY ".$message);
+            $this->away = $message;
+        }
     }
 
     public function back(){
-        $this->sendData("AWAY");
+        $ev = new BackEvent();
+        $this->getEventHandler()->callEvent($ev);
+        if(!$ev->isCancelled()){
+            $this->sendData("AWAY");
+            $this->away = false;
+        }
     }
 
     /**
@@ -346,6 +360,14 @@ class Connection{
 
     public function isConnected() : bool{
         return $this->isConnected;
+    }
+
+    public function isAway(): bool{
+        return (bool)$this->away;
+    }
+
+    public function getAwayMessage(): String{
+        return (string)$this->away;
     }
 
 }
