@@ -214,11 +214,18 @@ class Channel implements CommandSender{
     /**
      * Make a user execute a command
      * @param User $user
-     * @param Command $command
+     * @param UserCommand $command
      * @param array $args
      */
     public function executeCommand(User $user, UserCommand $command, array $args = []){
         $this->connection->getCommandHandler()->handleCommand($command, $user, $this, $args);
+    }
+
+    /**
+     * @param String $nick
+     */
+    public function inviteUser(String $nick){
+        $this->connection->sendData("INVITE ".$nick." ".$this->getName());
     }
 
 }

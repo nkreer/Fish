@@ -263,4 +263,16 @@ class User implements CommandSender{
         $this->connection->sendData("MODE ".$channel->getName()." -".$mode." ".$this->getNick());
     }
 
+    /**
+     * @param Channel $channel
+     * @return bool
+     */
+    public function inviteToChannel(Channel $channel): Bool{
+        if($this->connection->isInChannel($channel)){
+            $this->connection->sendData("INVITE ".$this->getNick()." ".$channel->getName());
+            return true;
+        }
+        return false;
+    }
+
 }
