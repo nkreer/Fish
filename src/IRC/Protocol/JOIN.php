@@ -49,6 +49,9 @@ class JOIN implements ProtocolCommand{
         $connection->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
             Logger::info($user->getNick()." joined ".$channel->getName());
+            if($ev instanceof BotJoinChannelEvent){
+                $connection->addChannel($channel); // Add the channel
+            }
         }
     }
 
