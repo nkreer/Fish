@@ -23,6 +23,7 @@ namespace IRC;
 
 use IRC\Command\Command as UserCommand;
 use IRC\Command\CommandSender;
+use IRC\Event\Invite\InviteUserEvent;
 use IRC\Event\Message\MessageSendEvent;
 use IRC\Event\Notice\NoticeSendEvent;
 
@@ -225,7 +226,11 @@ class Channel implements CommandSender{
      * @param String $nick
      */
     public function inviteUser(String $nick){
-        $this->connection->sendData("INVITE ".$nick." ".$this->getName());
+        $ev = new InviteUserEvent($this, $nick);
+        $this->connection->getEventHandler()->callEvent($ev);
+        if(!$ev->isCancelled()){
+            $this->connection->sendData("INVITE ".$nick." ".$this->getName());
+        }
     }
 
 }

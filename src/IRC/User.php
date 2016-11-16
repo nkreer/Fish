@@ -24,6 +24,7 @@ namespace IRC;
 use IRC\Authentication\AuthenticationStatus;
 use IRC\Authentication\UpdateAuthenticationStatusTask;
 use IRC\Command\CommandSender;
+use IRC\Event\Invite\InviteUserEvent;
 
 class User implements CommandSender{
 
@@ -269,8 +270,12 @@ class User implements CommandSender{
      */
     public function inviteToChannel(Channel $channel): Bool{
         if($this->connection->isInChannel($channel)){
-            $this->connection->sendData("INVITE ".$this->getNick()." ".$channel->getName());
-            return true;
+            $ev = new InviteUserEvent($channel, $this->getNick());
+            $this->connection->getEventHandler()->callEvent($ev);
+            if(!$ev->isCancelled()){
+                $this->connection->sendData("INVITE ".$this->getNick()." ".$channel->getName());
+                return true;
+            }
         }
         return false;
     }

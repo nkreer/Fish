@@ -236,10 +236,10 @@ class Connection{
         }
     }
 
-    public function listChannels(){
+    public function listChannels(array $channels = []){
         // We need full power for this.
         IRC::getInstance()->idleTime = false;
-        $this->sendData("LIST");
+        $this->sendData("LIST".(!empty($channels) ? " ".implode(" ", $channels) : ""));
     }
 
     /**
