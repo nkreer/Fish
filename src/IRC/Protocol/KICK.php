@@ -25,7 +25,9 @@ use IRC\Channel;
 use IRC\Command;
 use IRC\Connection;
 use IRC\Event\Kick\KickEvent;
+use IRC\IRC;
 use IRC\Logger;
+use IRC\Tracking\RejoinChannelTask;
 use IRC\User;
 use IRC\Utils\JsonConfig;
 
@@ -45,6 +47,12 @@ class KICK implements ProtocolCommand{
         $connection->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
             Logger::info($user." was kicked from ".$channel->getName());
+            if($user === $connection->getNick()){
+                if(IRC::getInstance()->getConfig()->getData("auto_rejoin_after_kick", false)){
+                    // Make the bot rejoin in 5 seconds
+                    $connection->getScheduler()->scheduleDelayedTask(new RejoinChannelTask($connection, $channel), 5);
+                }
+            }
         }
     }
 

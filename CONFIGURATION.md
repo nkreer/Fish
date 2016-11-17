@@ -28,6 +28,7 @@ This table explains each option in detail:
 | disable_management | Bool | Allows you to disable the built-in management features |
 | auto_reconnect_after_timeout | I nt/False| How long to wait and if Fish should reconnect after a timeout occured |
 | max_reconnect_attempts | Int | How often Fish should attempt to reconnect |
+| auto_rejoin_after_kick | Bool | Automatically rejoin a channel when kicked? |
 
 There's also an unspecified field for defining your `connection` information. 
 
