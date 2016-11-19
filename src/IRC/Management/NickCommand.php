@@ -40,9 +40,7 @@ class NickCommand extends Command implements CommandExecutor{
         if(!empty($args[1])){
             if($this->connection->getNick() !== $args[1]){
                 $this->connection->changeNick($args[1]);
-                $sender->sendNotice("Nick changed.");
-            } else {
-                $sender->sendNotice("Already nickname.");
+                // Just quietly let the bot do its job.
             }
         } else {
             $sender->sendNotice("Argument 1 must a nickname");
