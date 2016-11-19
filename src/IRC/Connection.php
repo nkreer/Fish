@@ -111,7 +111,7 @@ class Connection{
     /**
      * @var bool
      */
-    private $isConnected = false;
+    public $isConnected = false;
 
     public function __construct(String $address, int $port, $password = false){
         $this->address = $address;
@@ -197,7 +197,6 @@ class Connection{
         $this->socket = stream_socket_client($this->address.":".$this->getPort());
         if(is_resource($this->socket)){
             stream_set_blocking($this->socket, 0);
-            $this->isConnected = true;
             $this->lastPing = time();
             $this->handshake();
             // Automatically reconnect after a timeout
@@ -231,7 +230,7 @@ class Connection{
         $ev = new ConnectionUseEvent($this, $data);
         $this->getEventHandler()->callEvent($ev);
         if(!$ev->isCancelled()){
-            if($this->isConnected()){
+            if(is_resource($this->socket)){
                 fwrite($this->socket, $data."\r\n");
                 if(IRC::getInstance()->verbose){
                     Logger::info($this->getAddress()." > ".$data);

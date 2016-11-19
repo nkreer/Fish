@@ -25,7 +25,6 @@ use IRC\Channel;
 use IRC\Command;
 use IRC\Connection;
 use IRC\Event\Command\CommandEvent;
-use IRC\Event\Command\CommandSendUsageEvent;
 use IRC\Event\CTCP\CTCPReceiveEvent;
 use IRC\Event\CTCP\CTCPSendEvent;
 use IRC\Event\Message\MessageReceiveEvent;

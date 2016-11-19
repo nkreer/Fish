@@ -1,5 +1,6 @@
 {
   "default_nickname": "FishBot",
+  "alt_nickname": "FishIRC",
   "default_realname": "Fish - IRC Bot",
   "default_username": "Fish",
   "default_hostname": "Fish",

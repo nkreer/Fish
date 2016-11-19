@@ -23,24 +23,18 @@ namespace IRC\Protocol;
 
 use IRC\Command;
 use IRC\Connection;
-use IRC\IRC;
 use IRC\Logger;
-use IRC\Utils\BashColor;
 use IRC\Utils\JsonConfig;
 
 /**
- * Nickname already in use
- * Class _433
+ * Welcome
+ * Class _001
  * @package IRC\Protocol
  */
-class _433 implements ProtocolCommand{
+class _001 implements ProtocolCommand{
 
     public static function run(Command $command, Connection $connection, JsonConfig $config){
-        Logger::info(BashColor::HIGHLIGHT."Nickname already in use.");
-        $altNick = IRC::getInstance()->getConfig()->getData("alt_nickname", "FishIRC");
-        if(!$connection->isConnected() and $connection->getNick() !== $altNick){
-            $connection->changeNick($altNick);
-        }
+        $connection->isConnected = true;
     }
 
 }
