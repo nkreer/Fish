@@ -45,6 +45,9 @@ class NICK implements ProtocolCommand{
             if($user->getNick() === $connection->getNick()){
                 // Bot changed name
                 $connection->nickname = $new;
+            } else {
+                // Make sure that we can still message them from the old object
+                $user->nick = $new;
             }
             User::removeUser($connection, $user->getHostmask()); //Remove old authentication status, mainly
         }

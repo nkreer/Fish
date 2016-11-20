@@ -33,7 +33,7 @@ class User implements CommandSender{
     private $host;
     private $connection;
     public $admin = false;
-    private $nick = "";
+    public $nick = "";
     private $address = "";
     private $permissions = [];
 

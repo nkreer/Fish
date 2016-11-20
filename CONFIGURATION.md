@@ -17,6 +17,7 @@ This table explains each option in detail:
 | Option | Value | Explanation |
 |--------|-------|-------------|
 | default_nickname | String | The nickname Fish uses to connect |
+| alt_nickname | String | Alternative nickname, when the primary one is in use by someone else |
 | default_realname | String | The realname Fish uses to connect |
 | default_quitmsg | String | The default quit message to send when Fish quits |
 | command_prefix | Array | The characters Fish uses as command-symbols |
