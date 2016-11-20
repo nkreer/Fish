@@ -34,6 +34,7 @@ class StopCommand extends Command implements CommandExecutor{
     }
 
     public function onCommand(CommandInterface $command, CommandSender $sender, CommandSender $room, array $args){
+        $sender->sendNotice("Stopping.");
         IRC::getInstance()->stop();
     }
 
