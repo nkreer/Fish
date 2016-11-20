@@ -89,22 +89,27 @@ class PluginManager{
     public function loadAll(){
         foreach(scandir("plugins/") as $element){
             if(is_file("plugins/".$element)){
-                $this->loadPlugin($element);
+                // Make sure we're loading a phar plugin
+                if(stripos($element, ".phar") !== false){
+                    $this->loadPlugin($element, true);
+                }
             }
         }
     }
 
     /**
-     * @param $name
+     * @param String $name
+     * @param bool $pharPlugin
+     * @param bool $force
      * @return bool|int
      */
-    public function loadPlugin(String $name, bool $force = false){
-        if(file_exists("phar://plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR."plugin.json") && !$this->hasPlugin($name)){
+    public function loadPlugin(String $name, bool $pharPlugin = true, bool $force = false){
+        if(file_exists(($pharPlugin ? "phar://" : "")."plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR."plugin.json") && !$this->hasPlugin($name)){
             $json = new JsonConfig();
-            $json->loadFile("phar://plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR."plugin.json");
+            $json->loadFile(($pharPlugin ? "phar://" : "")."plugins".DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR."plugin.json");
             $json = $json->getConfig();
 
-            if(isset($json["load"]) and $json["load"] !== false or $force == true){
+            if(!isset($json["load"]) or $json["load"] !== false or $force === true){
                 if($json["api"] != IRC::VERSION){
                     Logger::info(BashColor::YELLOW."Plugin ".$name." was developed for Fish version ".$json["api"].", while you are running version ".IRC::VERSION."! It might not be compatible!");
                 }
@@ -122,9 +127,9 @@ class PluginManager{
                 }
 
                 if($success !== false){
-                    $this->getClassLoader()->addPsr4(basename($name, ".phar")."\\", "phar://plugins".DIRECTORY_SEPARATOR.$name);
+                    $this->getClassLoader()->addPsr4(basename($name, ".phar")."\\", ($pharPlugin ? "phar://" : "")."plugins".DIRECTORY_SEPARATOR.$name);
 
-                    $plugin = new Plugin(basename($name, ".phar"), $json, $this->getConnection());
+                    $plugin = new Plugin(basename($name, ".phar"), $json, $this->getConnection(), $pharPlugin);
 
                     $ev = new PluginLoadEvent($plugin);
                     $this->getConnection()->getEventHandler()->callEvent($ev);
