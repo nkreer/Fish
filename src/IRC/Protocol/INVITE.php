@@ -25,6 +25,7 @@ use IRC\Channel;
 use IRC\Command;
 use IRC\Connection;
 use IRC\Event\Invite\InvitationReceiveEvent;
+use IRC\IRC;
 use IRC\User;
 use IRC\Utils\JsonConfig;
 
@@ -38,7 +39,11 @@ class INVITE implements ProtocolCommand{
     public static function run(Command $command, Connection $connection, JsonConfig $config){
         $channel = Channel::getChannel($connection, explode(":", implode(" ", $command->getArgs()), 2)[1]);
         $user = User::getUser($connection, $command->getPrefix());
-        $connection->getEventHandler()->callEvent(new InvitationReceiveEvent($channel, $user));
+        $ev = new InvitationReceiveEvent($channel, $user);
+        $connection->getEventHandler()->callEvent($ev);
+        if(!$ev->isCancelled() and $user->hasPermission("fish.invitation.follow")){
+            $connection->joinChannel($channel); // Join the channel if the user is allowed to
+        }
     }
 
 }
