@@ -3,7 +3,7 @@
 /*
  *
  * Fish - IRC Bot
- * Copyright (C) 2016 Niklas Kreer
+ * Copyright (C) 2016 - 2017 Niklas Kreer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,10 +40,10 @@ class ConnectionAliveTask extends Task{
         $time = (int)IRC::getInstance()->getConfig()->getData("auto_reconnect_after_timeout", 500);
         $max_attempts = (int)IRC::getInstance()->getConfig()->getData("max_reconnect_attempts", 5);
         if($time){
-            if($this->connection->getLastPing() <= ($time + time()) and $this->connection->isConnected()){
+            if((time() - $this->connection->getLastPing()) >= $time and $this->connection->isConnected()){
                 // Possibly time-outed. Attempt a reconnect
                 Logger::info(BashColor::RED."Lost connection to ".$this->connection->getAddress()." - Reconnecting...");
-                $this->connection->disconnect();
+                $this->connection->disconnect("Time-outed.");
                 if($this->connection->connect()){
                     Logger::info(BashColor::GREEN."Successfully reconnected.");
                     // Re-schedule this task
