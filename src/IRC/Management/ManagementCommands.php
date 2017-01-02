@@ -3,7 +3,7 @@
 /*
  *
  * Fish - IRC Bot
- * Copyright (C) 2016 Niklas Kreer
+ * Copyright (C) 2016 - 2017 Niklas Kreer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ class ManagementCommands{
         $connection->getCommandMap()->registerCommand(new NickCommand($connection));
         $connection->getCommandMap()->registerCommand(new ReloadCommand($connection));
         $connection->getCommandMap()->registerCommand(new StopCommand($connection));
+        $connection->getCommandMap()->registerCommand(new UptimeCommand($connection));
     }
 
 }

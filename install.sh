@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Install Fish automatically
-# Automatic installation requires cURL, unzip and composer.
+# Automatic installation requires wget, unzip and composer.
 
 V=1.0 # Specify version
 

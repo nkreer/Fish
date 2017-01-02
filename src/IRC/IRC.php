@@ -59,10 +59,13 @@ class IRC {
 
     public $idleTime = false;
 
+    private $startupTime = 0;
+
     public function __construct(bool $verbose = false, bool $silent = false, String $configPath = "fish.json"){
         $this->silent = $silent;
         $this->verbose = $verbose;
         self::$instance = $this;
+        $this->startupTime = time();
         Logger::info(BashColor::GREEN."Starting Fish (".self::CODENAME.") v".self::VERSION);
         @mkdir("plugins");
         @mkdir("users");
@@ -226,6 +229,10 @@ class IRC {
      */
     public function isConnected(String $address) : bool{
         return isset($this->connections[$address]);
+    }
+
+    public function getStartupTime(){
+        return $this->startupTime;
     }
 
 }
