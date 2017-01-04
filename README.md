@@ -10,8 +10,8 @@ It is distributed under the terms and conditions of the [GPL Version 3](LICENSE)
 
 ### Requirements
 
-* PHP 7
-* Unix-like OS
+* PHP 7 (Tested on 7.0.x, should work on 7.1 as well)
+* Unix-like OS (Tested on macOS Sierra and Debian Linux)
 * Composer
 
 Fish has been tested to work well on unix systems and PHP 7.
@@ -25,17 +25,17 @@ It's not recommended to use the source-code from this repository in production, 
  
 #### Normal installation
 
-Either use the provided [installation script](install.sh) using:
+Either directly use composer to download and install the newest version:
 
-`$ wget -O - https://raw.githubusercontent.com/nkreer/Fish/master/install.sh | sh`
+`$ composer create-project nkreer/fish`
  
-or download the source of the latest release and let composer install the software:
+or download the latest codebase and let composer install the software using
 
 `$ composer install`
  
 #### Installation for use as a library
 
-Fish is available on Packagist. Composer can install it for you automatically.
+Fish is available on Packagist. You can require it for your own projects like this.
 
 `$ composer require nkreer/fish`
 
