@@ -28,8 +28,8 @@ use IRC\Utils\JsonConfig;
 
 class IRC {
 
-    const VERSION = 1.1;
-    const CODENAME = "Catfish";
+    const VERSION = 2;
+    const CODENAME = "Guppy";
 
     const IRC_PORT = 6667;
     const IRC_PORT_ENCRYPTED = 6697;
