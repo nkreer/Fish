@@ -4,6 +4,10 @@ Changelogs and release notes can also be found [on GitHub](https://github.com/nk
 
 ### Releases
 
+#### 1.1.1 Catfish
+
+* Fixes a possible crash when requesting the user on ChannelLeaveEvent
+
 #### 1.1 Catfsh
 
 * Automatically rejoin a channel when kicked

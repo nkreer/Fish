@@ -29,6 +29,7 @@ class ChannelLeaveEvent extends ChannelEvent{
     private $user;
 
     public function __construct(Channel $channel, User $user){
+        $this->user = $user;
         parent::__construct($channel);
     }
 
