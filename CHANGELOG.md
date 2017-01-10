@@ -4,6 +4,10 @@ Changelogs and release notes can also be found [on GitHub](https://github.com/nk
 
 ### Releases
 
+#### 1.1.2 Catfish
+
+* Fixes a crash with enabled user tracking on KickEvent
+
 #### 1.1.1 Catfish
 
 * Fixes a possible crash when requesting the user on ChannelLeaveEvent

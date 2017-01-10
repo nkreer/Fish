@@ -28,7 +28,7 @@ use IRC\Utils\JsonConfig;
 
 class IRC {
 
-    const VERSION = "1.1.1";
+    const VERSION = "1.1.2";
     const CODENAME = "Catfish";
 
     const IRC_PORT = 6667;

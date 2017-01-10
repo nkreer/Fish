@@ -71,7 +71,7 @@ class UserTracker implements Listener{
             $this->connection->removeChannel($event->getChannel());
         } else {
             // Someone else was kicked.
-            $event->getChannel()->removeUser($event->getKicker());
+            $event->getChannel()->removeUser($event->getKicker()->getNick());
         }
     }
 
