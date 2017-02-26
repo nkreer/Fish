@@ -104,7 +104,9 @@ class Plugin{
 
     public function unload(){
         if($this->reflectionClass->hasMethod("onDisable")){
-            $this->class->onDisable(); //Call the onDisable method
+            $this->class->onDisable();
+        } elseif($this->reflectionClass->hasMethod("onUnload")){
+            $this->class->onUnload();
         }
     }
 
