@@ -63,19 +63,17 @@ class PRIVMSG implements ProtocolCommand{
                     Logger::info(BashColor::GREEN.$ev->getChannel()->getName()." ".$ev->getUser()->getNick().BashColor::REMOVE." ".$ev->getMessage()); //Display the message to the console
                 }
             } else { // This is clearly a CTCP
-                $strippedMessage[1] = explode(" ", $args[1], 2);
-                $ctcp_command = str_replace(chr(1), "", $strippedMessage[1][0]);
-                unset($strippedMessage[1][0]);
+                $strippedMessage = explode(" ", $args[1], 2);
+                $ctcp_command = str_replace(chr(1), "", $strippedMessage[0]);
+                unset($strippedMessage[0]);
                 $ev = new CTCPReceiveEvent($user, $ctcp_command);
                 $connection->getEventHandler()->callEvent($ev);
-                if(empty($strippedMessage[1])){
-                    if($reply = IRC::getInstance()->getConfig()->getData("default_ctcp_replies", [])[$ctcp_command]){
-                        if($reply !== null){
-                            $ev = new CTCPSendEvent($user, $ctcp_command, $reply);
-                            $connection->getEventHandler()->callEvent($ev);
-                            if(!$ev->isCancelled()){
-                                $user->sendNotice(chr(1).$ctcp_command." ".$ev->getMessage());
-                            }
+                if($reply = IRC::getInstance()->getConfig()->getData("default_ctcp_replies", [])[$ctcp_command]){
+                    if($reply !== null){
+                        $ev = new CTCPSendEvent($user, $ctcp_command, $reply);
+                        $connection->getEventHandler()->callEvent($ev);
+                        if(!$ev->isCancelled()){
+                            $user->sendNotice(chr(1).$ctcp_command." ".$ev->getMessage());
                         }
                     }
                 }
