@@ -41,6 +41,8 @@ use IRC\Utils\JsonConfig;
  */
 class PRIVMSG implements ProtocolCommand{
 
+    //TODO - A clean rewrite of the run() method is really needed and different types of PRIVMSG commands should be handled by separate classes.
+
     public static function run(Command $command, Connection $connection, JsonConfig $config){
         $user = User::getUser($connection, $command->getPrefix());
         $arg = $command->getArgs();
@@ -51,30 +53,40 @@ class PRIVMSG implements ProtocolCommand{
         }
         unset($arg[0]);
         $args = explode(":", implode(" ", $arg), 2);
-        if($args[1][0] === chr(1)){ //Check whether the message is a ctcp, message or command
-            $args[1] = explode(" ", $args[1], 2);
-            $ctcp_command = str_replace(chr(1), "", $args[1][0]);
-            unset($args[1][0]);
-            $ev = new CTCPReceiveEvent($user, $ctcp_command);
-            $connection->getEventHandler()->callEvent($ev);
-            if(empty($args[1][1])){
-                if($reply = IRC::getInstance()->getConfig()->getData("default_ctcp_replies", [])[$ctcp_command]){
-                    if($reply !== null){
-                        $ev = new CTCPSendEvent($user, $ctcp_command, $reply);
-                        $connection->getEventHandler()->callEvent($ev);
-                        if(!$ev->isCancelled()){
-                            $user->sendNotice(chr(1).$ctcp_command." ".$ev->getMessage());
+        if($args[1][0] === chr(1)){ //Check whether the message is a ctcp or an action
+            if($args[1][1] == "A"){ // We're dealing with an ACTION
+                $strippedMessage = explode(" ", $args[1], 2);
+                unset($strippedMessage[0]);
+                $ev = new MessageReceiveEvent(implode(" ", $strippedMessage), $user, $channel, true);
+                $connection->getEventHandler()->callEvent($ev);
+                if(!$ev->isCancelled()){
+                    Logger::info(BashColor::GREEN.$ev->getChannel()->getName()." ".$ev->getUser()->getNick().BashColor::REMOVE." ".$ev->getMessage()); //Display the message to the console
+                }
+            } else { // This is clearly a CTCP
+                $strippedMessage[1] = explode(" ", $args[1], 2);
+                $ctcp_command = str_replace(chr(1), "", $strippedMessage[1][0]);
+                unset($strippedMessage[1][0]);
+                $ev = new CTCPReceiveEvent($user, $ctcp_command);
+                $connection->getEventHandler()->callEvent($ev);
+                if(empty($strippedMessage[1])){
+                    if($reply = IRC::getInstance()->getConfig()->getData("default_ctcp_replies", [])[$ctcp_command]){
+                        if($reply !== null){
+                            $ev = new CTCPSendEvent($user, $ctcp_command, $reply);
+                            $connection->getEventHandler()->callEvent($ev);
+                            if(!$ev->isCancelled()){
+                                $user->sendNotice(chr(1).$ctcp_command." ".$ev->getMessage());
+                            }
                         }
                     }
                 }
             }
-        } elseif(!in_array($args[1][0], $config->getData("command_prefix", [".", "!", "\\", "@"]))) {
+        } elseif(!in_array($args[1][0], $config->getData("command_prefix", [".", "!", "\\", "@"]))) {   // Message is not a command
             $ev = new MessageReceiveEvent($args[1], $user, $channel);
             $connection->getEventHandler()->callEvent($ev);
             if(!$ev->isCancelled()){
                 Logger::info(BashColor::GREEN.$ev->getChannel()->getName()." ".$ev->getUser()->getNick().":".BashColor::REMOVE." ".$ev->getMessage()); //Display the message to the console
             }
-        } else {
+        } else {    // Message is a command
             $args[1] = substr($args[1], 1);
             $args[1] = explode(" ", $args[1]);
             $cmd = strtolower($args[1][0]); //Command in lower case

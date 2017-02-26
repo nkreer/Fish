@@ -4,8 +4,9 @@ Changelogs and release notes can also be found [on GitHub](https://github.com/nk
 
 ### Releases
 
-#### 1.1.2 Catfish
+#### 1.2 Catfish
 
+* Handle PRIVMSG ACTIONs the same as normal messages, include them in MessageReceiveEvent
 * Fixes a crash with enabled user tracking on KickEvent
 
 #### 1.1.1 Catfish

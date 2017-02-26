@@ -28,11 +28,13 @@ class MessageReceiveEvent extends MessageEvent{
 
     private $user;
     private $channel;
+    private $action = false;
 
-    public function __construct($message, User $user, Channel $channel){
+    public function __construct($message, User $user, Channel $channel, bool $action = false){
         parent::__construct($message);
         $this->channel = $channel;
         $this->user = $user;
+        $this->action = $action;
     }
 
     /**
@@ -47,6 +49,13 @@ class MessageReceiveEvent extends MessageEvent{
      */
     public function getChannel(){
         return $this->channel;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAction(){
+        return $this->action;
     }
 
 }
